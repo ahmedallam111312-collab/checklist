@@ -1,0 +1,274 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark theme (default) */
+  --color-background: #07182a;
+  --color-surface: #0d2740;
+  --color-surface-raised: #123552;
+  --color-surface-sunken: #051220;
+  --color-border: #1f4466;
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-text: #f1f7fb;
+  --color-text-secondary: #b4c7d6;
+  --color-text-muted: #8fa8bb;
+  --color-primary: #00d2ff;
+  --color-primary-hover: #33dcff;
+  --color-primary-pressed: #00a8cc;
+  --color-on-primary: #03202b;
+  --color-focus-ring: #7be7ff;
+  --color-critical: #ffb020;
+  --color-critical-surface: rgba(255, 176, 32, 0.12);
+  --color-on-critical: #1c1200;
+  --color-danger: #ff7b7b;
+  --color-danger-surface: rgba(255, 123, 123, 0.12);
+  --color-success: #34d399;
+
+  /* Typography / Sizing */
+  --ar-bump: 1px;
+}
+
+[data-theme="light"] {
+  --color-background: #e8f1f8;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f3f8fc;
+  --color-surface-sunken: #dce7f0;
+  --color-border: #c3d6e4;
+  --color-border-subtle: rgba(11, 37, 64, 0.08);
+  --color-text: #0b2540;
+  --color-text-secondary: #3b566d;
+  --color-text-muted: #4d667a;
+  --color-primary: #006b94;
+  --color-primary-hover: #005a7d;
+  --color-primary-pressed: #004a66;
+  --color-on-primary: #ffffff;
+  --color-focus-ring: #006b94;
+  --color-on-critical: #ffffff;
+  --color-critical: #8a5300;
+  --color-critical-surface: #fff1d6;
+  --color-danger: #b42318;
+  --color-danger-surface: #fde8e6;
+  --color-success: #0f7a55;
+}
+
+/* Global Reset & Foundation */
+html {
+  font-size: 16px;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Typography Scales (DESIGN.md section 4)
+   ========================================================================== */
+
+/* Display Scale */
+.type-display {
+  --fs: 30px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: -0.015em;
+}
+@media (min-width: 768px) {
+  .type-display {
+    --fs: 36px;
+    font-size: var(--fs);
+    line-height: 44px;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* H1 Scale */
+.type-h1, h1 {
+  --fs: 24px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 32px;
+}
+@media (min-width: 768px) {
+  .type-h1, h1 {
+    --fs: 28px;
+    font-size: var(--fs);
+    line-height: 36px;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* H2 Scale */
+.type-h2, h2 {
+  --fs: 22px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 30px;
+}
+
+/* H3 Scale */
+.type-h3, h3 {
+  --fs: 18px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 26px;
+}
+
+/* Body Scale */
+.type-body {
+  --fs: 16px;
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: 26px;
+}
+
+/* Body SM Scale */
+.type-body-sm {
+  --fs: 14px;
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: 22px;
+}
+
+/* Step Scales */
+.type-step {
+  --fs: 18px;
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: 28px;
+}
+.type-step-critical {
+  --fs: 18px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 28px;
+}
+
+/* Button Scale */
+.type-button {
+  --fs: 16px;
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* Caption Scale */
+.type-caption {
+  --fs: 13px;
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+/* Label Scale (English only) */
+.type-label {
+  --fs: 12px;
+  font-size: var(--fs);
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   Arabic Typography Invariants (DESIGN.md section 4)
+   ========================================================================== */
+:lang(ar) {
+  font-family: var(--font-ibm-plex-sans-arabic), "IBM Plex Sans Arabic", system-ui, sans-serif;
+  letter-spacing: 0px !important;
+  text-transform: none !important;
+  line-height: 1.75;
+}
+
+/* Apply Arabic font bump cleanly using --fs */
+:lang(ar).type-display,
+:lang(ar) .type-display {
+  font-size: calc(var(--fs) + var(--ar-bump));
+}
+
+:lang(ar).type-h1,
+:lang(ar) .type-h1,
+h1:lang(ar),
+:lang(ar) h1 {
+  font-size: calc(var(--fs) + var(--ar-bump));
+}
+
+:lang(ar).type-h2,
+:lang(ar) .type-h2,
+h2:lang(ar),
+:lang(ar) h2 {
+  font-size: calc(var(--fs) + var(--ar-bump));
+}
+
+:lang(ar).type-h3,
+:lang(ar) .type-h3,
+h3:lang(ar),
+:lang(ar) h3 {
+  font-size: calc(var(--fs) + var(--ar-bump));
+}
+
+:lang(ar).type-caption,
+:lang(ar) .type-caption {
+  --fs: 13px;
+  font-size: calc(var(--fs) + var(--ar-bump)) !important;
+}
+
+:lang(ar).type-body,
+p:lang(ar):not(.type-caption),
+:lang(ar) p:not(.type-caption) {
+  font-size: calc(var(--fs, 16px) + var(--ar-bump));
+}
+
+:lang(en) {
+  font-family: var(--font-ibm-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+}
+
+/* English Headings and Titles Line-Height Polish (10a) */
+:lang(en) h1,
+:lang(en) h2,
+:lang(en) h3,
+:lang(en) h4,
+[lang="en"] h1,
+[lang="en"] h2,
+[lang="en"] h3,
+h1[lang="en"],
+h2[lang="en"],
+h3[lang="en"],
+h1:has(bdi[lang="en"]),
+h2:has(bdi[lang="en"]),
+h3:has(bdi[lang="en"]),
+[lang="en"].type-display,
+[lang="en"].type-h1,
+[lang="en"].type-h2,
+[lang="en"].type-h3,
+bdi[lang="en"] {
+  line-height: 1.3 !important;
+}
+
+/* RTL Icon Mirroring */
+[dir="rtl"] .icon-mirror {
+  transform: scaleX(-1);
+}
+
+/* Tabular Numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Accessible Tap Targets */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
