@@ -29,6 +29,7 @@ test-assets/
 
 # Local environment files
 .env*
+!.env.example
 .env*.local
 .env.local
 .env.development.local
