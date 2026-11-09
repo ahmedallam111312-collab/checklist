@@ -16,6 +16,8 @@ tests/.auth/
 docs/screenshots/
 test-assets/
 *.mp4
+.agents/
+.agents
 
 # Next.js build output
 .next
