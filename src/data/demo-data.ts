@@ -9,13 +9,14 @@ const INITIAL_SETTINGS: SiteSettings = {
   id: 1,
   site_name: "Critical Ease",
   tagline: "Learn • Practice • Excel",
-  splash_cta: "هيا نبدأ",
-  hero_eyebrow: "تمريض الطوارئ والرعاية الحرجة",
-  hero_title: "مرحبًا بك في Critical Ease",
+  splash_cta: "Get Started",
+  hero_eyebrow: "Critical Care & Emergency Nursing",
+  hero_title: "Welcome to Critical Ease",
   hero_description:
-    "منصة تعليمية عملية لإجراءات تمريض الطوارئ والرعاية الحرجة: خطوات واضحة، وقوائم تحقق تفاعلية، وفيديوهات توضيحية.",
-  hero_cta: "استكشف الإجراءات",
-  footer_text: "قسم تمريض الحالات الحرجة والطوارئ — جميع الحقوق محفوظة.",
+    "A standardized clinical reference platform for emergency and critical care nursing procedures: clear steps, interactive checklists, and instructional videos.",
+  hero_cta: "Explore Procedures",
+  footer_text:
+    "Department of Critical Care and Emergency Nursing, Faculty of Nursing, Cairo University. All rights reserved.",
   logo_path: null,
   updated_at: new Date().toISOString(),
 };

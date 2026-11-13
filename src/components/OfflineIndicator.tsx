@@ -38,10 +38,10 @@ export function OfflineIndicator() {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-warning text-white">
           <WifiOff className="h-4 w-4" aria-hidden="true" />
         </div>
-        <div className="flex-1 text-sm leading-tight">
-          <p className="font-bold text-warning">وضع عدم الاتصال</p>
+        <div className="flex-1 text-sm leading-tight" dir="ltr">
+          <p className="font-bold text-warning">Offline Mode</p>
           <p className="mt-0.5 text-xs text-navy">
-            أنت غير متصل بالإنترنت حالياً. يتم عرض الصفحات والمحتوى المحفوظ في المتصفح.
+            You are currently offline. Viewing cached procedures and local checklist progress.
           </p>
         </div>
       </div>

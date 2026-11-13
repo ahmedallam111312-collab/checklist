@@ -14,24 +14,45 @@ function isLegacyBrandString(value: string | null | undefined): boolean {
   return !value || /prof\s*nurse/i.test(value.trim());
 }
 
+function hasArabic(str: string | null | undefined): boolean {
+  if (!str) return false;
+  return /[\u0600-\u06FF]/.test(str);
+}
+
 function normalizeLegacySettings(raw: SiteSettings): SiteSettings {
   return {
     ...raw,
-    site_name: isLegacyBrandString(raw.site_name)
+    site_name: isLegacyBrandString(raw.site_name) || hasArabic(raw.site_name)
       ? BRAND.name
       : raw.site_name,
     tagline:
-      !raw.tagline || raw.tagline === "Learn. Practice. Perform."
+      !raw.tagline || raw.tagline === "Learn. Practice. Perform." || hasArabic(raw.tagline)
         ? BRAND.tagline
         : raw.tagline,
     splash_cta:
-      !raw.splash_cta || raw.splash_cta === "ابدأ"
+      !raw.splash_cta || hasArabic(raw.splash_cta)
         ? BRAND.splashCta
         : raw.splash_cta,
-    hero_title: isLegacyBrandString(raw.hero_title)
-      ? BRAND.heroTitle
-      : raw.hero_title,
-    footer_text: raw.footer_text || BRAND.footerText,
+    hero_eyebrow:
+      !raw.hero_eyebrow || hasArabic(raw.hero_eyebrow)
+        ? BRAND.heroEyebrow
+        : raw.hero_eyebrow,
+    hero_title:
+      isLegacyBrandString(raw.hero_title) || hasArabic(raw.hero_title)
+        ? BRAND.heroTitle
+        : raw.hero_title,
+    hero_description:
+      !raw.hero_description || hasArabic(raw.hero_description)
+        ? BRAND.heroDescription
+        : raw.hero_description,
+    hero_cta:
+      !raw.hero_cta || hasArabic(raw.hero_cta)
+        ? BRAND.heroCta
+        : raw.hero_cta,
+    footer_text:
+      !raw.footer_text || hasArabic(raw.footer_text)
+        ? BRAND.footerText
+        : raw.footer_text,
   };
 }
 

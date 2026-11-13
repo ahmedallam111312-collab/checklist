@@ -3,18 +3,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AccordionSection } from "@/components/AccordionSection";
 import { Checklist } from "@/components/Checklist";
 import { EquipmentList } from "@/components/EquipmentList";
 import { VideoPlayerPlaceholder } from "@/components/VideoPlayerPlaceholder";
+import { CreativeCommonsNotice } from "@/components/CreativeCommonsNotice";
 import { getPublicImageUrl } from "@/lib/images/url";
 import {
   getProcedureBySlug,
   getSiteSettings,
-  getPublishedProcedures,
 } from "@/lib/data";
 import { AR_STRINGS } from "@/messages/ar";
 
@@ -59,10 +59,10 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
   const steps = procedure.checklist_steps || [];
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    <div className="flex min-h-[100dvh] flex-col" dir="ltr">
       <Header siteName={settings.site_name} logoPath={settings.logo_path} />
 
-      {/* Navy -> Plum Procedure Hero (reference 04-procedure-page.jpg) */}
+      {/* Navy -> Plum Procedure Hero */}
       <section className="bg-grad-hero surface-navy border-b-[3px] border-rose px-4 py-8 text-white sm:px-6 sm:py-12">
         <div className="mx-auto max-w-[70rem] space-y-6">
           <div>
@@ -70,7 +70,7 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
               href="/procedures"
               className="squircle-pill inline-flex min-h-[44px] items-center gap-2 border border-rose/50 bg-white/10 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
-              <ArrowRight className="h-4 w-4 text-rose-light" aria-hidden="true" />
+              <ArrowLeft className="h-4 w-4 text-rose-light" aria-hidden="true" />
               <span>{AR_STRINGS.backToProcedures}</span>
             </Link>
           </div>
@@ -84,9 +84,7 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
               }`}
             >
               <h1 className="type-h1 font-latin font-bold text-white">
-                <bdi dir="ltr" lang="en">
-                  {procedure.title}
-                </bdi>
+                <span>{procedure.title}</span>
               </h1>
               {procedure.short_description && (
                 <p className="mt-3 max-w-2xl font-latin text-base leading-relaxed text-text-muted-navy sm:text-lg">
@@ -125,11 +123,11 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
               className="h-7 w-1.5 rounded-full bg-rose"
               aria-hidden="true"
             />
-            <h2 className="type-h2 font-bold text-navy">الأقسام</h2>
+            <h2 className="type-h2 font-bold text-navy">Procedure Sections</h2>
           </div>
 
           <div className="space-y-4">
-            {/* 1. التعريف */}
+            {/* 1. Definition */}
             <AccordionSection
               number={1}
               title={AR_STRINGS.sectionDefinition}
@@ -141,18 +139,14 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                     {procedure.definition}
                   </p>
                 ) : (
-                  <p
-                    className="text-base text-text-muted font-arabic"
-                    dir="rtl"
-                    lang="ar"
-                  >
+                  <p className="text-base text-text-muted">
                     {AR_STRINGS.sectionEmpty}
                   </p>
                 )}
               </div>
             </AccordionSection>
 
-            {/* 2. دواعي الاستخدام */}
+            {/* 2. Indications */}
             <AccordionSection
               number={2}
               title={AR_STRINGS.sectionIndications}
@@ -168,18 +162,14 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p
-                    className="text-base text-text-muted font-arabic"
-                    dir="rtl"
-                    lang="ar"
-                  >
+                  <p className="text-base text-text-muted">
                     {AR_STRINGS.sectionEmpty}
                   </p>
                 )}
               </div>
             </AccordionSection>
 
-            {/* 3. موانع الاستخدام */}
+            {/* 3. Contraindications */}
             <AccordionSection
               number={3}
               title={AR_STRINGS.sectionContraindications}
@@ -195,18 +185,14 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p
-                    className="text-base text-text-muted font-arabic"
-                    dir="rtl"
-                    lang="ar"
-                  >
+                  <p className="text-base text-text-muted">
                     {AR_STRINGS.sectionEmpty}
                   </p>
                 )}
               </div>
             </AccordionSection>
 
-            {/* 4. الأدوات */}
+            {/* 4. Required Equipment */}
             <AccordionSection
               number={4}
               title={AR_STRINGS.sectionEquipment}
@@ -215,7 +201,7 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
               <EquipmentList items={equipment} procedureSlug={procedure.slug} />
             </AccordionSection>
 
-            {/* 5. قائمة الخطوات */}
+            {/* 5. Procedural Checklist */}
             <AccordionSection
               number={5}
               title={AR_STRINGS.sectionChecklist}
@@ -224,7 +210,7 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
               <Checklist steps={steps} procedureSlug={procedure.slug} />
             </AccordionSection>
 
-            {/* 6. الأخطاء الشائعة */}
+            {/* 6. Common Errors & Complications */}
             <AccordionSection
               number={6}
               title={AR_STRINGS.sectionCommonMistakes}
@@ -241,18 +227,14 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p
-                    className="text-base text-text-muted font-arabic"
-                    dir="rtl"
-                    lang="ar"
-                  >
+                  <p className="text-base text-text-muted">
                     {AR_STRINGS.sectionEmpty}
                   </p>
                 )}
               </div>
             </AccordionSection>
 
-            {/* 7. الفيديو التوضيحي (Always Last) */}
+            {/* 7. Clinical Demonstration Video */}
             <AccordionSection
               number={7}
               title={AR_STRINGS.sectionVideo}
@@ -266,6 +248,11 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                 title={procedure.title}
               />
             </AccordionSection>
+          </div>
+
+          {/* Department Rights & Creative Commons Notice on Procedure Page */}
+          <div className="mt-12">
+            <CreativeCommonsNotice variant="card" />
           </div>
         </div>
       </main>

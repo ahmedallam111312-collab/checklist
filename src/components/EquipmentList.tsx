@@ -56,9 +56,9 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
   if (items.length === 0) {
     return (
       <p
-        className="py-6 text-center text-base text-text-muted font-arabic"
-        dir="rtl"
-        lang="ar"
+        className="py-6 text-center text-base text-text-muted"
+        dir="ltr"
+        lang="en"
       >
         {AR_STRINGS.sectionEmpty}
       </p>
@@ -74,8 +74,8 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
             <span>{" / "}</span>
             <span data-testid="equip-total">{total}</span>
           </bdi>
-          <span className="ms-1 font-arabic font-medium text-text-secondary">
-            {" جاهز"}
+          <span className="ms-1 font-medium text-text-secondary">
+            Ready
           </span>
         </div>
       </div>

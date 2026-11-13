@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Activity } from "lucide-react";
+import { ArrowRight, Activity } from "lucide-react";
 import { Procedure } from "@/types/database";
 import { AR_STRINGS } from "@/messages/ar";
 import { getPublicImageUrl } from "@/lib/images/url";
@@ -80,8 +80,8 @@ export function ProcedureCard({ procedure }: ProcedureCardProps) {
         <div className="mt-5">
           <span className="btn-rose-cta squircle-pill type-button flex min-h-[48px] w-full items-center justify-center gap-2 px-5 text-base font-bold text-navy">
             <span>{AR_STRINGS.explore}</span>
-            <ArrowLeft
-              className="h-4 w-4 transition-transform group-hover:-translate-x-1"
+            <ArrowRight
+              className="h-4 w-4 transition-transform group-hover:translate-x-1"
               aria-hidden="true"
             />
           </span>

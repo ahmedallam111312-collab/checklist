@@ -64,9 +64,9 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
   if (steps.length === 0) {
     return (
       <p
-        className="py-6 text-center text-sm text-text-muted font-arabic"
-        dir="rtl"
-        lang="ar"
+        className="py-6 text-center text-sm text-text-muted"
+        dir="ltr"
+        lang="en"
       >
         {AR_STRINGS.sectionEmpty}
       </p>

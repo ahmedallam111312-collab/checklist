@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description: BRAND.heroDescription,
     siteName: BRAND.name,
-    locale: "ar_SA",
+    locale: "en_US",
     type: "website",
     images: [
       {
@@ -80,20 +80,20 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ar"
-      dir="rtl"
+      lang="en"
+      dir="ltr"
       className={`${roboto.variable} ${ibmPlexSansArabic.variable}`}
       suppressHydrationWarning
     >
       <body
-        className="min-h-[100dvh] flex flex-col font-arabic text-text antialiased selection:bg-rose/25 selection:text-navy"
+        className="min-h-[100dvh] flex flex-col font-sans text-text antialiased selection:bg-rose/25 selection:text-navy"
         suppressHydrationWarning
       >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-50 focus:rounded-pill focus:bg-rose focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-navy focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-pill focus:bg-rose focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-navy focus:shadow-lg"
         >
-          تخطّي إلى المحتوى الرئيسي
+          Skip to main content
         </a>
         <DemoBanner />
         <OfflineIndicator />

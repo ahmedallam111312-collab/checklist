@@ -9,8 +9,8 @@ import { AR_STRINGS } from "@/messages/ar";
 const MuxPlayer = dynamic(() => import("@mux/mux-player-react"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-light-1 text-xs font-medium text-text-muted font-arabic animate-pulse">
-      جارٍ تهيئة مشغل الفيديو...
+    <div className="flex h-full w-full flex-col items-center justify-center bg-light-1 text-xs font-medium text-text-muted animate-pulse">
+      Initializing video player...
     </div>
   ),
 });
@@ -60,12 +60,12 @@ export function PublicVideoPlayer({
 
       const data = await res.json();
       if (!data.token) {
-        throw new Error("لم يتم استلام تصريح تشغيل الفيديو.");
+        throw new Error("Video playback authorization token was not received.");
       }
 
       setToken(data.token);
     } catch (err: any) {
-      setTokenError(err.message || "حدث خطأ أثناء الحصول على تصريح المشاهدة.");
+      setTokenError(err.message || "An error occurred while securing video playback authorization.");
     } finally {
       setLoadingToken(false);
     }
@@ -95,6 +95,7 @@ export function PublicVideoPlayer({
   return (
     <div
       className="w-full"
+      dir="ltr"
       onContextMenu={(e) => {
         e.preventDefault();
       }}
@@ -113,7 +114,7 @@ export function PublicVideoPlayer({
             <div className="flex h-12 w-12 items-center justify-center rounded-pill border border-border-subtle bg-white text-rose-dark shadow-xs">
               <Film className="h-6 w-6" aria-hidden="true" />
             </div>
-            <p className="text-base font-semibold text-navy font-arabic">
+            <p className="text-base font-semibold text-navy">
               {AR_STRINGS.videoPublicEmpty}
             </p>
           </div>
@@ -125,8 +126,8 @@ export function PublicVideoPlayer({
             <div className="flex h-12 w-12 items-center justify-center rounded-pill bg-white text-rose-dark">
               <Film className="h-6 w-6" aria-hidden="true" />
             </div>
-            <p className="text-xs font-medium text-text-secondary font-arabic">
-              جارٍ التحقق من صلاحيات المشاهدة الآمنة...
+            <p className="text-xs font-medium text-text-secondary">
+              Verifying secure playback permissions...
             </p>
           </div>
         )}
@@ -135,8 +136,8 @@ export function PublicVideoPlayer({
         {isVideoReady && !loadingToken && (tokenError || playerError) && (
           <div className="flex max-w-sm flex-col items-center justify-center gap-3 p-6 text-danger">
             <AlertCircle className="h-8 w-8 text-danger" aria-hidden="true" />
-            <p className="text-base font-semibold leading-relaxed font-arabic">
-              تعذر تشغيل الفيديو
+            <p className="text-base font-semibold leading-relaxed">
+              Unable to play video
             </p>
             <button
               type="button"
@@ -184,7 +185,7 @@ export function PublicVideoPlayer({
 
             {/* Non-interactive brand watermark overlay */}
             <div
-              className="pointer-events-none absolute end-3 top-3 z-10 opacity-45"
+              className="pointer-events-none absolute right-3 top-3 z-10 opacity-45"
               aria-hidden="true"
             >
               <Image

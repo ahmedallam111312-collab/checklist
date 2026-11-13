@@ -1,47 +1,47 @@
 /**
- * Arabic UI strings for Critical Ease.
- * Precedence: DESIGN.md & SPEC.md section 7.
+ * UI strings for Critical Ease.
+ * Department of Critical Care and Emergency Nursing, Faculty of Nursing, Cairo University.
  */
 
 export const AR_STRINGS = {
   // Navigation & Shell
-  home: "الرئيسية",
-  navProcedures: "الإجراءات",
-  navAbout: "عن المنصة",
-  navMenu: "القائمة",
-  start: "هيا نبدأ",
-  explore: "استكشف",
-  backToProcedures: "العودة إلى الإجراءات",
-  libraryTitle: "مكتبة الإجراءات",
-  searchPlaceholder: "ابحث في الإجراءات...",
-  noResults: "لا توجد نتائج مطابقة",
+  home: "Home",
+  navProcedures: "Procedures",
+  navAbout: "About",
+  navMenu: "Menu",
+  start: "Get Started",
+  explore: "Explore Procedure",
+  backToProcedures: "Back to Procedures",
+  libraryTitle: "Procedures Library",
+  searchPlaceholder: "Search procedures, steps, equipment...",
+  noResults: "No matching procedures found",
 
   // Sections (7 canonical sections in exact order)
-  sectionDefinition: "التعريف",
-  sectionIndications: "دواعي الاستخدام",
-  sectionContraindications: "موانع الاستخدام",
-  sectionEquipment: "الأدوات",
-  sectionChecklist: "قائمة الخطوات",
-  sectionCommonMistakes: "الأخطاء الشائعة",
-  sectionVideo: "الفيديو التوضيحي",
+  sectionDefinition: "1. Definition & Clinical Overview",
+  sectionIndications: "2. Indications",
+  sectionContraindications: "3. Contraindications",
+  sectionEquipment: "4. Required Equipment",
+  sectionChecklist: "5. Procedural Checklist",
+  sectionCommonMistakes: "6. Common Errors & Complications",
+  sectionVideo: "7. Demonstration Video",
 
   // Checklist & Equipment
   arabicToggle: "عربي",
-  criticalScreenReader: "خطوة حرجة",
-  resetProgress: "إعادة ضبط",
-  sectionEmpty: "لم تتم إضافة المحتوى بعد",
-  videoBeingPrepared: "الفيديو التوضيحي قيد الإعداد",
-  videoError: "تعذّر تشغيل الفيديو. حاول مرة أخرى.",
+  criticalScreenReader: "Critical Step",
+  resetProgress: "Reset Checklist",
+  sectionEmpty: "Content is being prepared for this section",
+  videoBeingPrepared: "Demonstration video is being prepared",
+  videoError: "Unable to play video. Please try again.",
 
   // Stats
-  statsProcedures: "إجراءات",
-  statsSections: "أقسام لكل إجراء",
-  statsLanguages: "ثنائي اللغة",
+  statsProcedures: "Procedures",
+  statsSections: "Sections per Procedure",
+  statsLanguages: "Bilingual Standard",
 
   // Banner
-  demoDataBanner: "وضع المعاينة التجريبية — جميع البيانات المعروضة تجريبية واختبارية فقط وليست محتوى سريريًا حقيقيًا",
-  demoDataBannerShort: "وضع المعاينة — بيانات تجريبية واختبارية فقط وليست محتوى حقيقيًا",
-  demoDataBadge: "بيانات تجريبية",
+  demoDataBanner: "Demo Mode — All data displayed is for demonstration and testing purposes only.",
+  demoDataBannerShort: "Demo Mode — Testing data only.",
+  demoDataBadge: "DEMO DATA",
 
   // Admin Navigation & Shell
   adminDashboard: "لوحة التحكم",
@@ -113,10 +113,10 @@ export const AR_STRINGS = {
   loginGenericError: "بيانات الدخول غير صحيحة.",
 
   // Empty States
-  emptyLibraryTitle: "لا توجد إجراءات متاحة حاليًا",
-  emptyLibraryDesc: "لم يتم نشر أي إجراءات سريرية بعد. سيتم إضافتها وتحديثها من قبل القسم قريبًا.",
-  emptySectionDesc: "لم تتم إضافة محتوى لهذا القسم بعد.",
-  emptyListDesc: "لا توجد عناصر مضافة حتى الآن.",
+  emptyLibraryTitle: "No Procedures Available Yet",
+  emptyLibraryDesc: "Standardized clinical nursing procedures will appear here once published by the department faculty.",
+  emptySectionDesc: "Content is being prepared for this section.",
+  emptyListDesc: "No items listed yet.",
 
   // Admin Settings
   settingsTitle: "إعدادات المنصة الأساسية",
@@ -190,9 +190,9 @@ export const AR_STRINGS = {
   videoDeleteCancelButton: "إلغاء",
   videoQuotaBlocked: "تم الوصول إلى الحد الأقصى للمكتبة المجانية (10 / 10). لا يمكن رفع فيديو جديد إلا بعد حذف فيديو موجود (استبدال الفيديو الحالي متاح).",
   videoOrphansWarning: "تنبيه: يوجد فيديوهات في Mux غير مرتبطة بأي إجراء ({count}).",
-  videoPublicEmpty: "لم تتم إضافة فيديو بعد",
-  videoPublicRetry: "إعادة المحاولة",
-  videoRefreshStatus: "تحديث الحالة",
+  videoPublicEmpty: "No demonstration video available yet",
+  videoPublicRetry: "Retry",
+  videoRefreshStatus: "Refresh Status",
 } as const;
 
 export type MessageKey = keyof typeof AR_STRINGS;
@@ -218,15 +218,15 @@ export function formatArabicPlural(
 }
 
 /**
- * Progress format helper: "تم {done} من {total}"
+ * Progress format helper: "{done} of {total} completed"
  */
 export function formatProgress(done: number, total: number): string {
-  return `تم ${done} من ${total}`;
+  return `${done} of ${total} completed`;
 }
 
 /**
- * Equipment ready helper: "{done} / {total} جاهز"
+ * Equipment ready helper: "{done} / {total} Ready"
  */
 export function formatEquipmentReady(done: number, total: number): string {
-  return `${done} / ${total} جاهز`;
+  return `${done} / ${total} Ready`;
 }

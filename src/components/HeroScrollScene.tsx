@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Activity, Heart } from "lucide-react";
-import { AR_STRINGS, formatArabicPlural } from "@/messages/ar";
+import { ArrowRight, Activity, Heart } from "lucide-react";
+import { InstitutionalBadges } from "@/components/InstitutionalBadges";
 import { BRAND } from "@/config/brand";
 
 interface HeroScrollSceneProps {
@@ -230,23 +230,22 @@ export function HeroScrollScene({
       <div ref={pinWrapperRef} className="w-full">
         <section className="mx-auto max-w-[70rem] px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
-            {/* Hero Text + Stats Column (Always opaque in SSR HTML) */}
+            {/* Hero Text Column (Always opaque in SSR HTML) */}
             <div className="lg:col-span-6 text-start space-y-5">
-              <p className="text-sm font-semibold text-rose-light">
-                {heroEyebrow}
-              </p>
+              <div className="flex flex-col items-start gap-2.5">
+                <InstitutionalBadges variant="hero" />
+                <p className="text-xs font-bold uppercase tracking-wider text-rose-light">
+                  {heroEyebrow}
+                </p>
+              </div>
 
               <h1 className="type-display font-bold text-white leading-tight">
                 {heroTitle.includes(siteName) ? (
                   <>
                     {heroTitle.split(siteName)[0]}
-                    <bdi
-                      dir="ltr"
-                      lang="en"
-                      className="font-latin inline-block text-rose-light"
-                    >
+                    <span className="inline-block text-rose-light">
                       {siteName}
-                    </bdi>
+                    </span>
                     {heroTitle.split(siteName)[1]}
                   </>
                 ) : (
@@ -258,73 +257,32 @@ export function HeroScrollScene({
                 {heroDescription}
               </p>
 
-              {/* Tagline in rose-light inside <bdi dir="ltr"> */}
-              <p className="font-latin text-sm font-medium text-rose-light">
-                <bdi dir="ltr" lang="en">
-                  {tagline}
-                </bdi>
+              {/* Tagline in rose-light */}
+              <p className="text-sm font-semibold tracking-wide text-rose-light">
+                {tagline}
               </p>
 
               {/* Primary Rose CTA */}
-              <div className="pt-1">
+              <div className="pt-2">
                 <Link
                   ref={ctaBtnRef}
                   href="/procedures"
                   data-testid="hero-explore-cta"
-                  className="btn-rose-cta squircle-pill type-button inline-flex min-h-[52px] items-center justify-center gap-3 px-7 text-base font-bold text-navy"
+                  className="btn-rose-cta squircle-pill type-button inline-flex min-h-[52px] items-center justify-center gap-3 px-8 text-base font-bold text-navy"
                 >
                   <span>{heroCta}</span>
-                  <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
               </div>
 
-              {/* Stats Row with Rose Vertical Dividers */}
-              <div
-                className={`mt-6 grid border-t border-rose/30 pt-6 divide-x divide-x-reverse divide-rose/70 ${
-                  hasCount ? "grid-cols-3" : "grid-cols-2"
-                }`}
-                data-testid="hero-stats-row"
-              >
-                {hasCount && (
-                  <div className="flex flex-col items-center justify-center px-2 text-center">
-                    <span className="font-latin text-2xl sm:text-3xl font-bold tabular-nums text-white">
-                      {procedureCount}
-                    </span>
-                    <span className="mt-1 text-xs sm:text-sm text-rose-light">
-                      {formatArabicPlural(procedureCount, {
-                        zero: "إجراء سريري",
-                        one: "إجراء سريري",
-                        two: "إجراءان سريريان",
-                        few: "إجراءات سريرية",
-                        many: "إجراءً سريريًا",
-                        other: "إجراء سريري",
-                      })}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex flex-col items-center justify-center px-2 text-center">
-                  <span className="font-latin text-2xl sm:text-3xl font-bold tabular-nums text-white">
-                    7
-                  </span>
-                  <span className="mt-1 text-xs sm:text-sm text-rose-light">
-                    {formatArabicPlural(7, {
-                      few: "أقسام لكل إجراء",
-                      other: "أقسام لكل إجراء",
-                    })}
-                  </span>
-                </div>
-
-                <div className="flex flex-col items-center justify-center px-2 text-center">
-                  <span className="font-latin text-lg sm:text-2xl font-bold tracking-wide text-white">
-                    <bdi dir="ltr" lang="en">
-                      EN | AR
-                    </bdi>
-                  </span>
-                  <span className="mt-1 text-xs sm:text-sm text-rose-light">
-                    {AR_STRINGS.statsLanguages}
-                  </span>
-                </div>
+              {/* Institutional Department Notice & CC Rights */}
+              <div className="mt-8 border-t border-rose/30 pt-4 text-xs">
+                <p className="font-semibold text-white">
+                  Department of Critical Care and Emergency Nursing
+                </p>
+                <p className="mt-0.5 text-text-muted-navy">
+                  Faculty of Nursing, Cairo University • Licensed under CC BY-NC-ND 4.0
+                </p>
               </div>
             </div>
 

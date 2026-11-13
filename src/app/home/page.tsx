@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ClipboardList, Info } from "lucide-react";
+import { ArrowRight, ClipboardList, Info } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HeroScrollScene } from "@/components/HeroScrollScene";
@@ -22,11 +22,11 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    <div className="flex min-h-[100dvh] flex-col" dir="ltr">
       <Header siteName={settings.site_name} logoPath={settings.logo_path} />
 
       <main className="flex-1">
-        {/* Scroll-Driven 3D ECG Monitor Hero Scene + Integrated Stats */}
+        {/* Scroll-Driven 3D ECG Monitor Hero Scene */}
         <HeroScrollScene
           heroEyebrow={settings.hero_eyebrow}
           heroTitle={settings.hero_title}
@@ -37,7 +37,7 @@ export default async function HomePage() {
           procedureCount={procedureCount}
         />
 
-        {/* Light Quick-Access Section (gives clean vertical scroll room for Hero pin track) */}
+        {/* Quick-Access Section */}
         <section className="bg-grad-page flex min-h-[460px] items-center px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto w-full max-w-[70rem]">
             <div className="surface-light squircle-card mx-auto max-w-3xl border border-border-subtle bg-white p-8 text-center shadow-card-soft sm:p-12">
@@ -47,24 +47,24 @@ export default async function HomePage() {
 
               <h2 className="type-h1 text-navy">{AR_STRINGS.libraryTitle}</h2>
               <p className="type-body mx-auto mt-3 max-w-xl text-text-secondary">
-                تصفح قائمة الإجراءات التمريضية المنظمة في سبعة أقسام واضحة تشمل التعريف، والأدوات، وقائمة الخطوات التفاعلية، والفيديو التوضيحي.
+                Explore standardized emergency and critical care nursing procedures structured into 7 clear clinical sections: definitions, indications, contraindications, required equipment, step-by-step interactive checklists, common mistakes, and demonstration videos.
               </p>
 
-              <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/procedures"
-                  className="btn-rose-cta squircle-pill type-button inline-flex min-h-[48px] w-full items-center justify-center gap-2 px-7 text-navy sm:w-auto"
+                  className="btn-rose-cta squircle-pill type-button inline-flex min-h-[48px] w-full items-center justify-center gap-2 px-8 text-navy sm:w-auto"
                 >
-                  <span>{settings.hero_cta}</span>
-                  <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+                  <span>{settings.hero_cta || "Explore Procedures"}</span>
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
 
                 <Link
                   href="/about"
-                  className="squircle-pill type-button inline-flex min-h-[48px] w-full items-center justify-center gap-2 border border-border bg-light-1 px-6 text-rose-dark transition-colors hover:bg-page sm:w-auto"
+                  className="squircle-pill type-button inline-flex min-h-[48px] w-full items-center justify-center gap-2 border border-border bg-light-1 px-6 font-semibold text-rose-dark transition-colors hover:bg-page sm:w-auto"
                 >
                   <Info className="h-4 w-4" aria-hidden="true" />
-                  <span>{AR_STRINGS.navAbout}</span>
+                  <span>About the Platform</span>
                 </Link>
               </div>
             </div>

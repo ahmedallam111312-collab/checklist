@@ -19,7 +19,7 @@ export default async function ProceduresPage() {
   ]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-list-page">
+    <div className="flex min-h-[100dvh] flex-col bg-list-page" dir="ltr">
       <Header siteName={settings.site_name} logoPath={settings.logo_path} />
 
       <main className="flex-1 px-4 py-8 sm:px-6 sm:py-12">
