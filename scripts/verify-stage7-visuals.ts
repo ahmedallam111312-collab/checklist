@@ -6,21 +6,19 @@ import { chromium, Page, BrowserContext } from "playwright";
 import {
   captureDevFingerprint,
   compareDevFingerprints,
-} from "d:/checklists/tests/support/dev-fingerprint";
+} from "../tests/support/dev-fingerprint";
 
 loadEnvConfig(process.cwd());
 
 const BASE_URL = "http://127.0.0.1:3000";
+const SCREENSHOTS_DIR = path.join(process.cwd(), "docs", "screenshots");
 const ARTIFACT_DIRS = [
-  "D:/checklists/docs/screenshots",
-  "C:/Users/IT/.gemini/antigravity/brain/02d0d068-7aca-4947-b736-df0206d0d0f0",
-  "C:/Users/IT/.gemini/antigravity/brain/f82be7e3-df8b-4a7e-98be-7c2620afe20a",
-  "C:/Users/IT/.gemini/antigravity/brain/57a8a860-fce2-456f-9e82-733239fb2819"
+  SCREENSHOTS_DIR,
 ];
 for (const dir of ARTIFACT_DIRS) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
-const REF_DIR = "d:/checklists/docs/referance";
+const REF_DIR = path.join(process.cwd(), "docs", "referance");
 const TEST_SLUG = "e2e-visual-test";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -29,7 +27,7 @@ const adminEmail = process.env.E2E_ADMIN_EMAIL || "";
 const adminPassword = process.env.E2E_ADMIN_PASSWORD || "";
 
 function shot(name: string) {
-  return path.join("D:/checklists/docs/screenshots", name);
+  return path.join(SCREENSHOTS_DIR, name);
 }
 
 function syncArtifacts(name: string) {
@@ -709,7 +707,7 @@ async function main() {
     cspViolations.push(...v1, ...v2);
 
     // Sync all generated screenshots to all artifact directories
-    const shotFiles = fs.readdirSync("D:/checklists/docs/screenshots");
+    const shotFiles = fs.existsSync(SCREENSHOTS_DIR) ? fs.readdirSync(SCREENSHOTS_DIR) : [];
     for (const f of shotFiles) {
       if (f.endsWith(".png") || f.endsWith(".jpg") || f.endsWith(".json")) {
         syncArtifacts(f);

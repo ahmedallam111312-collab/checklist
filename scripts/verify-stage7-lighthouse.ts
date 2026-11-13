@@ -6,16 +6,13 @@ import { createClient } from "@supabase/supabase-js";
 import {
   captureDevFingerprint,
   compareDevFingerprints,
-} from "d:/checklists/tests/support/dev-fingerprint";
+} from "../tests/support/dev-fingerprint";
 
 loadEnvConfig(process.cwd());
 
 const BASE_URL = "http://127.0.0.1:3000";
 const REPORTS_DIRS = [
   path.join(process.cwd(), "docs", "lighthouse"),
-  "C:/Users/IT/.gemini/antigravity/brain/02d0d068-7aca-4947-b736-df0206d0d0f0/lh-reports",
-  "C:/Users/IT/.gemini/antigravity/brain/f82be7e3-df8b-4a7e-98be-7c2620afe20a/lh-reports",
-  "C:/Users/IT/.gemini/antigravity/brain/57a8a860-fce2-456f-9e82-733239fb2819/lh-reports",
 ];
 for (const dir of REPORTS_DIRS) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
