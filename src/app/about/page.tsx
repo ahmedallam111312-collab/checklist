@@ -39,7 +39,10 @@ export default async function AboutPage() {
       <section className="bg-grad-hero surface-navy border-b-[3px] border-rose px-4 py-10 text-white sm:px-6 sm:py-14">
         <div className="mx-auto max-w-[70rem] space-y-4 text-start">
           <div className="flex flex-wrap items-center gap-3">
-            <InstitutionalBadges variant="hero" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-rose/30 bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-rose-light backdrop-blur-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-light animate-pulse" aria-hidden="true" />
+              <span>Cairo University • Faculty of Nursing</span>
+            </div>
             <span className="rounded-pill border border-rose/40 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rose-light">
               Official Academic Platform
             </span>

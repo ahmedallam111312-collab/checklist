@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Home, ClipboardList, Info } from "lucide-react";
-import { Logo } from "@/components/Logo";
-import { InstitutionalBadges } from "@/components/InstitutionalBadges";
 import { CreativeCommonsNotice } from "@/components/CreativeCommonsNotice";
 import { AR_STRINGS } from "@/messages/ar";
 
@@ -14,7 +13,7 @@ interface HeaderProps {
   logoPath?: string | null;
 }
 
-export function Header({ siteName, logoPath }: HeaderProps) {
+export function Header({ siteName = "Critical Ease" }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const menuBtnRef = useRef<HTMLButtonElement>(null);
@@ -63,40 +62,56 @@ export function Header({ siteName, logoPath }: HeaderProps) {
   return (
     <>
       <header className="surface-navy sticky top-0 z-40 h-[64px] w-full border-b-[3px] border-rose bg-navy text-white shadow-sm">
-        <div className="mx-auto flex h-full max-w-[70rem] items-center justify-between gap-2 px-4 sm:px-6">
-          {/* Start (Left): Brand Logo + Institutional Badges (Cairo University & Faculty of Nursing) */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/"
-              aria-label={siteName || "Critical Ease"}
-              className="surface-light inline-flex min-h-[44px] shrink-0 items-center rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-light"
-            >
-              <Logo
-                variant="chip"
-                name={siteName}
-                logoPath={logoPath}
-                width={84}
-                height={46}
+        <div className="mx-auto flex h-full max-w-[70rem] items-center justify-between gap-3 px-4 sm:px-6">
+          {/* Start (Left): Single Unified Master Brand Lockup (Critical Ease + Cairo University + Faculty of Nursing) */}
+          <Link
+            href="/"
+            aria-label={`${siteName} — Cairo University, Faculty of Nursing`}
+            className="surface-light group inline-flex min-h-[46px] items-center gap-2 sm:gap-2.5 rounded-[14px] bg-white px-2.5 sm:px-3 py-1 shadow-sm transition-all hover:shadow-md hover:ring-2 hover:ring-rose/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-light"
+          >
+            {/* Critical Ease Logo */}
+            <Image
+              src="/brand/critical-ease-logo.png"
+              alt={siteName}
+              width={160}
+              height={82}
+              priority
+              className="h-[34px] sm:h-[38px] w-auto object-contain"
+            />
+
+            {/* Vertical Hairline Divider */}
+            <div className="h-6 w-[1px] bg-gray-200" aria-hidden="true" />
+
+            {/* Institutional Logos: Cairo University Shield + Faculty of Nursing Seal */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Image
+                src="/brand/cairo-university-shield.png"
+                alt="Cairo University Emblem"
+                width={50}
+                height={42}
                 priority
-                className="h-[42px] w-auto rounded-[12px]"
+                className="h-[30px] sm:h-[34px] w-auto max-w-[40px] object-contain"
               />
-            </Link>
+              <Image
+                src="/brand/faculty-nursing-cairo.png"
+                alt="Faculty of Nursing Logo — Cairo University"
+                width={42}
+                height={42}
+                priority
+                className="h-[30px] sm:h-[34px] w-auto max-w-[34px] object-contain"
+              />
+            </div>
 
-            {/* University & Faculty of Nursing Logos on Every Page */}
-            <InstitutionalBadges variant="header" />
-
-            <Link
-              href="/home"
-              className={`squircle-pill hidden sm:inline-flex min-h-[40px] items-center gap-2 border px-3 text-sm font-semibold transition-colors ${
-                isHomeActive
-                  ? "border-rose bg-white/15 text-white"
-                  : "border-white/25 bg-white/10 text-white hover:border-rose/70 hover:bg-white/15"
-              }`}
-            >
-              <Home className="h-4 w-4 text-rose-light" aria-hidden="true" />
-              <span>{AR_STRINGS.home}</span>
-            </Link>
-          </div>
+            {/* Desktop Institutional Typography (>= 1120px) */}
+            <div className="hidden min-[1120px]:flex flex-col text-start leading-none justify-center border-l border-gray-200 pl-2">
+              <span className="text-[11px] font-bold text-navy">
+                Cairo University
+              </span>
+              <span className="text-[10px] font-semibold text-rose-dark mt-0.5">
+                Faculty of Nursing
+              </span>
+            </div>
+          </Link>
 
           {/* Desktop Navigation Pills (>= md) */}
           <nav
@@ -116,7 +131,7 @@ export function Header({ siteName, logoPath }: HeaderProps) {
                   href={link.href}
                   className={`squircle-pill inline-flex min-h-[40px] items-center gap-2 border px-4 text-sm font-semibold transition-colors ${
                     isActive
-                      ? "border-rose bg-rose text-navy font-bold"
+                      ? "border-rose bg-rose text-navy font-bold shadow-xs"
                       : "border-white/20 bg-white/5 text-white hover:border-rose/60 hover:bg-white/10"
                   }`}
                 >
@@ -171,16 +186,29 @@ export function Header({ siteName, logoPath }: HeaderProps) {
           <aside className="surface-navy fixed inset-y-0 right-0 flex w-[min(85vw,340px)] flex-col justify-between border-l-[3px] border-rose bg-navy p-5 text-white shadow-2xl safe-pt safe-pb">
             <div>
               <div className="flex items-center justify-between border-b border-rose/40 pb-4">
-                <div className="flex items-center gap-2">
-                  <Logo
-                    variant="chip"
-                    name={siteName}
-                    logoPath={logoPath}
-                    width={84}
-                    height={46}
-                    className="h-[38px] w-auto rounded-[10px]"
+                <div className="flex items-center gap-2 rounded-[12px] bg-white p-2 shadow-sm">
+                  <Image
+                    src="/brand/critical-ease-logo.png"
+                    alt={siteName}
+                    width={80}
+                    height={40}
+                    className="h-[30px] w-auto object-contain"
                   />
-                  <InstitutionalBadges variant="header" />
+                  <div className="h-5 w-[1px] bg-gray-200" aria-hidden="true" />
+                  <Image
+                    src="/brand/cairo-university-shield.png"
+                    alt="Cairo University"
+                    width={32}
+                    height={28}
+                    className="h-[26px] w-auto object-contain"
+                  />
+                  <Image
+                    src="/brand/faculty-nursing-cairo.png"
+                    alt="Faculty of Nursing"
+                    width={28}
+                    height={28}
+                    className="h-[26px] w-auto object-contain"
+                  />
                 </div>
                 <button
                   ref={closeBtnRef}

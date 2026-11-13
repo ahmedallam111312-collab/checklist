@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Activity, Heart } from "lucide-react";
-import { InstitutionalBadges } from "@/components/InstitutionalBadges";
 import { BRAND } from "@/config/brand";
 
 interface HeroScrollSceneProps {
@@ -232,9 +231,12 @@ export function HeroScrollScene({
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
             {/* Hero Text Column (Always opaque in SSR HTML) */}
             <div className="lg:col-span-6 text-start space-y-5">
-              <div className="flex flex-col items-start gap-2.5">
-                <InstitutionalBadges variant="hero" />
-                <p className="text-xs font-bold uppercase tracking-wider text-rose-light">
+              <div className="flex flex-col items-start gap-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-rose/30 bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-rose-light backdrop-blur-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-light animate-pulse" aria-hidden="true" />
+                  <span>Cairo University • Faculty of Nursing</span>
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-text-muted-navy">
                   {heroEyebrow}
                 </p>
               </div>
