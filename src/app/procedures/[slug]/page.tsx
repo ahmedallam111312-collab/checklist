@@ -10,6 +10,7 @@ import { AccordionSection } from "@/components/AccordionSection";
 import { Checklist } from "@/components/Checklist";
 import { EquipmentList } from "@/components/EquipmentList";
 import { VideoPlayerPlaceholder } from "@/components/VideoPlayerPlaceholder";
+import { getPublicImageUrl } from "@/lib/images/url";
 import {
   getProcedureBySlug,
   getSiteSettings,
@@ -100,7 +101,7 @@ export default async function ProcedureDetailPage({ params }: PageProps) {
                 style={{ viewTransitionName: `procedure-cover-${procedure.slug}` }}
               >
                 <Image
-                  src={procedure.cover_path}
+                  src={getPublicImageUrl(procedure.cover_path) || procedure.cover_path}
                   alt={procedure.cover_alt || procedure.title}
                   fill
                   priority

@@ -13,6 +13,7 @@ import { AccordionSection } from "@/components/AccordionSection";
 import { Checklist } from "@/components/Checklist";
 import { EquipmentList } from "@/components/EquipmentList";
 import { VideoPlayerPlaceholder } from "@/components/VideoPlayerPlaceholder";
+import { getPublicImageUrl } from "@/lib/images/url";
 import { AR_STRINGS } from "@/messages/ar";
 
 interface PreviewPageProps {
@@ -134,7 +135,7 @@ export default async function AdminDraftPreviewPage({ params }: PreviewPageProps
           {procedure.cover_path && (
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[22px] border border-rose/40 bg-navy/90 shadow-card-soft lg:col-span-5">
               <Image
-                src={procedure.cover_path}
+                src={getPublicImageUrl(procedure.cover_path) || procedure.cover_path}
                 alt={procedure.cover_alt || procedure.title}
                 fill
                 priority

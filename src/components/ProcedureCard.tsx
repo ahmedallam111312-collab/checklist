@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Activity } from "lucide-react";
 import { Procedure } from "@/types/database";
 import { AR_STRINGS } from "@/messages/ar";
+import { getPublicImageUrl } from "@/lib/images/url";
 
 interface ProcedureCardProps {
   procedure: Procedure;
@@ -14,6 +15,8 @@ interface ProcedureCardProps {
 
 export function ProcedureCard({ procedure }: ProcedureCardProps) {
   const router = useRouter();
+  const [imageError, setImageError] = useState(false);
+  const coverUrl = !imageError ? getPublicImageUrl(procedure.cover_path) : null;
 
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (
@@ -40,15 +43,16 @@ export function ProcedureCard({ procedure }: ProcedureCardProps) {
         className="relative aspect-[16/10] w-full overflow-hidden rounded-[20px] border border-white/10 bg-navy/90"
         style={{ viewTransitionName: `procedure-cover-${procedure.slug}` }}
       >
-        {procedure.cover_path ? (
+        {coverUrl ? (
           <Image
-            src={procedure.cover_path}
+            src={coverUrl}
             alt={procedure.cover_alt || procedure.title}
             fill
             placeholder={procedure.blur_data_url ? "blur" : "empty"}
             blurDataURL={procedure.blur_data_url || undefined}
             sizes="(max-width: 767px) 100vw, (max-width: 1099px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-navy to-plum/80 text-rose-light transition-transform duration-300 group-hover:scale-105">

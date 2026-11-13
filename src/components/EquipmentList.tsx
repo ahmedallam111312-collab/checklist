@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import { EquipmentItem } from "@/types/database";
 import { AR_STRINGS } from "@/messages/ar";
+import { getPublicImageUrl } from "@/lib/images/url";
 
 interface EquipmentListProps {
   items: EquipmentItem[];
@@ -82,7 +83,7 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
       <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-white">
         {items.map((item) => {
           const isChecked = checkedIds.has(item.id);
-          const imageSrc = item.image_path || item.photo_path;
+          const imageSrc = getPublicImageUrl(item.image_path || item.photo_path);
 
           return (
             <div

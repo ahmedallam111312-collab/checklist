@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { resizeImageToWebP } from "@/lib/images/resizer";
+import { getPublicImageUrl } from "@/lib/images/url";
 import { uploadImageAction, deleteImageAction } from "@/app/admin/actions/storage";
 import { AR_STRINGS } from "@/messages/ar";
 
@@ -23,7 +24,7 @@ export function ImageUploader({
   label = AR_STRINGS.fieldCoverImage,
 }: ImageUploaderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    currentPath ? `/api/image-proxy?path=${encodeURIComponent(currentPath)}` : null
+    currentPath ? getPublicImageUrl(currentPath) : null
   );
   const [altText, setAltText] = useState(currentAlt || "");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,14 +32,7 @@ export function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper to format public image URL
-  const getDisplayUrl = (path: string | null) => {
-    if (!path) return null;
-    if (path.startsWith("blob:") || path.startsWith("data:") || path.startsWith("http")) {
-      return path;
-    }
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    return `${supabaseUrl}/storage/v1/object/public/site-images/${path}`;
-  };
+  const getDisplayUrl = (path: string | null) => getPublicImageUrl(path);
 
   const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
