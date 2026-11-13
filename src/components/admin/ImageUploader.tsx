@@ -54,17 +54,17 @@ export function ImageUploader({
         formData.append("oldPath", currentPath);
       }
 
-      // 3. Upload via server action (enforcing admin auth & RLS)
+      // 3. Upload via server action
       const result = await uploadImageAction(formData);
 
       if (result.error || !result.path) {
-        setErrorMessage(result.error || "فشل رفع الصورة إلى الخادم.");
+        setErrorMessage(result.error || "Failed to upload image to storage server.");
         setPreviewUrl(getDisplayUrl(currentPath));
       } else {
         onImageChanged(result.path, altText, blurDataUrl);
       }
     } catch (err: any) {
-      setErrorMessage(err.message || "حدث خطأ أثناء معالجة الصورة.");
+      setErrorMessage(err.message || "An error occurred while processing image.");
       setPreviewUrl(getDisplayUrl(currentPath));
     } finally {
       setIsProcessing(false);
@@ -105,7 +105,7 @@ export function ImageUploader({
             <div className="relative mx-auto h-48 w-full max-w-md overflow-hidden rounded-lg border border-border-subtle bg-white">
               <Image
                 src={activeDisplayUrl}
-                alt={altText || "معاينة الصورة المرفوعة"}
+                alt={altText || "Uploaded image preview"}
                 fill
                 unoptimized
                 className="object-contain"
@@ -125,7 +125,7 @@ export function ImageUploader({
                 className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-border bg-white px-4 py-2 text-xs font-bold text-navy transition-colors hover:border-rose-dark hover:text-rose-dark"
               >
                 <Upload className="h-4 w-4" aria-hidden="true" />
-                <span>تغيير الصورة</span>
+                <span>Change Image</span>
               </button>
 
               <button
@@ -135,7 +135,7 @@ export function ImageUploader({
                 className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-danger/30 bg-danger-surface px-4 py-2 text-xs font-bold text-danger transition-colors hover:bg-danger hover:text-white"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
-                <span>إزالة الصورة</span>
+                <span>Remove Image</span>
               </button>
             </div>
           </div>
@@ -143,10 +143,10 @@ export function ImageUploader({
           <div className="py-6">
             <ImageIcon className="mx-auto h-10 w-10 text-text-secondary" />
             <p className="mt-2 text-sm font-semibold text-navy">
-              اسحب الصورة وأفلتها هنا، أو اضغط للاختيار
+              Drag and drop image here, or click to browse
             </p>
             <p className="mt-1 text-xs text-text-secondary">
-              يدعم JPEG أو PNG أو WebP بحد أقصى 5 ميجابايت (يتم ضغطها إلى WebP بحجم أقل من 2 ميجابايت تلقائيًا)
+              Supports JPEG, PNG, or WebP up to 5 MB (optimized automatically to WebP under 2 MB)
             </p>
 
             <button
@@ -158,12 +158,12 @@ export function ImageUploader({
               {isProcessing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>جاري المعالجة والرفع...</span>
+                  <span>Processing and uploading...</span>
                 </>
               ) : (
                 <>
                   <Upload className="h-4 w-4" />
-                  <span>اختيار ملف</span>
+                  <span>Choose Image File</span>
                 </>
               )}
             </button>
@@ -192,14 +192,14 @@ export function ImageUploader({
           htmlFor="cover_alt_input"
           className="block text-xs font-semibold text-text-secondary mb-1.5"
         >
-          النص البديل (200 حرف كحد أقصى)
+          Image Alt Text (max 200 characters)
         </label>
         <input
           id="cover_alt_input"
           type="text"
           value={altText}
           onChange={handleAltChange}
-          placeholder="وصف الصورة لقارئ الشاشة..."
+          placeholder="Describe the image for screen readers..."
           maxLength={200}
           className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
         />

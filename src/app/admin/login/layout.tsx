@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Critical Ease: دخول الإدارة",
+    absolute: "Admin Sign In | Critical Ease",
   },
   robots: {
     index: false,

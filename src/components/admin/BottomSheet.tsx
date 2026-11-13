@@ -109,7 +109,7 @@ export function BottomSheet({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={title || "نافذة منبثقة"}
+      aria-label={title || "Dialog"}
       className="surface-light fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-navy/60 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -138,13 +138,13 @@ export function BottomSheet({
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3 sm:px-6">
-          <h2 className="text-base sm:text-lg font-bold text-navy truncate font-arabic">
+          <h2 className="text-base sm:text-lg font-bold text-navy truncate">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            aria-label="إغلاق"
+            aria-label="Close"
             className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill text-text-secondary hover:text-navy hover:bg-light-1 transition-colors"
           >
             <X className="h-5 w-5" aria-hidden="true" />

@@ -114,7 +114,7 @@ export function AdminHeader() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
             aria-controls="admin-mobile-menu"
-            aria-label={mobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             className="sm:hidden squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-rose/40 bg-white/10 text-white transition-colors hover:border-rose hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-light"
           >
             {mobileMenuOpen ? (

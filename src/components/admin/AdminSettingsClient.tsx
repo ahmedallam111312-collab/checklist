@@ -184,12 +184,12 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             onChange={(e) => handleChange("hero_title", e.target.value.slice(0, 300))}
             className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
-          <p className="mt-1 type-caption text-text-secondary font-arabic leading-relaxed">
-            العنوان الرئيسي المعروض في واجهة الصفحة الرئيسية (الافتراضي: &quot;مرحبًا بك في Critical Ease&quot;). عند احتواء العنوان على اسم المنصة، يتم عزله وتنسيقه بلوني الهوية البصرية تلقائيًا.
+          <p className="mt-1 type-caption text-text-secondary leading-relaxed">
+            Main headline displayed on the homepage hero (Default: &quot;Welcome to Critical Ease&quot;). When containing the platform name, brand colors are automatically applied.
           </p>
         </div>
 
-        {/* Hero Description (Arabic RTL) */}
+        {/* Hero Description */}
         <div>
           <label
             htmlFor="setting_hero_desc"
@@ -207,7 +207,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
           />
         </div>
 
-        {/* Hero CTA (Arabic RTL) */}
+        {/* Hero CTA */}
         <div>
           <label
             htmlFor="setting_hero_cta"
@@ -225,7 +225,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
           />
         </div>
 
-        {/* Footer Text (Arabic RTL) */}
+        {/* Footer Text */}
         <div>
           <label
             htmlFor="setting_footer_text"
@@ -243,7 +243,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
               e.target.style.height = "auto";
               e.target.style.height = `${e.target.scrollHeight}px`;
             }}
-            placeholder="قسم تمريض الحالات الحرجة والطوارئ — جميع الحقوق محفوظة."
+            placeholder="Department of Critical Care and Emergency Nursing — All rights reserved."
             className="w-full min-h-[60px] rounded-lg border border-border bg-search-bg p-3 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 resize-none"
           />
           {/* Live character counter aligned to end under field */}
@@ -252,8 +252,8 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
               {settings.footer_text.length}/300
             </span>
           </div>
-          <p className="mt-1 type-caption text-text-secondary font-arabic leading-relaxed">
-            إذا تم مسح هذا الحقل بالكامل، فلن يتم عرض أي تذييل على الموقع العام.
+          <p className="mt-1 type-caption text-text-secondary leading-relaxed">
+            If this field is empty, no custom footer notice will be displayed on the public site.
           </p>
         </div>
 
@@ -265,8 +265,8 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             folder="logos"
             onImageChanged={handleLogoChanged}
           />
-          <p className="mt-2 type-caption text-text-secondary font-arabic leading-relaxed">
-            عند رفع شعار، سيحل محل الشعار الافتراضي واسم المنصة. يمكن حذفه للعودة إلى الشعار الافتراضي.
+          <p className="mt-2 type-caption text-text-secondary leading-relaxed">
+            Uploading a custom logo will replace the platform emblem. Remove it anytime to restore the default logo.
           </p>
         </div>
 

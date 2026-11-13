@@ -18,11 +18,11 @@ export function DisabledTab({ title, phaseNote }: DisabledTabProps) {
         {title}
       </h3>
 
-      <div className="mt-2 inline-flex items-center rounded-full border border-rose/30 bg-light-1 px-3 py-1 text-xs font-bold text-rose-dark font-arabic">
+      <div className="mt-2 inline-flex items-center rounded-full border border-rose/30 bg-light-1 px-3 py-1 text-xs font-bold text-rose-dark">
         {AR_STRINGS.tabComingSoon}
       </div>
 
-      <p className="mt-3 text-sm text-text-secondary font-arabic max-w-md mx-auto">
+      <p className="mt-3 text-sm text-text-secondary max-w-md mx-auto">
         {phaseNote}
       </p>
     </div>

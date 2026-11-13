@@ -33,7 +33,7 @@ const MuxPlayer = dynamic(() => import("@mux/mux-player-react"), {
   ssr: false,
   loading: () => (
     <div className="w-full aspect-video rounded-tile bg-light-1 flex items-center justify-center animate-pulse text-xs text-text-secondary">
-      جارٍ تحميل مشغل الفيديو...
+      Loading video player...
     </div>
   ),
 });
@@ -166,7 +166,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
         setDurationSeconds(30);
       } else if (stateOverride === "error") {
         setStatus("errored");
-        setVideoError("تعذر إكمال معالجة ملف الفيديو في Mux. يرجى إعادة المحاولة.");
+        setVideoError("Unable to complete video processing on Mux. Please retry.");
       } else if (stateOverride === "delete_confirm") {
         setStatus("ready");
         setPlaybackId("2DVqQg8Y84Zah00xlfHBTDB009TIm2xuvOchkbtDmquYQ");
@@ -227,7 +227,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
       } else if (res.videoStatus === "errored") {
         setFeedback({
           type: "error",
-          message: res.videoError || "فشلت معالجة الفيديو في Mux.",
+          message: res.videoError || "Video processing failed on Mux.",
         });
       }
     }
@@ -252,7 +252,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
     if (file.size > MAX_BYTES) {
       setFeedback({
         type: "error",
-        message: "حجم الملف يتجاوز الحد الأقصى المسموح به (500 ميجابايت).",
+        message: "File size exceeds the maximum limit of 500 MB.",
       });
       return;
     }
@@ -282,7 +282,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
         setIsUploading(false);
         setFeedback({
           type: "error",
-          message: res.error || "فشل الحصول على رابط الرفع.",
+          message: res.error || "Failed to obtain video upload URL.",
         });
         return;
       }
@@ -308,7 +308,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
         setSelectedFile(null);
         setFeedback({
           type: "success",
-          message: "اكتمل الرفع بنجاح. جارٍ المعالجة في Mux...",
+          message: "Upload completed successfully. Processing video on Mux...",
         });
         // Immediately trigger first poll
         setTimeout(runPoll, 1000);
@@ -317,10 +317,10 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
       upload.on("error", (err: any) => {
         setIsUploading(false);
         setStatus("errored");
-        setVideoError(err.detail?.message || "انقطع الاتصال أثناء الرفع.");
+        setVideoError(err.detail?.message || "Connection lost during upload.");
         setFeedback({
           type: "error",
-          message: "حدث خطأ أثناء رفع الفيديو. يرجى المحاولة مرة أخرى.",
+          message: "An error occurred while uploading video. Please try again.",
         });
       });
     } catch (err: any) {
@@ -328,7 +328,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
       setStatus("errored");
       setFeedback({
         type: "error",
-        message: err.message || "فشلت عملية الرفع.",
+        message: err.message || "Upload failed.",
       });
     }
   };
@@ -344,7 +344,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
     setUploadPercent(0);
     setFeedback({
       type: "error",
-      message: "تم إلغاء عملية الرفع.",
+      message: "Upload cancelled.",
     });
   };
 
@@ -367,7 +367,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
         setIsDeleteDialogOpen(false);
         setFeedback({
           type: "success",
-          message: "تم حذف الفيديو بنجاح من Mux ومن الإجراء.",
+          message: "Video deleted successfully from Mux and procedure.",
         });
         onProcedureUpdated?.({
           video_status: "none",
@@ -379,7 +379,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
     } catch (err: any) {
       setFeedback({
         type: "error",
-        message: err.message || "حدث خطأ غير متوقع أثناء حذف الفيديو.",
+        message: err.message || "An unexpected error occurred while deleting video.",
       });
     } finally {
       setIsDeleting(false);
@@ -397,7 +397,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
   if (!configLoaded) {
     return (
       <div className="p-8 text-center text-xs text-text-secondary animate-pulse">
-        جاري فحص إعدادات Mux...
+        Checking Mux configuration...
       </div>
     );
   }
@@ -437,8 +437,8 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border-subtle bg-light-1 p-3.5 text-xs text-text-secondary text-right" dir="rtl">
-          يرجى تهيئة مفاتيح واجهة الفيديو في إعدادات خادم الإنتاج لتفعيل ميزة رفع المقاطع. راجع دليل النشر للحصول على التعليمات.
+        <div className="rounded-lg border border-border-subtle bg-light-1 p-3.5 text-xs text-text-secondary">
+          Please configure video API credentials in production server environment variables to enable video uploads. See deployment guide for instructions.
         </div>
       </div>
     );
@@ -585,7 +585,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
           {/* Progress track */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-bold text-text-secondary">
-              <span>نسبة الرفع المباشر:</span>
+              <span>Direct upload progress:</span>
               <span className="font-mono text-navy">{uploadPercent}%</span>
             </div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-white border border-border-subtle">
@@ -654,10 +654,10 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
           {/* Video Preview Box (16:9 reserved aspect ratio, Light Theme) */}
           <div className="w-full aspect-video rounded-tile overflow-hidden bg-light-1 border border-border-subtle shadow-sm" dir="ltr" lang="en">
             {adminPlayerError ? (
-              <div dir="rtl" lang="ar" className="w-full h-full flex flex-col items-center justify-center text-center p-6 gap-3 bg-light-1">
+              <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 gap-3 bg-light-1">
                 <AlertCircle className="h-8 w-8 text-danger" />
-                <p className="text-sm sm:text-base font-bold font-arabic text-danger">
-                  تعذر تشغيل الفيديو
+                <p className="text-sm sm:text-base font-bold text-danger">
+                  Unable to play video
                 </p>
                 <button
                   type="button"
@@ -668,16 +668,16 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
                   className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-danger/40 bg-danger-surface px-4 py-2 text-xs font-bold text-danger hover:bg-danger hover:text-white transition-colors"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  <span>إعادة المحاولة</span>
+                  <span>Retry</span>
                 </button>
               </div>
             ) : loadingAdminToken ? (
-              <div dir="rtl" lang="ar" className="w-full h-full flex flex-col items-center justify-center animate-pulse bg-light-1 p-6 space-y-3">
+              <div className="w-full h-full flex flex-col items-center justify-center animate-pulse bg-light-1 p-6 space-y-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white border border-border-subtle">
                   <Loader2 className="h-6 w-6 text-rose-dark animate-spin" />
                 </div>
-                <p className="text-xs text-text-secondary font-arabic">
-                  جارٍ تحميل مشغل الفيديو...
+                <p className="text-xs text-text-secondary">
+                  Loading video player...
                 </p>
               </div>
             ) : playbackId && adminToken ? (
@@ -705,9 +705,9 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
                 }}
               />
             ) : (
-              <div dir="rtl" lang="ar" className="w-full h-full flex flex-col items-center justify-center text-text-secondary gap-2">
+              <div className="w-full h-full flex flex-col items-center justify-center text-text-secondary gap-2">
                 <Play className="h-8 w-8 text-rose-dark" />
-                <span className="text-xs font-semibold">المعاينة المباشرة جاهزة</span>
+                <span className="text-xs font-semibold">Live preview ready</span>
               </div>
             )}
           </div>
@@ -746,9 +746,9 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
           <div className="flex items-start gap-3 text-danger">
             <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h4 data-testid="video-heading-error" className="text-[16px] sm:text-[17px] font-bold">حدث خطأ في معالجة الفيديو</h4>
+              <h4 data-testid="video-heading-error" className="text-[16px] sm:text-[17px] font-bold">Video processing error</h4>
               <p data-testid="video-supporting-error" className="type-caption text-[13px] sm:text-[14px] text-danger">
-                {videoError || "فشلت معالجة ملف الفيديو في Mux."}
+                {videoError || "Video processing failed on Mux."}
               </p>
             </div>
           </div>
@@ -760,7 +760,7 @@ export function VideoTab({ procedure, onProcedureUpdated }: VideoTabProps) {
               className="squircle-pill inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-danger px-4 py-2 text-xs font-bold text-white transition-transform active:scale-95"
             >
               <RotateCcw className="h-4 w-4" />
-              <span>إعادة الرفع</span>
+              <span>Re-upload</span>
             </button>
           </div>
         </div>

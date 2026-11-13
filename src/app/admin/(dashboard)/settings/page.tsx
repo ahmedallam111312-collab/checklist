@@ -1,13 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getSiteSettings } from "@/lib/data";
 import { AdminSettingsClient } from "@/components/admin/AdminSettingsClient";
 import { AR_STRINGS } from "@/messages/ar";
 
 export const metadata: Metadata = {
-  title: "إعدادات المنصة | Critical Ease",
+  title: "Platform Settings | Critical Ease",
 };
 
 export default async function AdminSettingsPage() {
@@ -20,7 +20,7 @@ export default async function AdminSettingsPage() {
           href="/admin"
           className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-dark hover:underline transition-colors"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" />
           <span>{AR_STRINGS.adminBackToDashboard}</span>
         </Link>
       </div>
@@ -29,8 +29,8 @@ export default async function AdminSettingsPage() {
         <h1 className="type-h1 text-navy">
           {AR_STRINGS.adminSettings}
         </h1>
-        <p className="mt-1 text-sm text-text-secondary font-arabic">
-          تعديل النصوص الأساسية للمنصة، نصوص الواجهة والصفحة الرئيسية، وشعار الموقع.
+        <p className="mt-1 text-sm text-text-secondary">
+          Configure platform branding, homepage hero copy, and custom logo.
         </p>
       </div>
 

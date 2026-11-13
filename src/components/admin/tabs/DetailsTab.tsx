@@ -136,7 +136,7 @@ export function DetailsTab({
             <FormattedLabel text={AR_STRINGS.fieldSlug} /> <span className="text-[var(--color-danger)]">*</span>
           </label>
           <span className="text-xs text-[var(--color-text-muted)]">
-            مستخدم في رابط URL
+            Used in URL address
           </span>
         </div>
         <div className="relative">
@@ -225,7 +225,7 @@ export function DetailsTab({
                   setIsDirty(true);
                   if (!nextVal) {
                     showUndoToast({
-                      message: "تم إلغاء نشر الإجراء",
+                      message: "Procedure unpublished (set to draft)",
                       durationMs: 8000,
                       onUndo: () => {
                         setPublished(true);
@@ -250,8 +250,8 @@ export function DetailsTab({
           </div>
 
           {/* Full-width Description & Empty Warning */}
-          <p className="text-xs text-text-secondary font-arabic leading-relaxed">
-            عند التفعيل، سيظهر الإجراء في مكتبة الطلاب العامة ومحرك البحث فورًا.
+          <p className="text-xs text-text-secondary leading-relaxed">
+            When enabled, this procedure will appear immediately in the public student library and search.
           </p>
 
           {published && hasEmptyContent && (

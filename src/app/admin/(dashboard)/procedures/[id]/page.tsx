@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowRight, Eye } from "lucide-react";
+import { ArrowLeft, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/data";
 import { DEMO_PROCEDURES } from "@/data/demo-data";
@@ -17,7 +17,7 @@ interface EditProcedurePageProps {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "تعديل الإجراء | Critical Ease",
+  title: "Edit Procedure | Critical Ease",
 };
 
 export default async function EditProcedurePage({ params }: EditProcedurePageProps) {
@@ -77,7 +77,7 @@ export default async function EditProcedurePage({ params }: EditProcedurePagePro
           href="/admin"
           className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-dark hover:underline transition-colors"
         >
-          <ArrowRight className="h-4 w-4 icon-mirror" />
+          <ArrowLeft className="h-4 w-4" />
           <span>{AR_STRINGS.adminBackToDashboard}</span>
         </Link>
 

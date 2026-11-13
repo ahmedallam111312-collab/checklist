@@ -58,7 +58,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
     }
     setProcedures((prev) => prev.filter((p) => p.id !== deletingProc.id));
     setDeletingProc(null);
-    setFeedback({ type: "success", message: "تم حذف الإجراء بنجاح." });
+    setFeedback({ type: "success", message: "Procedure deleted successfully." });
   };
 
   return (
@@ -92,7 +92,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
               {isSaving ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>جاري حفظ الترتيب...</span>
+                  <span>Saving order...</span>
                 </>
               ) : (
                 <>
@@ -122,8 +122,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
           items={procedures}
           onReorder={handleReorder}
           renderItem={(proc, index) => {
-            const dateStr = new Date(proc.updated_at).toLocaleDateString("ar-EG", {
-              numberingSystem: "latn",
+            const dateStr = new Date(proc.updated_at).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -180,8 +179,8 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                   {/* Edit Procedure Link */}
                   <Link
                     href={`/admin/procedures/${proc.id}`}
-                    title="تعديل الإجراء"
-                    aria-label={`تعديل: ${proc.title}`}
+                    title="Edit procedure"
+                    aria-label={`Edit: ${proc.title}`}
                     className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border-subtle bg-light-1 text-text-secondary transition-colors hover:border-rose-dark hover:text-rose-dark"
                   >
                     <Edit3 className="h-4 w-4" aria-hidden="true" />

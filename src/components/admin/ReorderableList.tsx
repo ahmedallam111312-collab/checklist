@@ -93,7 +93,7 @@ export function ReorderableList<T extends ReorderableItem>({
               className={`hidden cursor-grab active:cursor-grabbing sm:flex h-11 w-8 shrink-0 items-center justify-center text-text-secondary hover:text-navy ${
                 stackedOnMobile ? "mt-0.5" : ""
               }`}
-              title="سحب للترتيب"
+              title="Drag to reorder"
               aria-hidden="true"
             >
               <GripVertical className="h-5 w-5" />

@@ -221,7 +221,7 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
           ref={navRef}
           role="tablist"
           className="flex items-center gap-1.5 overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x px-2 py-0.5 no-scrollbar"
-          aria-label="أقسام تعديل الإجراء"
+          aria-label="Procedure Editor Tabs"
         >
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -302,7 +302,7 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
 
         {activeTab === "video" && !procedure && (
           <div className="p-6 text-center text-xs text-[var(--color-text-secondary)]">
-            يرجى حفظ البيانات الأساسية للإجراء أولاً قبل رفع الفيديو.
+            Please save basic procedure details first before uploading video.
           </div>
         )}
       </div>

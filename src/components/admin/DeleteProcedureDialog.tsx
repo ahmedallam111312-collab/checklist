@@ -64,7 +64,7 @@ export function DeleteProcedureDialog({
     try {
       await onConfirm();
     } catch (err: any) {
-      setError(err.message || "فشل حذف الإجراء.");
+      setError(err.message || "Failed to delete procedure.");
       setIsDeleting(false);
     }
   };
@@ -146,7 +146,7 @@ export function DeleteProcedureDialog({
               {isDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>جاري الحذف...</span>
+                  <span>Deleting...</span>
                 </>
               ) : (
                 <span>{AR_STRINGS.deleteConfirmButton}</span>

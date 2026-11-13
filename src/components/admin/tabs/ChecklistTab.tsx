@@ -169,7 +169,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
     markDirty(updated);
 
     showUndoToast({
-      message: "تم حذف الخطوة",
+      message: "Checklist step deleted",
       durationMs: 8000,
       onUndo: () => {
         const restored = [...updated];
@@ -219,7 +219,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
     const errors: Record<number, string> = {};
     steps.forEach((step, idx) => {
       if (!step.text_en || step.text_en.trim() === "") {
-        errors[idx] = "نص الخطوة بالإنجليزية مطلوب";
+        errors[idx] = "Step text in English is required";
       }
     });
 
@@ -227,7 +227,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
       setFieldErrors(errors);
       setFeedback({
         type: "error",
-        message: "يرجى كتابة نص الخطوة باللغة الإنجليزية لكافة الخطوات قبل الحفظ.",
+        message: "Please provide English step text for all steps before saving.",
       });
       return;
     }
@@ -271,7 +271,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
     // If replace mode, verify title confirmation
     if (importMode === "replace") {
       if (replaceConfirmInput.trim().toLowerCase() !== procedure.title.trim().toLowerCase()) {
-        alert("عنوان الإجراء المدخل غير متطابق مع عنوان الإجراء الحالي.");
+        alert("The entered confirmation title does not match the procedure title.");
         return;
       }
     }
@@ -294,7 +294,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
     }
 
     if (nextSteps.length > 200) {
-      alert("العدد الإجمالي للخطوات بعد الاستيراد سيتجاوز 200 خطوة (الحد الأقصى).");
+      alert("Total steps after import will exceed the maximum limit of 200 steps.");
       return;
     }
 
@@ -346,13 +346,13 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
               <CheckSquare className="h-4 w-4 text-rose-dark" />
               <span>{AR_STRINGS.checklistTitle}</span>
             </h2>
-            <div className="flex items-center gap-2.5 mt-1 text-xs text-text-secondary font-arabic flex-wrap">
+            <div className="flex items-center gap-2.5 mt-1 text-xs text-text-secondary flex-wrap">
               <span>
-                إجمالي الخطوات: <bdi className="font-mono font-bold text-navy">{steps.length}</bdi> / 200
+                Total Steps: <bdi className="font-mono font-bold text-navy">{steps.length}</bdi> / 200
               </span>
               <span>•</span>
               <span className="text-critical font-bold">
-                الخطوات الحرجة: <bdi className="font-mono">{criticalCount}</bdi>
+                Critical Steps: <bdi className="font-mono">{criticalCount}</bdi>
               </span>
             </div>
           </div>
@@ -386,7 +386,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
           <div className="py-8 text-center border-2 border-dashed border-border rounded-tile bg-light-1/50">
             <CheckSquare className="mx-auto h-8 w-8 text-text-secondary opacity-70" />
             <p className="mt-2 text-sm text-text-secondary">
-              لم تتم إضافة خطوات سريرية بعد. اضغط &quot;إضافة خطوة&quot; أو استخدم &quot;استيراد مجمّع&quot;.
+              No checklist steps added yet. Click &quot;Add Step&quot; or use &quot;Bulk Import&quot; to begin.
             </p>
           </div>
         ) : (
@@ -452,12 +452,12 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                             type="text"
                             list="procedure-phases"
                             maxLength={80}
-                            aria-label={`المرحلة للخطوة ${index + 1}`}
+                            aria-label={`Clinical phase for step ${index + 1}`}
                             value={step.phase || ""}
                             onChange={(e) =>
                               handleStepFieldChange(index, "phase", e.target.value.slice(0, 80))
                             }
-                            placeholder="المرحلة (اختياري)..."
+                            placeholder="Clinical Phase (Optional)..."
                             className="min-h-[44px] w-full sm:w-44 rounded-lg border border-border bg-white px-3 text-xs text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
                           />
                         </div>
@@ -469,8 +469,8 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                         <button
                           type="button"
                           onClick={() => handleAddStepAfter(index)}
-                          title="إضافة خطوة تالية مباشرة"
-                          aria-label={`إضافة خطوة بعد الخطوة ${index + 1}`}
+                          title="Add step immediately after"
+                          aria-label={`Add step after step ${index + 1}`}
                           className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border bg-white text-text-secondary hover:border-rose-dark hover:text-rose-dark"
                         >
                           <Plus className="h-4 w-4" />
@@ -480,8 +480,8 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                         <button
                           type="button"
                           onClick={() => handleDuplicateStep(index)}
-                          title="نسخ الخطوة"
-                          aria-label={`نسخ الخطوة ${index + 1}`}
+                          title="Duplicate step"
+                          aria-label={`Duplicate step ${index + 1}`}
                           className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border bg-white text-text-secondary hover:border-rose-dark hover:text-navy"
                         >
                           <Copy className="h-4 w-4" />
@@ -493,7 +493,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                           disabled={index === 0}
                           onClick={() => handleMoveUp(index)}
                           title={AR_STRINGS.adminMoveUp}
-                          aria-label={`${AR_STRINGS.adminMoveUp} للخطوة ${index + 1}`}
+                          aria-label={`${AR_STRINGS.adminMoveUp} for step ${index + 1}`}
                           className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border bg-white text-text-secondary hover:border-rose-dark hover:text-navy disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                           <ChevronUp className="h-4 w-4" />
@@ -505,7 +505,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                           disabled={index === steps.length - 1}
                           onClick={() => handleMoveDown(index)}
                           title={AR_STRINGS.adminMoveDown}
-                          aria-label={`${AR_STRINGS.adminMoveDown} للخطوة ${index + 1}`}
+                          aria-label={`${AR_STRINGS.adminMoveDown} for step ${index + 1}`}
                           className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border bg-white text-text-secondary hover:border-rose-dark hover:text-navy disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                           <ChevronDown className="h-4 w-4" />
@@ -516,7 +516,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                           type="button"
                           onClick={() => handleDeleteStep(index)}
                           title={AR_STRINGS.deleteStep}
-                          aria-label={`حذف الخطوة ${index + 1}`}
+                          aria-label={`Delete step ${index + 1}`}
                           className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-danger/30 bg-danger-surface text-danger hover:bg-danger hover:text-white transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -559,12 +559,12 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
 
                       {/* Arabic Textarea (Optional) */}
                       <div>
-                        <label htmlFor={`step-text-ar-${index}`} className="block text-xs font-semibold text-text-secondary mb-1 font-arabic">
-                          الترجمة العربية للخطوة (اختياري)
+                        <label htmlFor={`step-text-ar-${index}`} className="block text-xs font-semibold text-text-secondary mb-1">
+                          Arabic Translation (Optional)
                         </label>
                         <textarea
                           id={`step-text-ar-${index}`}
-                          aria-label={`الترجمة العربية للخطوة ${index + 1}`}
+                          aria-label={`Arabic translation for step ${index + 1}`}
                           rows={2}
                           dir="rtl"
                           lang="ar"
@@ -573,7 +573,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                           onChange={(e) =>
                             handleStepFieldChange(index, "text_ar", e.target.value.slice(0, 500))
                           }
-                          placeholder="الترجمة التوضيحية للخطوة باللغة العربية..."
+                          placeholder="Optional Arabic translation for reference..."
                           className="w-full rounded-lg border border-border bg-white p-2.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 leading-relaxed"
                         />
                       </div>
@@ -587,10 +587,10 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
 
         {/* Bottom Save Action Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border-subtle">
-          <div className="text-xs text-text-secondary font-arabic">
+          <div className="text-xs text-text-secondary">
             {dirty && (
               <span className="text-critical font-bold">
-                ● يوجد تعديلات غير محفوظة في قائمة الخطوات
+                ● Unsaved changes in checklist steps
               </span>
             )}
           </div>
@@ -657,7 +657,7 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                   setImportResult(null);
                 }}
                 className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill text-text-secondary hover:bg-light-1 hover:text-navy"
-                aria-label="إغلاق نافذة الاستيراد"
+                aria-label="Close bulk import dialog"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -667,12 +667,12 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
             <div className="p-3 sm:p-6 overflow-y-auto flex-1 space-y-4">
               {/* Import Textarea */}
               <div>
-                <label htmlFor="bulk-import-textarea" className="block text-xs font-semibold text-text-secondary mb-1.5 font-arabic">
-                  الصق أسطر الخطوات هنا (بحد أقصى 200 سطر):
+                <label htmlFor="bulk-import-textarea" className="block text-xs font-semibold text-text-secondary mb-1.5">
+                  Paste step lines here (Max: 200 lines):
                 </label>
                 <textarea
                   id="bulk-import-textarea"
-                  aria-label="نص الخطوات للاستيراد المجمّع"
+                  aria-label="Checklist steps bulk import text"
                   rows={5}
                   dir="ltr"
                   value={importText}
@@ -680,9 +680,9 @@ export function ChecklistTab({ procedure, onDirtyChange }: ChecklistTabProps) {
                     setImportText(e.target.value);
                     setImportResult(null);
                   }}
-                  placeholder={`# Phase Name
-English instruction step | الترجمة العربية
-! Critical step instruction | خطوة حرجة
+                  placeholder={`# Phase Name (Optional)
+English instruction step | Arabic translation (Optional)
+! Critical step instruction | Critical translation
 Another standard step`}
                   className="w-full rounded-lg border border-border bg-search-bg p-3 font-mono text-left text-xs text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
                 />
@@ -717,7 +717,7 @@ Another standard step`}
                       <ul className="list-disc list-inside space-y-0.5 ps-1">
                         {importResult.errors.map((err, i) => (
                           <li key={i}>
-                            <span className="font-bold">السطر {err.line}:</span> {err.message}
+                            <span className="font-bold">Line {err.line}:</span> {err.message}
                           </li>
                         ))}
                       </ul>
@@ -729,12 +729,12 @@ Another standard step`}
                     <div className="rounded-lg border border-critical/40 bg-critical-surface p-3 text-xs text-critical space-y-1.5">
                       <div className="font-bold flex items-center gap-1.5">
                         <AlertTriangle className="h-4 w-4 shrink-0" />
-                        <span>تحذيرات (غير مانعة للاستيراد):</span>
+                        <span>Warnings (non-blocking):</span>
                       </div>
                       <ul className="list-disc list-inside space-y-0.5 ps-1">
                         {importResult.warnings.map((warn, i) => (
                           <li key={i}>
-                            <span className="font-bold">السطر {warn.line}:</span> {warn.message}
+                            <span className="font-bold">Line {warn.line}:</span> {warn.message}
                           </li>
                         ))}
                       </ul>
@@ -748,10 +748,10 @@ Another standard step`}
                         <thead className="bg-light-1 border-b border-border-subtle text-text-secondary">
                           <tr>
                             <th className="p-2 text-start">#</th>
-                            <th className="p-2 text-start">المرحلة</th>
-                            <th className="p-2 text-start">الحالة</th>
-                            <th className="p-2 text-start">النص بالإنجليزية</th>
-                            <th className="p-2 text-start">الترجمة العربية</th>
+                            <th className="p-2 text-start">Phase</th>
+                            <th className="p-2 text-start">Status</th>
+                            <th className="p-2 text-start">English Text</th>
+                            <th className="p-2 text-start">Arabic Text</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-border-subtle">
@@ -764,16 +764,16 @@ Another standard step`}
                               <td className="p-2">
                                 {st.is_critical ? (
                                   <span className="inline-block rounded bg-critical px-1.5 py-0.5 text-[10px] font-bold text-white">
-                                    حرجة
+                                    Critical
                                   </span>
                                 ) : (
-                                  <span className="text-text-secondary text-[10px]">عادية</span>
+                                  <span className="text-text-secondary text-[10px]">Standard</span>
                                 )}
                               </td>
                               <td className="p-2 font-mono text-navy" dir="ltr">
                                 {st.text_en}
                               </td>
-                              <td className="p-2 text-text-secondary font-arabic" dir="rtl">
+                              <td className="p-2 text-text-secondary" dir="rtl">
                                 {st.text_ar || <span className="text-text-secondary">-</span>}
                               </td>
                             </tr>
@@ -819,7 +819,7 @@ Another standard step`}
                         </label>
                         <input
                           id="replace-confirm-title-input"
-                          aria-label="تأكيد عنوان الإجراء للاستبدال الكلي"
+                          aria-label="Confirm procedure title for full replacement"
                           type="text"
                           value={replaceConfirmInput}
                           onChange={(e) => setReplaceConfirmInput(e.target.value)}
@@ -835,17 +835,17 @@ Another standard step`}
 
             {/* Modal Footer Actions (Always reachable at 320x568) */}
             <div className="border-t border-border-subtle bg-white p-3 sm:p-4 shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-              <div className="text-xs text-text-secondary font-arabic flex items-center">
+              <div className="text-xs text-text-secondary flex items-center">
                 {importResult && !importResult.valid && (
                   <span className="text-danger font-bold flex items-center gap-1.5" role="alert">
                     <AlertCircle className="h-4 w-4 shrink-0" />
-                    <span>الزر معطل: لا يمكن الاستيراد بسبب وجود أخطاء أعلاه.</span>
+                    <span>Button disabled: Fix errors above before importing.</span>
                   </span>
                 )}
                 {importResult && importResult.valid && importMode === "replace" && replaceConfirmInput.trim().toLowerCase() !== procedure.title.trim().toLowerCase() && (
                   <span className="text-danger font-bold flex items-center gap-1.5">
                     <AlertCircle className="h-4 w-4 shrink-0" />
-                    <span>الزر معطل: يرجى كتابة عنوان الإجراء بدقة لتأكيد الاستبدال.</span>
+                    <span>Button disabled: Type procedure title exactly to confirm replacement.</span>
                   </span>
                 )}
               </div>
@@ -875,12 +875,12 @@ Another standard step`}
                   }
                   title={
                     !importResult
-                      ? "الزر معطل: يرجى إجراء المعاينة أولاً"
+                      ? "Button disabled: Please preview steps first"
                       : !importResult.valid
-                      ? "الزر معطل: يوجد أخطاء تمنع الاستيراد"
+                      ? "Button disabled: Errors present in import text"
                       : importMode === "replace" && replaceConfirmInput.trim().toLowerCase() !== procedure.title.trim().toLowerCase()
-                      ? "الزر معطل: اكتب عنوان الإجراء للمطابقة"
-                      : "تأكيد واستيراد الخطوات"
+                      ? "Button disabled: Type title to match"
+                      : "Confirm & Import Steps"
                   }
                   className="squircle-pill btn-rose-cta flex-1 sm:flex-initial inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill px-6 py-2 text-xs font-bold text-navy disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
                 >

@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Lock, Mail, Loader2, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { loginAdmin } from "@/app/admin/actions/auth";
 import { AR_STRINGS } from "@/messages/ar";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +24,14 @@ export default function AdminLoginPage() {
     startTransition(async () => {
       const result = await loginAdmin(null, formData);
       if (result.error) {
-        setError(result.error);
+        // Display English friendly error
+        if (result.error === AR_STRINGS.loginGenericError || result.error.includes("غير صحيحة")) {
+          setError("Invalid email or password.");
+        } else if (result.error.includes("محاولات")) {
+          setError("Too many failed login attempts. Please try again after 15 minutes.");
+        } else {
+          setError(result.error);
+        }
       } else if (result.success) {
         window.location.href = "/admin";
       }
@@ -33,7 +39,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="surface-light flex min-h-[100dvh] flex-col items-center justify-center p-4">
+    <div className="surface-light flex min-h-[100dvh] flex-col items-center justify-center p-4" dir="ltr">
       <div className="squircle-card w-full max-w-sm rounded-card border border-border-subtle bg-white p-6 sm:p-8 shadow-card-soft text-start">
         {/* Logo and Header */}
         <div className="flex flex-col items-center text-center mb-6">
@@ -45,14 +51,14 @@ export default function AdminLoginPage() {
             className="h-auto w-[176px]"
           />
           <h1 className="mt-4 text-xl font-bold text-navy">
-            <bdi dir="ltr">Critical Ease</bdi>: دخول الإدارة
+            Admin Sign In
           </h1>
-          <p className="mt-1 text-xs text-text-secondary font-arabic">
+          <p className="mt-1 text-xs text-text-secondary">
             {AR_STRINGS.adminLoginSubtitle}
           </p>
         </div>
 
-        {/* Error message (Generic Arabic: no user enumeration) */}
+        {/* Error message */}
         {error && (
           <div
             role="alert"
@@ -120,16 +126,25 @@ export default function AdminLoginPage() {
             {isPending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>جاري تسجيل الدخول...</span>
+                <span>Signing in...</span>
               </>
             ) : (
               <>
                 <span>{AR_STRINGS.loginButton}</span>
-                <ArrowRight className="h-4 w-4 icon-mirror" />
+                <ArrowRight className="h-4 w-4" />
               </>
             )}
           </button>
         </form>
+
+        <div className="mt-6 border-t border-border-subtle pt-4 text-center">
+          <Link
+            href="/"
+            className="text-xs font-semibold text-rose-dark hover:underline"
+          >
+            Return to Public Site
+          </Link>
+        </div>
       </div>
     </div>
   );

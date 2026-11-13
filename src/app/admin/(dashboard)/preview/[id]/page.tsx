@@ -23,7 +23,7 @@ interface PreviewPageProps {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "معاينة الإجراء | Critical Ease",
+  title: "Draft Preview | Critical Ease",
 };
 
 export default async function AdminDraftPreviewPage({ params }: PreviewPageProps) {
@@ -106,7 +106,7 @@ export default async function AdminDraftPreviewPage({ params }: PreviewPageProps
           className="squircle-pill inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-pill bg-white px-4 py-2 text-xs font-bold text-navy border border-border hover:border-rose-dark hover:text-rose-dark transition-colors shrink-0"
         >
           <Edit3 className="h-4 w-4 text-rose-dark" />
-          <span>العودة للتعديل</span>
+          <span>Back to Editor</span>
         </Link>
       </div>
 
@@ -153,7 +153,7 @@ export default async function AdminDraftPreviewPage({ params }: PreviewPageProps
       <div className="text-start">
         <div className="mb-6 flex items-center gap-3">
           <span className="h-7 w-1.5 rounded-full bg-rose" aria-hidden="true" />
-          <h2 className="type-h2 font-bold text-navy">الأقسام</h2>
+          <h2 className="type-h2 font-bold text-navy">Sections</h2>
         </div>
 
         <div className="space-y-4">

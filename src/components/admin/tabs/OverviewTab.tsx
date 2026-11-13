@@ -187,8 +187,8 @@ export function OverviewTab({
             <h3 className="text-sm font-semibold text-[var(--color-text)]">
               <FormattedLabel text={AR_STRINGS.fieldIndications} />
             </h3>
-            <p className="text-xs text-[var(--color-text-muted)] font-arabic">
-              الحالات السريرية ودواعي اللجوء لهذا الإجراء.
+            <p className="text-xs text-[var(--color-text-muted)]">
+              Clinical scenarios and indications for performing this procedure.
             </p>
           </div>
           <button
@@ -202,7 +202,7 @@ export function OverviewTab({
         </div>
 
         {indications.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)] font-arabic">
+          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)]">
             {AR_STRINGS.emptyListDesc}
           </p>
         ) : (
@@ -242,8 +242,8 @@ export function OverviewTab({
             <h3 className="text-sm font-semibold text-[var(--color-text)]">
               <FormattedLabel text={AR_STRINGS.fieldContraindications} />
             </h3>
-            <p className="text-xs text-[var(--color-text-muted)] font-arabic">
-              موانع الاستخدام المطلقة والنسبية.
+            <p className="text-xs text-[var(--color-text-muted)]">
+              Absolute and relative clinical contraindications.
             </p>
           </div>
           <button
@@ -257,7 +257,7 @@ export function OverviewTab({
         </div>
 
         {contraindications.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)] font-arabic">
+          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)]">
             {AR_STRINGS.emptyListDesc}
           </p>
         ) : (
@@ -297,8 +297,8 @@ export function OverviewTab({
             <h3 className="text-sm font-semibold text-[var(--color-danger)]">
               <FormattedLabel text={AR_STRINGS.fieldCommonMistakes} />
             </h3>
-            <p className="text-xs text-[var(--color-text-muted)] font-arabic">
-              الأخطاء الشائعة التي يقع فيها الممارسون والطلاب أثناء الإجراء.
+            <p className="text-xs text-[var(--color-text-muted)]">
+              Common errors, pitfalls, and complications during the procedure.
             </p>
           </div>
           <button
@@ -312,7 +312,7 @@ export function OverviewTab({
         </div>
 
         {commonMistakes.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)] font-arabic">
+          <p className="rounded-lg border border-dashed border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)]">
             {AR_STRINGS.emptyListDesc}
           </p>
         ) : (

@@ -92,7 +92,7 @@ export function UndoToastProvider({ children }: { children: React.ReactNode }) {
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          aria-label="إشعار التراجع عن العملية"
+          aria-label="Undo action notification"
           className="surface-light squircle-card fixed bottom-4 inset-x-4 sm:inset-x-auto sm:end-6 sm:bottom-6 z-50 flex max-w-md flex-col overflow-hidden rounded-card border border-border-subtle bg-white shadow-card-soft safe-mb animate-in slide-in-from-bottom duration-200"
         >
           <div className="flex items-center justify-between gap-3 p-4 text-start">
@@ -100,7 +100,7 @@ export function UndoToastProvider({ children }: { children: React.ReactNode }) {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-success-surface text-success shrink-0">
                 <Check className="h-4 w-4" aria-hidden="true" />
               </span>
-              <p className="text-sm font-bold text-navy truncate font-arabic">
+              <p className="text-sm font-bold text-navy truncate">
                 {activeToast.message}
               </p>
             </div>
@@ -113,14 +113,14 @@ export function UndoToastProvider({ children }: { children: React.ReactNode }) {
                 className="squircle-pill btn-rose-cta inline-flex min-h-[44px] items-center gap-1.5 rounded-pill px-3.5 py-2 text-xs font-bold text-navy active:scale-95"
               >
                 <Undo2 className="h-3.5 w-3.5 icon-mirror" aria-hidden="true" />
-                <span>تراجع (8 ث)</span>
+                <span>Undo (8s)</span>
               </button>
 
               {/* Dismiss Button */}
               <button
                 type="button"
                 onClick={() => dismissToast(true)}
-                aria-label="إغلاق الإشعار"
+                aria-label="Dismiss notification"
                 className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill text-text-secondary hover:bg-light-1 hover:text-navy"
               >
                 <X className="h-4 w-4" aria-hidden="true" />

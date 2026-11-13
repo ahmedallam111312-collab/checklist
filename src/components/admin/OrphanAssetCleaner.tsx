@@ -18,7 +18,7 @@ export function OrphanAssetCleaner({ orphanAssets }: OrphanAssetCleanerProps) {
   if (orphanAssets.length === 0) return null;
 
   const handleDelete = async (assetId: string) => {
-    if (!confirm(`هل أنت متأكد من حذف الفيديو (${assetId}) نهائياً من حساب Mux لتفريغ المساحة؟`)) {
+    if (!confirm(`Are you sure you want to permanently delete video asset (${assetId}) from Mux to free up quota?`)) {
       return;
     }
 
@@ -31,11 +31,11 @@ export function OrphanAssetCleaner({ orphanAssets }: OrphanAssetCleanerProps) {
       if (res.error) {
         setErrorMessage(res.error);
       } else {
-        setSuccessMessage(`تم حذف الفيديو (${assetId}) بنجاح وتفريغ الحصة في Mux.`);
+        setSuccessMessage(`Video (${assetId}) was permanently deleted from Mux and quota was freed.`);
         router.refresh();
       }
     } catch (err: any) {
-      setErrorMessage(err.message || "حدث خطأ غير متوقع أثناء الحذف.");
+      setErrorMessage(err.message || "An unexpected error occurred while deleting.");
     } finally {
       setDeletingId(null);
     }
@@ -46,12 +46,12 @@ export function OrphanAssetCleaner({ orphanAssets }: OrphanAssetCleanerProps) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 font-bold">
           <AlertTriangle className="h-4 w-4 shrink-0 text-warning" />
-          <span>تنبيه: يوجد فيديوهات في Mux غير مرتبطة بأي إجراء ({orphanAssets.length}).</span>
+          <span>Notice: Unlinked videos detected in Mux ({orphanAssets.length}).</span>
         </div>
       </div>
 
       <p className="text-[11px] text-text-secondary leading-relaxed">
-        هذه الفيديوهات موجودة على خوادم Mux لكنها غير مخصصة لأي إجراء في الموقع، وتحتسب ضمن سقف الـ 10 فيديوهات المجانية. يمكنك حذفها الآن لتفريغ الحصة:
+        These video assets exist on Mux servers but are not linked to any procedure, consuming slots against your 10-video free quota. You can delete them now to reclaim space:
       </p>
 
       {errorMessage && (
@@ -86,12 +86,12 @@ export function OrphanAssetCleaner({ orphanAssets }: OrphanAssetCleanerProps) {
               {deletingId === id ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>جاري الحذف...</span>
+                  <span>Deleting...</span>
                 </>
               ) : (
                 <>
                   <Trash2 className="h-3.5 w-3.5" />
-                  <span>حذف من Mux وتفريغ الحصة</span>
+                  <span>Delete from Mux & Free Quota</span>
                 </>
               )}
             </button>

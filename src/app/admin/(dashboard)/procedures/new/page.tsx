@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ProcedureEditor } from "@/components/admin/ProcedureEditor";
 import { AR_STRINGS } from "@/messages/ar";
 
 export const metadata: Metadata = {
-  title: "إضافة إجراء جديد | Critical Ease",
+  title: "Add New Procedure | Critical Ease",
 };
 
 export default function NewProcedurePage() {
@@ -17,7 +17,7 @@ export default function NewProcedurePage() {
           href="/admin"
           className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-dark hover:underline transition-colors"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" />
           <span>{AR_STRINGS.adminBackToDashboard}</span>
         </Link>
       </div>
@@ -26,8 +26,8 @@ export default function NewProcedurePage() {
         <h1 className="type-h1 text-navy">
           {AR_STRINGS.adminAddProcedure}
         </h1>
-        <p className="mt-1 text-sm text-text-secondary font-arabic">
-          أدخل البيانات الأساسية للإجراء الجديد لبدء مسودة الإجراء.
+        <p className="mt-1 text-sm text-text-secondary">
+          Enter basic details to create a new procedure draft.
         </p>
       </div>
 

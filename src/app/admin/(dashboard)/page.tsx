@@ -14,7 +14,7 @@ import { getVideoUsageSummary } from "@/app/admin/actions/video";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "إدارة الإجراءات | Critical Ease",
+  title: "Procedures Management | Critical Ease",
 };
 
 export default async function AdminDashboardPage() {
@@ -65,8 +65,8 @@ export default async function AdminDashboardPage() {
           <h1 className="type-h1 text-navy">
             {AR_STRINGS.adminProceduresList}
           </h1>
-          <p className="mt-1 text-sm text-text-secondary font-arabic">
-            إدارة وتعديل الإجراءات السريرية، ترتيب عرضها للطلاب، ونشرها.
+          <p className="mt-1 text-sm text-text-secondary">
+            Manage clinical procedures, drag to reorder their student display sequence, and manage publication.
           </p>
         </div>
 
@@ -94,8 +94,8 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Backup note in UI */}
-      <p className="text-xs text-text-secondary font-arabic">
-        {AR_STRINGS.backupNote}
+      <p className="text-xs text-text-secondary">
+        The database backup export includes all structured tables, clinical steps, equipment items, and site settings.
       </p>
 
       {/* Videos used widget */}

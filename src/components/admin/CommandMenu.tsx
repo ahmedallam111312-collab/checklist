@@ -14,7 +14,7 @@ import {
 import { AR_STRINGS } from "@/messages/ar";
 import { logoutAdmin } from "@/app/admin/actions/auth";
 
-export function normalizeArabic(text: string): string {
+export function normalizeSearchQuery(text: string): string {
   return text
     .toLowerCase()
     .replace(/[أإآٱ]/g, "ا")
@@ -54,7 +54,7 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
     }
   }, []);
 
-  // Listen for Cmd+K / Ctrl+K using event.code === "KeyK" to support Arabic layout
+  // Listen for Cmd+K / Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.code === "KeyK") {
@@ -89,8 +89,8 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
   const baseItems: CommandItem[] = useMemo(() => [
     {
       id: "new-proc",
-      title: "إضافة إجراء سريري جديد",
-      subtitle: "فتح محرر إنشاء الإجراءات",
+      title: "Add New Clinical Procedure",
+      subtitle: "Open procedure creation editor",
       icon: Plus,
       category: "actions",
       action: () => {
@@ -100,16 +100,16 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
     },
     {
       id: "export-backup",
-      title: "تصدير نسخة احتياطية كاملة (JSON)",
-      subtitle: "تحميل الإجراءات، الخطوات، والمعدات",
+      title: "Export Full Database Backup (JSON)",
+      subtitle: "Download procedures, checklist steps, and equipment",
       icon: Download,
       category: "actions",
       action: handleExportBackup,
     },
     {
       id: "sign-out",
-      title: "تسجيل الخروج من لوحة الإدارة",
-      subtitle: "إنهاء جلسة المشرف الحالية",
+      title: "Sign Out of Admin",
+      subtitle: "End current administrator session",
       icon: LogOut,
       category: "settings",
       action: handleSignOut,
@@ -121,7 +121,7 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
     return procedures.map((p) => ({
       id: `proc-${p.id}`,
       title: p.title,
-      subtitle: p.published ? "منشور — الانتقال للمحرر" : "مسودة — الانتقال للمحرر",
+      subtitle: p.published ? "Published — Open editor" : "Draft — Open editor",
       icon: FileText,
       category: "navigation",
       action: () => {
@@ -135,10 +135,10 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
 
   const filteredItems = useMemo(() => {
     if (!query.trim()) return allItems;
-    const normQ = normalizeArabic(query);
+    const normQ = normalizeSearchQuery(query);
     return allItems.filter((item) => {
-      const matchTitle = normalizeArabic(item.title).includes(normQ);
-      const matchSub = item.subtitle ? normalizeArabic(item.subtitle).includes(normQ) : false;
+      const matchTitle = normalizeSearchQuery(item.title).includes(normQ);
+      const matchSub = item.subtitle ? normalizeSearchQuery(item.subtitle).includes(normQ) : false;
       return matchTitle || matchSub;
     });
   }, [query, allItems]);
@@ -176,11 +176,11 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        aria-label="البحث السريع والتنقل (Ctrl+K)"
+        aria-label="Quick command search (Ctrl+K)"
         className="squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-pill border border-rose/40 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:border-rose hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-light"
       >
         <Search className="h-3.5 w-3.5 text-rose-light" aria-hidden="true" />
-        <span className="hidden md:inline font-arabic">البحث والتنقل...</span>
+        <span className="hidden md:inline">Search & commands...</span>
         <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-rose/40 bg-logo-navy px-1.5 py-0.5 text-[10px] font-mono font-medium text-rose-light">
           {isMac ? "⌘K" : "Ctrl+K"}
         </kbd>
@@ -191,7 +191,7 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="قائمة الأوامر السريعة"
+          aria-label="Quick Command Palette"
           className="surface-light fixed inset-0 z-50 flex items-start justify-center p-4 pt-16 sm:pt-24 bg-navy/60 backdrop-blur-sm animate-in fade-in duration-150"
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsOpen(false);
@@ -200,7 +200,7 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
         >
           <div
             ref={dialogRef}
-            dir="rtl"
+            dir="ltr"
             className="squircle-card w-full max-w-xl overflow-hidden rounded-card border border-border-subtle bg-white text-navy shadow-card-soft animate-in zoom-in-95 duration-150"
           >
             {/* Search Header */}
@@ -214,13 +214,13 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
                   setQuery(e.target.value);
                   setSelectedIndex(0);
                 }}
-                placeholder="ابحث عن إجراء، أمر، أو إعداد..."
-                className="w-full min-h-[52px] bg-transparent px-3 text-sm text-navy placeholder:text-text-secondary/70 focus:outline-none font-arabic"
+                placeholder="Search procedures, actions, or settings..."
+                className="w-full min-h-[52px] bg-transparent px-3 text-sm text-navy placeholder:text-text-secondary/70 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                aria-label="إغلاق"
+                aria-label="Close"
                 className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill text-text-secondary hover:bg-light-1 hover:text-navy"
               >
                 <X className="h-4 w-4" />
@@ -234,7 +234,7 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
               className="max-h-80 overflow-y-auto p-2 space-y-1 focus:outline-none"
             >
               {filteredItems.length === 0 ? (
-                <li className="py-8 text-center text-xs text-text-secondary font-arabic">
+                <li className="py-8 text-center text-xs text-text-secondary">
                   {AR_STRINGS.noResults}
                 </li>
               ) : (
@@ -280,16 +280,16 @@ export function CommandMenu({ procedures = [] }: CommandMenuProps) {
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono text-navy">↑↓</kbd>
-                  <span>للتنقل</span>
+                  <span>Navigate</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono text-navy">↵</kbd>
-                  <span>للاختيار</span>
+                  <span>Select</span>
                 </span>
               </div>
               <span className="flex items-center gap-1">
                 <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono text-navy">Esc</kbd>
-                <span>للإغلاق</span>
+                <span>Close</span>
               </span>
             </div>
           </div>
