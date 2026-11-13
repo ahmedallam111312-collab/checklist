@@ -8,6 +8,7 @@ import { DEMO_PROCEDURES } from "@/data/demo-data";
 import { Procedure } from "@/types/database";
 import { AR_STRINGS } from "@/messages/ar";
 import { AdminDashboardClient } from "@/components/admin/AdminDashboardClient";
+import { OrphanAssetCleaner } from "@/components/admin/OrphanAssetCleaner";
 import { getVideoUsageSummary } from "@/app/admin/actions/video";
 
 export const dynamic = "force-dynamic";
@@ -135,21 +136,7 @@ export default async function AdminDashboardPage() {
           </p>
         )}
 
-        {orphanAssets.length > 0 && (
-          <div className="mt-3 rounded-lg border border-warning/40 bg-warning-surface p-2.5 text-xs text-warning space-y-1">
-            <div className="flex items-center gap-1.5 font-bold">
-              <AlertTriangle className="h-4 w-4 shrink-0" />
-              <span>تنبيه: يوجد فيديوهات في Mux غير مرتبطة بأي إجراء ({orphanAssets.length}).</span>
-            </div>
-            <div className="font-mono text-[11px] text-text-secondary flex flex-wrap gap-1" dir="ltr">
-              {orphanAssets.map((id) => (
-                <span key={id} className="inline-block rounded bg-white px-1.5 py-0.5 border border-border-subtle">
-                  {id}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        <OrphanAssetCleaner orphanAssets={orphanAssets} />
       </div>
 
       {/* Procedures Reorderable List & Management */}

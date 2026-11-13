@@ -259,7 +259,7 @@ export async function deleteProcedureVideo(
 
   const { data: proc, error: fetchErr } = await supabase
     .from("procedures")
-    .select("id, slug, mux_asset_id")
+    .select("id, slug, mux_asset_id, mux_upload_id")
     .eq("id", procedureId)
     .single();
 
@@ -268,11 +268,23 @@ export async function deleteProcedureVideo(
   }
 
   // 1. Delete from Mux first if asset exists
-  if (proc.mux_asset_id && !isDemoMode() && isMuxConfigured()) {
-    try {
-      await deleteMuxAsset(proc.mux_asset_id);
-    } catch (err: any) {
-      return { error: mapActionError("deleteProcedureVideo:deleteMuxAsset", err) };
+  if (!isDemoMode() && isMuxConfigured()) {
+    let assetToDelete = proc.mux_asset_id;
+    if (!assetToDelete && proc.mux_upload_id) {
+      try {
+        const upload = await getMuxUpload(proc.mux_upload_id);
+        if (upload?.asset_id) {
+          assetToDelete = upload.asset_id;
+        }
+      } catch {}
+    }
+
+    if (assetToDelete) {
+      try {
+        await deleteMuxAsset(assetToDelete);
+      } catch (err: any) {
+        return { error: mapActionError("deleteProcedureVideo:deleteMuxAsset", err) };
+      }
     }
   }
 
@@ -370,4 +382,26 @@ export async function getVideoUsageSummary(): Promise<{
     maxLimit: 10,
     orphanAssets,
   };
+}
+
+/**
+ * Deletes an orphan Mux asset by ID (an asset in Mux not referenced by any procedure).
+ */
+export async function deleteOrphanMuxAsset(assetId: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await verifyAdmin();
+  if (!auth.authorized) {
+    return { error: auth.error || "غير مصرح" };
+  }
+
+  if (isDemoMode() || !isMuxConfigured()) {
+    return { error: "Mux غير مهيأ أو في وضع العرض التجريبي" };
+  }
+
+  try {
+    await deleteMuxAsset(assetId);
+    revalidateRoutes();
+    return { success: true };
+  } catch (err: any) {
+    return { error: mapActionError("deleteOrphanMuxAsset", err) };
+  }
 }

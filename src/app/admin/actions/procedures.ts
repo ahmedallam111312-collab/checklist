@@ -20,7 +20,7 @@ import {
   DEMO_PROCEDURES,
 } from "@/data/demo-data";
 import { Procedure } from "@/types/database";
-import { deleteMuxAsset, isMuxConfigured } from "@/lib/mux/client";
+import { deleteMuxAsset, getMuxUpload, isMuxConfigured } from "@/lib/mux/client";
 import { withIdempotency } from "@/lib/idempotency";
 
 export interface ActionResponse {
@@ -438,7 +438,7 @@ export async function deleteProcedure(
 
     const { data: proc, error: fetchError } = await supabase
       .from("procedures")
-      .select("id, title, slug, cover_path, mux_asset_id")
+      .select("id, title, slug, cover_path, mux_asset_id, mux_upload_id")
       .eq("id", id)
       .single();
 
@@ -479,11 +479,23 @@ export async function deleteProcedure(
     }
 
     // Delete associated Mux video asset if present. Failures are reported to the admin, not swallowed.
-    if (proc.mux_asset_id && !isDemoMode() && isMuxConfigured()) {
-      try {
-        await deleteMuxAsset(proc.mux_asset_id);
-      } catch (muxErr: any) {
-        return { error: `فشل حذف أصل الفيديو من Mux: ${muxErr.message}` };
+    if (!isDemoMode() && isMuxConfigured()) {
+      let assetToDelete = proc.mux_asset_id;
+      if (!assetToDelete && proc.mux_upload_id) {
+        try {
+          const upload = await getMuxUpload(proc.mux_upload_id);
+          if (upload?.asset_id) {
+            assetToDelete = upload.asset_id;
+          }
+        } catch {}
+      }
+
+      if (assetToDelete) {
+        try {
+          await deleteMuxAsset(assetToDelete);
+        } catch (muxErr: any) {
+          return { error: `فشل حذف أصل الفيديو من Mux: ${muxErr.message}` };
+        }
       }
     }
 
