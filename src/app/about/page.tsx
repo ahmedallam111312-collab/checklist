@@ -21,6 +21,8 @@ import { CreativeCommonsNotice } from "@/components/CreativeCommonsNotice";
 import { getSiteSettings } from "@/lib/data";
 import { BRAND } from "@/config/brand";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "About",
   description:

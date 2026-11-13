@@ -2,13 +2,15 @@ import React from "react";
 import Image from "next/image";
 
 interface InstitutionalBadgesProps {
-  variant?: "header" | "footer" | "hero" | "about";
+  variant?: "header" | "footer" | "hero" | "about" | "splash";
   className?: string;
+  showSubtitle?: boolean;
 }
 
 export function InstitutionalBadges({
   variant = "header",
   className = "",
+  showSubtitle = true,
 }: InstitutionalBadgesProps) {
   if (variant === "header") {
     return (
@@ -44,6 +46,63 @@ export function InstitutionalBadges({
             Faculty of Nursing
           </span>
         </div>
+      </div>
+    );
+  }
+
+  if (variant === "splash") {
+    return (
+      <div className={`flex flex-col items-center gap-3.5 ${className}`}>
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          {/* Cairo University Card */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border-subtle/80 bg-white px-4 py-2.5 shadow-card-soft transition-transform hover:-translate-y-0.5">
+            <Image
+              src="/brand/cairo-university-shield.png"
+              alt="Cairo University Emblem"
+              width={64}
+              height={52}
+              priority
+              className="h-[44px] w-auto object-contain"
+            />
+            <div className="text-start leading-tight">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-navy/60">
+                Est. 1908
+              </p>
+              <p className="text-xs font-bold text-navy">Cairo University</p>
+            </div>
+          </div>
+
+          <div className="hidden sm:block h-8 w-[1px] bg-navy/15" aria-hidden="true" />
+
+          {/* Faculty of Nursing Card */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border-subtle/80 bg-white px-4 py-2.5 shadow-card-soft transition-transform hover:-translate-y-0.5">
+            <Image
+              src="/brand/faculty-nursing-cairo.png"
+              alt="Faculty of Nursing Logo — Cairo University"
+              width={52}
+              height={52}
+              priority
+              className="h-[44px] w-auto object-contain"
+            />
+            <div className="text-start leading-tight">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-rose-dark">
+                NAQAAE Accredited
+              </p>
+              <p className="text-xs font-bold text-navy">Faculty of Nursing</p>
+            </div>
+          </div>
+        </div>
+
+        {showSubtitle && (
+          <div className="text-center space-y-0.5">
+            <p className="text-xs sm:text-sm font-bold tracking-wide text-navy">
+              Cairo University • Faculty of Nursing
+            </p>
+            <p className="text-[11px] sm:text-xs font-semibold text-rose-dark">
+              Department of Critical Care and Emergency Nursing
+            </p>
+          </div>
+        )}
       </div>
     );
   }

@@ -11,6 +11,8 @@ import {
 } from "@/lib/data";
 import { AR_STRINGS } from "@/messages/ar";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: AR_STRINGS.home,
 };

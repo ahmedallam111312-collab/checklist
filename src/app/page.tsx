@@ -8,6 +8,8 @@ import { getSiteSettings } from "@/lib/data";
 import { BRAND } from "@/config/brand";
 import { AR_STRINGS } from "@/messages/ar";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `${BRAND.name} — ${BRAND.tagline}`,
   description: BRAND.heroDescription,
@@ -27,7 +29,7 @@ export default async function CoverPage() {
 
       {/* Institutional Badges Header on Splash */}
       <div className="mb-6 flex flex-col items-center gap-2">
-        <InstitutionalBadges variant="footer" />
+        <InstitutionalBadges variant="splash" />
       </div>
 
       {/* Centered White Rounded Cover Card */}
