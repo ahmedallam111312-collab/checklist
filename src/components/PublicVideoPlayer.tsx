@@ -171,15 +171,9 @@ export function PublicVideoPlayer({
               className="h-full w-full"
               style={
                 {
-                  "--primary-color": "var(--color-rose)",
-                  "--accent-color": "var(--color-rose)",
-                  "--controls-backdrop-color": "rgba(255, 255, 255, 0.92)",
-                  "--media-icon-color": "var(--color-navy)",
-                  "--media-text-color": "var(--color-navy)",
-                  "--media-control-background": "rgba(251, 243, 243, 0.92)",
-                  "--media-control-hover-background": "rgba(200, 116, 117, 0.24)",
-                  "--media-range-bar-color": "var(--color-rose)",
-                  "--media-range-track-background": "var(--color-light-2)",
+                  "--primary-color": "#c87475",
+                  "--accent-color": "#c87475",
+                  "--media-range-bar-color": "#c87475",
                 } as React.CSSProperties & Record<`--${string}`, string>
               }
               disablePictureInPicture={true}
