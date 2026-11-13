@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { InstitutionalBadges } from "@/components/InstitutionalBadges";
-import { CreativeCommonsNotice } from "@/components/CreativeCommonsNotice";
 import { getSiteSettings } from "@/lib/data";
 import { BRAND } from "@/config/brand";
 import { AR_STRINGS } from "@/messages/ar";
@@ -47,9 +46,6 @@ export default async function CoverPage() {
         <p className="mt-4 text-xs font-semibold tracking-wider text-rose-dark uppercase">
           {BRAND.heroEyebrow}
         </p>
-        <p className="mt-1 font-latin text-sm text-text-secondary">
-          {BRAND.tagline}
-        </p>
       </div>
 
       {/* Primary Rose CTA Pill Button */}
@@ -62,11 +58,6 @@ export default async function CoverPage() {
           <span>{ctaLabel}</span>
           <ArrowRight className="h-5 w-5" aria-hidden="true" />
         </Link>
-      </div>
-
-      {/* CC Rights at Bottom */}
-      <div className="mt-8">
-        <CreativeCommonsNotice variant="inline" />
       </div>
     </main>
   );

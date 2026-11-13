@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Video,
-  Layers,
   HeartPulse,
   Users,
   Compass,
@@ -150,7 +149,7 @@ export default async function AboutPage() {
               <h2 className="type-h2 font-bold text-navy">Core Educational Objectives</h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {/* Box 3A */}
               <div className="squircle-card border border-border-subtle bg-white p-5 shadow-card-soft flex flex-col justify-between">
                 <div>
@@ -191,28 +190,10 @@ export default async function AboutPage() {
               <div className="squircle-card border border-border-subtle bg-white p-5 shadow-card-soft flex flex-col justify-between">
                 <div>
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-pill bg-light-1 text-rose-dark">
-                    <Layers className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <h3 className="font-bold text-navy text-sm">
-                    3. Interactive Self-Verification
-                  </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-text-secondary">
-                    Providing real-time interactive checklist step tracking and equipment checklists stored locally on the learner&apos;s device for immediate practice.
-                  </p>
-                </div>
-                <div className="mt-4 border-t border-border-subtle pt-2 text-[11px] font-semibold text-rose-dark">
-                  Autonomous Learning
-                </div>
-              </div>
-
-              {/* Box 3D */}
-              <div className="squircle-card border border-border-subtle bg-white p-5 shadow-card-soft flex flex-col justify-between">
-                <div>
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-pill bg-light-1 text-rose-dark">
                     <Video className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <h3 className="font-bold text-navy text-sm">
-                    4. Visual Video Demonstrations
+                    3. Visual Video Demonstrations
                   </h3>
                   <p className="mt-2 text-xs leading-relaxed text-text-secondary">
                     Reinforcing cognitive retention with high-quality demonstration videos showing exact psychomotor handling of specialized ICU instruments.

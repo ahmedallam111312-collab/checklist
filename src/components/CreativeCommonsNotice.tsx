@@ -74,9 +74,6 @@ export function CreativeCommonsNotice({
             </Link>
             .
           </p>
-          <div className="rounded-xl border border-border-subtle bg-light-1/70 p-3.5 text-xs text-text-secondary">
-            <span className="font-bold text-navy">Permitted Terms:</span> You are free to share, copy, and redistribute this material in any medium or format for non-commercial educational purposes, provided appropriate academic attribution is given to the Department and Faculty of Nursing, Cairo University. No alterations, transformations, derivatives, or commercial uses are allowed without prior written departmental authorization.
-          </div>
         </div>
       </div>
     );
