@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
  * - Uses the signed-in session (not secret key)
  * - Returns JSON { version: 1, exported_at, tables: { site_settings, procedures, list_items, equipment_items, checklist_steps } } including drafts
  * - Cache-Control: no-store
- * - filename: profnurse-backup-YYYY-MM-DD.json
+ * - filename: critical-ease-backup-YYYY-MM-DD.json
  */
 export async function GET() {
   const auth = await verifyAdmin();
@@ -26,7 +26,7 @@ export async function GET() {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const dateStr = `${year}-${month}-${day}`;
-  const filename = `profnurse-backup-${dateStr}.json`;
+  const filename = `critical-ease-backup-${dateStr}.json`;
 
   if (isDemoMode()) {
     const listItems: any[] = [];

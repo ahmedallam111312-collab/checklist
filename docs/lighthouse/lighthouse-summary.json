@@ -1,0 +1,347 @@
+[
+  {
+    "page": "Cover (/)",
+    "runs": [
+      {
+        "run": 1,
+        "perf": 95,
+        "lcpSec": 3,
+        "cls": 0,
+        "tbtMs": 39,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 2,
+        "perf": 95,
+        "lcpSec": 3,
+        "cls": 0,
+        "tbtMs": 39,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 3,
+        "perf": 95,
+        "lcpSec": 3.01,
+        "cls": 0,
+        "tbtMs": 47,
+        "fcpMs": 910,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      }
+    ],
+    "median": {
+      "perf": 95,
+      "a11y": 100,
+      "bp": 100,
+      "seo": 100,
+      "lcpSec": 3,
+      "lcpMs": 2996,
+      "cls": 0,
+      "tbtMs": 39,
+      "fcpMs": 911
+    },
+    "medianRunBreakdown": {
+      "lcpMs": 2996,
+      "fcpMs": 911,
+      "ttfbMs": 5,
+      "subparts": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 8.61
+        },
+        {
+          "subpart": "resourceLoadDelay",
+          "label": "Resource load delay",
+          "duration": 12.854
+        },
+        {
+          "subpart": "resourceLoadDuration",
+          "label": "Resource load duration",
+          "duration": 16.492
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 151.236
+        }
+      ],
+      "lcpElement": null
+    }
+  },
+  {
+    "page": "Home (/home)",
+    "runs": [
+      {
+        "run": 1,
+        "perf": 86,
+        "lcpSec": 4.09,
+        "cls": 0.0216,
+        "tbtMs": 102,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 2,
+        "perf": 84,
+        "lcpSec": 4.17,
+        "cls": 0.0001,
+        "tbtMs": 168,
+        "fcpMs": 910,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 3,
+        "perf": 86,
+        "lcpSec": 4.1,
+        "cls": 0.0216,
+        "tbtMs": 93,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      }
+    ],
+    "median": {
+      "perf": 86,
+      "a11y": 100,
+      "bp": 100,
+      "seo": 100,
+      "lcpSec": 4.1,
+      "lcpMs": 4103,
+      "cls": 0.0216,
+      "tbtMs": 102,
+      "fcpMs": 911
+    },
+    "medianRunBreakdown": {
+      "lcpMs": 4103,
+      "fcpMs": 911,
+      "ttfbMs": 5,
+      "subparts": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 8.416000030517578
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 713.7249999694824
+        }
+      ],
+      "lcpElement": null
+    }
+  },
+  {
+    "page": "Procedures (/procedures)",
+    "runs": [
+      {
+        "run": 1,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0.0001,
+        "tbtMs": 86,
+        "fcpMs": 909,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 92
+      },
+      {
+        "run": 2,
+        "perf": 99,
+        "lcpSec": 1.57,
+        "cls": 0.0001,
+        "tbtMs": 100,
+        "fcpMs": 1568,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 92
+      },
+      {
+        "run": 3,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0,
+        "tbtMs": 46,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 92
+      }
+    ],
+    "median": {
+      "perf": 100,
+      "a11y": 100,
+      "bp": 100,
+      "seo": 92,
+      "lcpSec": 0.91,
+      "lcpMs": 911,
+      "cls": 0.0001,
+      "tbtMs": 86,
+      "fcpMs": 911
+    },
+    "medianRunBreakdown": {
+      "lcpMs": 911,
+      "fcpMs": 911,
+      "ttfbMs": 15,
+      "subparts": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 18.262
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 626.509
+        }
+      ],
+      "lcpElement": null
+    }
+  },
+  {
+    "page": "Procedure (/procedures/e2e-lighthouse-test)",
+    "runs": [
+      {
+        "run": 1,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0,
+        "tbtMs": 47,
+        "fcpMs": 912,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 2,
+        "perf": 99,
+        "lcpSec": 0.91,
+        "cls": 0,
+        "tbtMs": 109,
+        "fcpMs": 914,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      },
+      {
+        "run": 3,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0,
+        "tbtMs": 85,
+        "fcpMs": 911,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100
+      }
+    ],
+    "median": {
+      "perf": 100,
+      "a11y": 100,
+      "bp": 100,
+      "seo": 100,
+      "lcpSec": 0.91,
+      "lcpMs": 912,
+      "cls": 0,
+      "tbtMs": 85,
+      "fcpMs": 912
+    },
+    "medianRunBreakdown": {
+      "lcpMs": 912,
+      "fcpMs": 912,
+      "ttfbMs": 5,
+      "subparts": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 8.283
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 332.759
+        }
+      ],
+      "lcpElement": null
+    }
+  },
+  {
+    "page": "Admin Login (/admin/login)",
+    "runs": [
+      {
+        "run": 1,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0.0001,
+        "tbtMs": 48,
+        "fcpMs": 911,
+        "a11y": 98,
+        "bp": 100,
+        "seo": 66
+      },
+      {
+        "run": 2,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0.0001,
+        "tbtMs": 50,
+        "fcpMs": 911,
+        "a11y": 98,
+        "bp": 100,
+        "seo": 66
+      },
+      {
+        "run": 3,
+        "perf": 100,
+        "lcpSec": 0.91,
+        "cls": 0.0001,
+        "tbtMs": 35,
+        "fcpMs": 910,
+        "a11y": 98,
+        "bp": 100,
+        "seo": 66
+      }
+    ],
+    "median": {
+      "perf": 100,
+      "a11y": 98,
+      "bp": 100,
+      "seo": 66,
+      "lcpSec": 0.91,
+      "lcpMs": 911,
+      "cls": 0.0001,
+      "tbtMs": 48,
+      "fcpMs": 911
+    },
+    "medianRunBreakdown": {
+      "lcpMs": 911,
+      "fcpMs": 911,
+      "ttfbMs": 5,
+      "subparts": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 8.981
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 213.373
+        }
+      ],
+      "lcpElement": null
+    }
+  }
+]

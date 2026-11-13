@@ -1,4 +1,4 @@
--- ProfNurse database schema (Supabase / Postgres)
+-- Critical Ease database schema (Supabase / Postgres)
 -- Run ONCE on a fresh Supabase project (SQL editor or migration).
 --
 -- Before running:
@@ -42,11 +42,11 @@ $$;
 
 create table public.site_settings (
   id int primary key default 1 check (id = 1),
-  site_name text not null default 'ProfNurse',
-  tagline text not null default 'Learn. Practice. Perform.',
-  splash_cta text not null default 'ابدأ',
+  site_name text not null default 'Critical Ease',
+  tagline text not null default 'Learn • Practice • Excel',
+  splash_cta text not null default 'هيا نبدأ',
   hero_eyebrow text not null default 'تمريض الطوارئ والرعاية الحرجة',
-  hero_title text not null default 'مرحبًا بك في ProfNurse',
+  hero_title text not null default 'مرحبًا بك في Critical Ease',
   hero_description text not null default 'منصة تعليمية عملية لإجراءات تمريض الطوارئ والرعاية الحرجة: خطوات واضحة، وقوائم تحقق تفاعلية، وفيديوهات توضيحية.',
   hero_cta text not null default 'استكشف الإجراءات',
   footer_text text not null default '',

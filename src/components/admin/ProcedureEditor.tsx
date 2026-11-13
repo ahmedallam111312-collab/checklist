@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useTransition } from "react";
+import React, { useState, useEffect, useRef, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Check, AlertCircle, FileText, ListChecks, Wrench, CheckSquare, Video, ChevronLeft, ChevronRight } from "lucide-react";
 import { Procedure } from "@/types/database";
@@ -8,6 +8,7 @@ import { DetailsTab } from "@/components/admin/tabs/DetailsTab";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
 import { EquipmentTab } from "@/components/admin/tabs/EquipmentTab";
 import { ChecklistTab } from "@/components/admin/tabs/ChecklistTab";
+import { VideoTab } from "@/components/admin/tabs/VideoTab";
 import { DisabledTab } from "@/components/admin/tabs/DisabledTab";
 import {
   updateProcedureDetails,
@@ -26,6 +27,16 @@ interface ProcedureEditorProps {
 export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>("details");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab") as TabId;
+      if (tabParam && ["details", "overview", "equipment", "checklist", "video"].includes(tabParam)) {
+        setActiveTab(tabParam);
+      }
+    }
+  }, []);
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
@@ -55,6 +66,12 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
     setIsDirty(false);
     setFeedback(null);
     setActiveTab(targetTab);
+
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", targetTab);
+      window.history.replaceState(null, "", url.toString());
+    }
   };
 
   const handleSaveDetails = async (data: any) => {
@@ -140,13 +157,19 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
     }
   }, []);
 
+  const scrollActiveTabIntoView = useCallback((tabId: TabId) => {
+    const el = tabRefs.current[tabId];
+    const nav = navRef.current;
+    if (!el || !nav) return;
+
+    // Center the active tab horizontally to guarantee both left and right edges lie comfortably inside nav container
+    el.scrollIntoView({ behavior: "auto", block: "nearest", inline: "center" });
+    checkScroll();
+  }, []);
+
   useEffect(() => {
-    const el = tabRefs.current[activeTab];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
-      setTimeout(checkScroll, 100);
-    }
-  }, [activeTab]);
+    scrollActiveTabIntoView(activeTab);
+  }, [activeTab, scrollActiveTabIntoView]);
 
   return (
     <div className="space-y-4">
@@ -154,10 +177,10 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
       <div aria-live="polite">
         {feedback && (
           <div
-            className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold text-start mb-2 animate-in fade-in ${
+            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-start mb-2 animate-in fade-in ${
               feedback.type === "success"
-                ? "bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
-                : "bg-[var(--color-danger-surface)] text-[var(--color-danger)]"
+                ? "border border-success/30 bg-success-surface text-success"
+                : "border border-danger/30 bg-danger-surface text-danger"
             }`}
           >
             {feedback.type === "success" ? (
@@ -171,14 +194,14 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
       </div>
 
       {/* Tabs Navigation Bar with Scroll Snap & Edge Fade Mask */}
-      <div className="relative border-b border-[var(--color-border-subtle)] pb-px max-w-full overflow-hidden">
+      <div className="relative border-b border-border-subtle pb-px max-w-full overflow-hidden">
         {/* Start edge fade mask (RTL start) */}
         <div
           className={`pointer-events-none absolute inset-y-0 start-0 w-6 z-10 sm:hidden transition-opacity duration-200 ${
             canScrollStart ? "opacity-100" : "opacity-0"
           }`}
           style={{
-            background: "linear-gradient(to left, var(--color-background) 10%, transparent 100%)",
+            background: "linear-gradient(to left, var(--color-page) 10%, transparent 100%)",
           }}
           aria-hidden="true"
         />
@@ -189,7 +212,7 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
             canScrollEnd ? "opacity-100" : "opacity-0"
           }`}
           style={{
-            background: "linear-gradient(to right, var(--color-background) 10%, transparent 100%)",
+            background: "linear-gradient(to right, var(--color-page) 10%, transparent 100%)",
           }}
           aria-hidden="true"
         />
@@ -218,19 +241,14 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
                 aria-controls={`panel-${tab.id}`}
                 disabled={isTabDisabled}
                 onClick={() => handleTabSwitch(tab.id)}
-                className={`snap-start shrink-0 inline-flex min-h-[44px] items-center gap-1.5 sm:gap-2 border-b-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] ${
+                className={`snap-start shrink-0 inline-flex min-h-[44px] items-center gap-1.5 sm:gap-2 border-b-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed rounded-t-lg ${
                   isActive
-                    ? "border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-surface-raised)]/40"
-                    : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:text-[var(--color-text)]"
+                    ? "border-rose-dark text-rose-dark bg-white"
+                    : "border-transparent text-text-secondary hover:border-border hover:text-navy"
                 }`}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="whitespace-nowrap">{tab.label}</span>
-                {tab.id === "video" && (
-                  <span className="rounded bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] text-[var(--color-text-muted)] font-arabic border border-[var(--color-border-subtle)]">
-                    قريبًا
-                  </span>
-                )}
               </button>
             );
           })}
@@ -242,7 +260,7 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
         role="tabpanel"
         id={`panel-${activeTab}`}
         aria-labelledby={`tab-${activeTab}`}
-        className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 sm:p-6 shadow-sm"
+        className="squircle-card rounded-card border border-border-subtle bg-white p-4 sm:p-6 shadow-card-soft"
       >
         {activeTab === "details" && (
           <DetailsTab
@@ -276,11 +294,16 @@ export function ProcedureEditor({ procedure, isNew = false }: ProcedureEditorPro
           />
         )}
 
-        {activeTab === "video" && (
-          <DisabledTab
-            title={AR_STRINGS.tabVideo}
-            phaseNote="ميزة إدارة وتكامل فيديوهات Mux التوضيحية ستكون متاحة في المرحلة 3."
+        {activeTab === "video" && procedure && (
+          <VideoTab
+            procedure={procedure}
           />
+        )}
+
+        {activeTab === "video" && !procedure && (
+          <div className="p-6 text-center text-xs text-[var(--color-text-secondary)]">
+            يرجى حفظ البيانات الأساسية للإجراء أولاً قبل رفع الفيديو.
+          </div>
         )}
       </div>
     </div>

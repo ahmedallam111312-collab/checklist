@@ -35,6 +35,7 @@ export const procedureDetailsSchema = z.object({
     .string()
     .max(200, "Alt text cannot exceed 200 characters")
     .default(""),
+  blur_data_url: z.string().nullable().optional(),
   published: z.boolean().default(false),
 });
 

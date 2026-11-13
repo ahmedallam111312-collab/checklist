@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyAdmin } from "@/lib/auth/admin";
 import { isDemoMode } from "@/lib/data";
 import {
@@ -20,6 +20,8 @@ import {
   DEMO_PROCEDURES,
 } from "@/data/demo-data";
 import { Procedure } from "@/types/database";
+import { deleteMuxAsset, isMuxConfigured } from "@/lib/mux/client";
+import { withIdempotency } from "@/lib/idempotency";
 
 export interface ActionResponse {
   success?: boolean;
@@ -35,11 +37,14 @@ function revalidateAffectedRoutes(slug?: string) {
   try {
     if (slug) {
       revalidatePath(`/procedures/${slug}`);
+      revalidateTag(`procedure-${slug}`);
     }
     revalidatePath("/procedures");
     revalidatePath("/admin");
     revalidatePath("/home");
     revalidatePath("/");
+    revalidateTag("procedures");
+    revalidateTag("site-settings");
   } catch (err) {
     // Ignore in non-production test harnesses
   }
@@ -49,106 +54,114 @@ function revalidateAffectedRoutes(slug?: string) {
  * Creates a new procedure (Details tab).
  */
 export async function createProcedure(
-  data: ProcedureDetailsInput
+  data: ProcedureDetailsInput,
+  idempotencyKey?: string
 ): Promise<ActionResponse> {
   const auth = await verifyAdmin();
   if (!auth.authorized) {
     return { error: "Unauthorized: admin session required." };
   }
 
-  const parsed = procedureDetailsSchema.safeParse(data);
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message || "Validation failed" };
-  }
+  return withIdempotency(
+    idempotencyKey,
+    auth.user?.id || "admin",
+    "create_procedure",
+    async () => {
+      const parsed = procedureDetailsSchema.safeParse(data);
+      if (!parsed.success) {
+        return { error: parsed.error.issues[0]?.message || "Validation failed" };
+      }
 
-  const { title, slug, short_description, cover_path, cover_alt, published } =
-    parsed.data;
+      const { title, slug, short_description, cover_path, cover_alt, blur_data_url, published } =
+        parsed.data;
 
+      // Demo mode
+      if (isDemoMode()) {
+        const existing = DEMO_PROCEDURES.find((p) => p.slug === slug);
+        if (existing) {
+          return { error: "Procedure slug already exists. Please choose a unique slug." };
+        }
 
+        const maxSort = DEMO_PROCEDURES.reduce(
+          (max, p) => (p.sort_order > max ? p.sort_order : max),
+          0
+        );
 
-  // Demo mode
-  if (isDemoMode()) {
-    const existing = DEMO_PROCEDURES.find((p) => p.slug === slug);
-    if (existing) {
-      return { error: "Procedure slug already exists. Please choose a unique slug." };
+        const newProc: Procedure = {
+          id: `proc-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          slug,
+          title,
+          short_description,
+          definition: "",
+          cover_path: cover_path || null,
+          cover_alt,
+          blur_data_url: blur_data_url || null,
+          sort_order: maxSort + 10,
+          published,
+          video_status: "none",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          list_items: [],
+          equipment_items: [],
+          checklist_steps: [],
+        };
+
+        addDemoProcedure(newProc);
+        revalidateAffectedRoutes(slug);
+        return { success: true, procedureId: newProc.id, slug };
+      }
+
+      // Supabase with RLS
+      try {
+        const supabase = auth.supabase;
+
+        // Check slug uniqueness
+        const { data: existing } = await supabase
+          .from("procedures")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+
+        if (existing) {
+          return { error: "Procedure slug already exists. Please choose a unique slug." };
+        }
+
+        // Determine max sort order
+        const { data: maxRow } = await supabase
+          .from("procedures")
+          .select("sort_order")
+          .order("sort_order", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const nextSort = (maxRow?.sort_order ?? 0) + 10;
+
+        const { data: newRow, error: insertError } = await supabase
+          .from("procedures")
+          .insert({
+            title,
+            slug,
+            short_description,
+            cover_path: cover_path || null,
+            cover_alt,
+            blur_data_url: blur_data_url || null,
+            published,
+            sort_order: nextSort,
+          })
+          .select("id, slug")
+          .single();
+
+        if (insertError || !newRow) {
+          return { error: insertError?.message || "Failed to create procedure." };
+        }
+
+        revalidateAffectedRoutes(newRow.slug);
+        return { success: true, procedureId: newRow.id, slug: newRow.slug };
+      } catch (err: any) {
+        return { error: err.message || "Failed to create procedure." };
+      }
     }
-
-    const maxSort = DEMO_PROCEDURES.reduce(
-      (max, p) => (p.sort_order > max ? p.sort_order : max),
-      0
-    );
-
-    const newProc: Procedure = {
-      id: `proc-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      slug,
-      title,
-      short_description,
-      definition: "",
-      cover_path: cover_path || null,
-      cover_alt,
-      sort_order: maxSort + 10,
-      published,
-      video_status: "none",
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      list_items: [],
-      equipment_items: [],
-      checklist_steps: [],
-    };
-
-    addDemoProcedure(newProc);
-    revalidateAffectedRoutes(slug);
-    return { success: true, procedureId: newProc.id, slug };
-  }
-
-  // Supabase with RLS
-  try {
-    const supabase = auth.supabase;
-
-    // Check slug uniqueness
-    const { data: existing } = await supabase
-      .from("procedures")
-      .select("id")
-      .eq("slug", slug)
-      .maybeSingle();
-
-    if (existing) {
-      return { error: "Procedure slug already exists. Please choose a unique slug." };
-    }
-
-    // Determine max sort order
-    const { data: maxRow } = await supabase
-      .from("procedures")
-      .select("sort_order")
-      .order("sort_order", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const nextSort = (maxRow?.sort_order ?? 0) + 10;
-
-    const { data: newRow, error: insertError } = await supabase
-      .from("procedures")
-      .insert({
-        title,
-        slug,
-        short_description,
-        cover_path: cover_path || null,
-        cover_alt,
-        published,
-        sort_order: nextSort,
-      })
-      .select("id, slug")
-      .single();
-
-    if (insertError || !newRow) {
-      return { error: insertError?.message || "Failed to create procedure." };
-    }
-
-    revalidateAffectedRoutes(newRow.slug);
-    return { success: true, procedureId: newRow.id, slug: newRow.slug };
-  } catch (err: any) {
-    return { error: err.message || "Failed to create procedure." };
-  }
+  );
 }
 
 /**
@@ -168,7 +181,7 @@ export async function updateProcedureDetails(
     return { error: parsed.error.issues[0]?.message || "Validation failed" };
   }
 
-  const { title, slug, short_description, cover_path, cover_alt, published } =
+  const { title, slug, short_description, cover_path, cover_alt, blur_data_url, published } =
     parsed.data;
 
 
@@ -188,6 +201,7 @@ export async function updateProcedureDetails(
       short_description,
       cover_path: cover_path || null,
       cover_alt,
+      blur_data_url: blur_data_url || null,
       published,
     });
 
@@ -223,6 +237,7 @@ export async function updateProcedureDetails(
         short_description,
         cover_path: cover_path || null,
         cover_alt,
+        blur_data_url: blur_data_url || null,
         published,
       })
       .eq("id", id);
@@ -403,8 +418,14 @@ export async function deleteProcedure(
       return { error: "Confirmed title does not match the procedure title." };
     }
 
-    // [PHASE 3 HOOK]: If procedure has mux_asset_id, delete asset from Mux API:
-    // if (proc.mux_asset_id) { await deleteMuxAsset(proc.mux_asset_id); }
+    // Delete associated Mux video asset if present. Failures are reported to the admin, not swallowed.
+    if (proc.mux_asset_id && !isDemoMode() && isMuxConfigured()) {
+      try {
+        await deleteMuxAsset(proc.mux_asset_id);
+      } catch (muxErr: any) {
+        return { error: `فشل حذف أصل الفيديو من Mux: ${muxErr.message}` };
+      }
+    }
 
     const oldSlug = proc.slug;
     deleteDemoProcedure(id);
@@ -457,8 +478,14 @@ export async function deleteProcedure(
       }
     }
 
-    // [PHASE 3 HOOK]: If procedure has mux_asset_id, delete asset from Mux API:
-    // if (proc.mux_asset_id) { await deleteMuxAsset(proc.mux_asset_id); }
+    // Delete associated Mux video asset if present. Failures are reported to the admin, not swallowed.
+    if (proc.mux_asset_id && !isDemoMode() && isMuxConfigured()) {
+      try {
+        await deleteMuxAsset(proc.mux_asset_id);
+      } catch (muxErr: any) {
+        return { error: `فشل حذف أصل الفيديو من Mux: ${muxErr.message}` };
+      }
+    }
 
     const { error: deleteError } = await supabase
       .from("procedures")

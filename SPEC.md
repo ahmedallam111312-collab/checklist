@@ -1,6 +1,6 @@
-# ProfNurse: Build Specification
+# Critical Ease: Build Specification
 
-Companion files: `DESIGN.md` (visual system, typography, motion) and `schema.sql` (database, security policies, starter rows).
+Companion files: `DESIGN.md` (visual system, typography, motion, light-only) and `supabase/migrations/001_schema.sql` (database, security policies, starter rows).
 
 **Precedence:** `DESIGN.md` decides how things look and move. This file decides behavior, data and security. If they conflict, stop and ask.
 
@@ -39,7 +39,7 @@ Student accounts or progress sync, quizzes, comments, payments, analytics, addit
 | Video | Mux free plan, signed playback, `@mux/mux-player-react`, `@mux/upchunk`, Mux Node SDK |
 | Motion | GSAP with ScrollTrigger, lazy-loaded (see `DESIGN.md` section 8) |
 | Hosting | Vercel |
-| Fonts | IBM Plex Sans, IBM Plex Sans Arabic, IBM Plex Mono via `next/font` |
+| Fonts | Roboto (Latin 400/500/700) and IBM Plex Sans Arabic (400/500/700) via `next/font` |
 
 Arabic UI strings live in one file, `src/messages/ar.ts`, so the department can review the wording. Use `Intl.PluralRules("ar")` for counts.
 
@@ -68,6 +68,7 @@ CRON_SECRET=
 | `/home` | Hero with the 3D scroll scene, stats row, explore button |
 | `/procedures` | Library: search field and procedure cards |
 | `/procedures/[slug]` | Procedure page with the 7 sections |
+| `/about` | About page (editable placeholders only until department copy is provided) |
 | `/admin/login` | Admin sign-in (email and password) |
 | `/admin` | Dashboard: procedure list, video usage counter, shortcuts |
 | `/admin/procedures/new`, `/admin/procedures/[id]` | Procedure editor |
@@ -93,7 +94,7 @@ Public pages are statically generated with on-demand revalidation. Every admin s
 **Checklist.**
 - Steps in `sort_order`. If a step has a `phase`, show the phase heading when it changes.
 - Each step has a checkbox. A progress bar and "done / total" counter sit above the list. A reset button clears progress.
-- Critical steps use the critical style from `DESIGN.md` (amber border, "CRITICAL" chip with icon, heavier weight, screen-reader text).
+- Critical steps use the critical style from `DESIGN.md` (deep red `#B42318` border/badge, flag icon, `"خطوة حرجة"` label, heavier weight, screen-reader text).
 - The "عربي" button appears only when `text_ar` exists. It toggles the Arabic text under that step.
 - Progress is stored in localStorage keyed by step id. Ignore ids that no longer exist.
 
@@ -171,7 +172,7 @@ ffmpeg -i input.mp4 -i watermark.png -filter_complex "overlay=W-w-24:H-h-24" \
 - `/api/video-token?slug=...` checks that the procedure is published and has a ready video, then returns a signed playback token that expires in 2 hours, with `Cache-Control: no-store`. Rate-limit it.
 - The client requests the token only when the video section is opened or scrolled into view, and refreshes it before expiry. It passes the token to Mux Player.
 - Configure Mux playback restrictions to allow only the production domain (and localhost for development).
-- Style Mux Player with the cyan accent. Remove any download controls. Do not block right-click, F12 or shortcuts.
+- Style Mux Player with the rose accent (`#C87475`) on light surfaces. Remove any download controls. Do not block right-click, F12 or shortcuts.
 
 ---
 
@@ -180,8 +181,7 @@ ffmpeg -i input.mp4 -i watermark.png -filter_complex "overlay=W-w-24:H-h-24" \
 | Key | Arabic |
 |---|---|
 | Home | الرئيسية |
-| Toggle theme | تغيير المظهر |
-| Start | ابدأ |
+| Start | هيا نبدأ |
 | Explore | استكشف |
 | Back to procedures | العودة إلى الإجراءات |
 | Library title | مكتبة الإجراءات |
@@ -237,9 +237,9 @@ Admin labels: draft them in Arabic, short and plain, in the same file.
 
 Stop at the end of each phase, summarize what was built, and wait for approval.
 
-**Phase 0: Foundation.** Project setup, Tailwind with the `DESIGN.md` tokens (dark and light), fonts, the `lang` and `dir` rules, `ar.ts`, Supabase client, run `schema.sql`, `.env.example`.
+**Phase 0: Foundation.** Project setup, Tailwind with the `DESIGN.md` tokens (light-only palette), fonts, the `lang` and `dir` rules, `ar.ts`, Supabase client, run `001_schema.sql`, `.env.example`.
 
-**Phase 1: Public site with demo data.** Cover, home (static hero, no 3D yet), library, procedure page with all 7 sections and the full checklist component (progress, critical style, per-step Arabic toggle, equipment). Add a `seed:demo` script with clearly fake content, for development only. Checkpoint: screenshots at 390px and 1280px in RTL, dark and light.
+**Phase 1: Public site with demo data.** Cover, home (static hero, no 3D yet), library, procedure page with all 7 sections and the full checklist component (progress, critical style, per-step Arabic toggle, equipment). Add a `seed:demo` script with clearly fake content, for development only. Checkpoint: screenshots at 390px and 1280px in RTL (light-only).
 
 **Phase 2: Admin CMS.** Login, dashboard, procedure editor, uploads, reorder, bulk import with tests, settings, backup export, revalidation, draft preview.
 
@@ -267,7 +267,7 @@ Stop at the end of each phase, summarize what was built, and wait for approval.
 5. Uploading a video through the admin results in a playable video on the public page, with no direct file URL available and no download control.
 6. Replacing or deleting a video removes the old Mux asset.
 7. Editing text in the admin appears on the public site without redeploying.
-8. The site works at 320px, in RTL, in dark and light themes, with keyboard only, and with reduced motion.
+8. The site works at 320px, in RTL, in light-only theme, with keyboard only, and with reduced motion.
 
 ---
 

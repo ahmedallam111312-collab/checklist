@@ -11,7 +11,7 @@ import { DEMO_PROCEDURES, DEMO_SITE_SETTINGS } from "../src/data/demo-data";
 
 async function main() {
   console.log("==================================================");
-  console.log("ProfNurse Demo Data Verification & Seed Check");
+  console.log("Critical Ease Demo Data Verification & Seed Check");
   console.log("==================================================");
 
   console.log(`Site Name: ${DEMO_SITE_SETTINGS.site_name}`);

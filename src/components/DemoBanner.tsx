@@ -10,21 +10,21 @@ export function DemoBanner() {
     <div
       role="status"
       aria-label="Demo Mode Notice"
-      className="w-full border-b border-[var(--color-critical)] bg-[var(--color-critical-surface)] px-4 py-2 text-xs font-medium text-[var(--color-text)]"
+      className="surface-light w-full border-b border-warning bg-warning-surface px-4 py-2 text-xs font-medium text-navy"
     >
       <div className="mx-auto flex max-w-[70rem] items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <AlertTriangle
-            className="h-4 w-4 shrink-0 text-[var(--color-critical)]"
+            className="h-4 w-4 shrink-0 text-warning"
             aria-hidden="true"
           />
-          <span className="font-semibold text-[var(--color-critical)] uppercase tracking-wider font-mono">
+          <span className="font-latin font-bold uppercase tracking-wider text-warning">
             DEMO DATA
           </span>
-          <span className="text-[var(--color-text-secondary)] sm:hidden">
+          <span className="text-navy sm:hidden">
             {AR_STRINGS.demoDataBannerShort}
           </span>
-          <span className="text-[var(--color-text-secondary)] hidden sm:inline">
+          <span className="hidden text-navy sm:inline">
             {AR_STRINGS.demoDataBanner}
           </span>
         </div>

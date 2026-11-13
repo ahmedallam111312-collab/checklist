@@ -18,6 +18,7 @@ import { Procedure, EquipmentItem } from "@/types/database";
 import { updateEquipmentBatch } from "@/app/admin/actions/equipment";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { AR_STRINGS } from "@/messages/ar";
+import { useUndoToast } from "@/components/admin/UndoToast";
 
 interface EquipmentTabProps {
   procedure: Procedure;
@@ -40,6 +41,25 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
   } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<number, string>>({});
   const [activePhotoUploaderIndex, setActivePhotoUploaderIndex] = useState<number | null>(null);
+  const [isMac, setIsMac] = useState(false);
+  const { showUndoToast } = useUndoToast();
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined" && navigator.platform) {
+      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const handleSaveShortcut = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.code === "KeyS") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+    window.addEventListener("keydown", handleSaveShortcut);
+    return () => window.removeEventListener("keydown", handleSaveShortcut);
+  }, [items, dirty]);
 
   const markDirty = (newItems: EquipmentItem[]) => {
     setItems(newItems);
@@ -79,8 +99,19 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
   };
 
   const handleDeleteItem = (index: number) => {
+    const deletedItem = items[index];
     const updated = items.filter((_, i) => i !== index);
     markDirty(updated);
+
+    showUndoToast({
+      message: "تم حذف الأداة",
+      durationMs: 8000,
+      onUndo: () => {
+        const restored = [...updated];
+        restored.splice(index, 0, deletedItem);
+        markDirty(restored);
+      },
+    });
   };
 
   const handleMoveUp = (index: number) => {
@@ -142,10 +173,10 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
       <div aria-live="polite">
         {feedback && (
           <div
-            className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold text-start mb-2 animate-in fade-in ${
+            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-start mb-2 ${
               feedback.type === "success"
-                ? "bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
-                : "bg-[var(--color-danger-surface)] text-[var(--color-danger)]"
+                ? "border border-success/30 bg-success-surface text-success"
+                : "border border-danger/30 bg-danger-surface text-danger"
             }`}
           >
             {feedback.type === "success" ? (
@@ -158,21 +189,21 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 sm:p-6 space-y-4 shadow-sm">
+      <div className="squircle-card rounded-card border border-border-subtle bg-white p-4 sm:p-6 space-y-4 shadow-card-soft">
         {/* Header with Counter and Add Button */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-subtle pb-4">
           <div>
-            <h2 className="text-base font-bold text-[var(--color-text)] flex items-center gap-2">
-              <Wrench className="h-4 w-4 text-[var(--color-primary)]" />
+            <h2 className="text-base font-bold text-navy flex items-center gap-2">
+              <Wrench className="h-4 w-4 text-rose-dark" />
               <span>{AR_STRINGS.equipmentTitle}</span>
             </h2>
-            <p className="mt-1 text-xs text-[var(--color-text-muted)] font-arabic">
+            <p className="mt-1 text-xs text-text-secondary font-arabic">
               الأدوات والتجهيزات الطبية المطلوبة لتنفيذ الإجراء (الحد الأقصى: 100 أداة).
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs text-[var(--color-text-muted)] font-mono">
+            <span className="text-xs text-text-secondary font-mono">
               <bdi dir="ltr">{items.length} / 100</bdi>
             </span>
 
@@ -180,7 +211,7 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
               type="button"
               onClick={handleAddItem}
               disabled={items.length >= 100}
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3.5 py-2 text-xs font-semibold text-[var(--color-text)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] disabled:opacity-50"
+              className="squircle-pill inline-flex min-h-[44px] items-center gap-1.5 rounded-pill border border-border bg-light-1 px-3.5 py-2 text-xs font-bold text-navy transition-colors hover:border-rose-dark hover:text-rose-dark disabled:opacity-50"
             >
               <Plus className="h-4 w-4" />
               <span>{AR_STRINGS.addEquipmentItem}</span>
@@ -201,7 +232,7 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
             {items.map((item, index) => (
               <div
                 key={item.id || index}
-                className="group rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-3 sm:p-4 space-y-3 transition-colors hover:border-[var(--color-primary)]/40"
+                className="group squircle-tile rounded-tile border border-border-subtle bg-light-1 p-3 sm:p-4 space-y-3 transition-colors hover:border-rose-dark/50"
               >
                 {/* Mobile & Desktop: Full-width layout with controls below or inline */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
@@ -216,6 +247,8 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
                   {/* Name Input (English LTR) — Auto-growing textarea for long names at 320px (T9b) */}
                   <div className="flex-1 min-w-0">
                     <textarea
+                      id={`equipment-item-name-${index}`}
+                      aria-label={`اسم الأداة ${index + 1}`}
                       dir="ltr"
                       lang="en"
                       rows={1}
@@ -231,10 +264,10 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
                         e.target.style.height = `${e.target.scrollHeight}px`;
                       }}
                       placeholder="Equipment name (e.g., 20G Arterial Line Catheter)..."
-                      className={`w-full min-h-[44px] rounded-md border bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text)] focus:outline-none focus:ring-1 resize-none leading-snug overflow-hidden ${
+                      className={`w-full min-h-[44px] rounded-lg border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 resize-none leading-snug overflow-hidden ${
                         fieldErrors[index]
-                          ? "border-[var(--color-danger)] focus:ring-[var(--color-danger)]"
-                          : "border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                          ? "border-danger focus:ring-danger/25"
+                          : "border-border focus:border-rose-dark focus:ring-rose-dark/25"
                       }`}
                     />
                     {fieldErrors[index] && (
@@ -256,10 +289,10 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
                       }
                       title="صورة توضيحية للأداة"
                       aria-label={`صورة توضيحية للأداة ${index + 1}`}
-                      className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border text-xs font-semibold transition-colors px-2.5 gap-1.5 ${
+                      className={`squircle-pill inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border text-xs font-bold transition-colors px-3 gap-1.5 ${
                         item.photo_path
-                          ? "border-[var(--color-primary)]/50 bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
-                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+                          ? "border-rose-dark/50 bg-white text-rose-dark"
+                          : "border-border bg-white text-text-secondary hover:border-rose-dark hover:text-rose-dark"
                       }`}
                     >
                       <Camera className="h-4 w-4 shrink-0" />
@@ -338,7 +371,7 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
             type="button"
             onClick={handleSave}
             disabled={isSaving || !dirty}
-            className="w-full sm:w-auto inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill btn-rose-cta w-full sm:w-auto inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-sm font-bold text-navy active:scale-[0.98] disabled:opacity-50"
           >
             {isSaving ? (
               <>
@@ -349,6 +382,9 @@ export function EquipmentTab({ procedure, onDirtyChange }: EquipmentTabProps) {
               <>
                 <Save className="h-4 w-4" />
                 <span>{AR_STRINGS.saveChanges}</span>
+                <kbd className="hidden sm:inline-flex items-center rounded border border-navy/25 bg-navy/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-navy">
+                  {isMac ? "⌘S" : "Ctrl+S"}
+                </kbd>
               </>
             )}
           </button>

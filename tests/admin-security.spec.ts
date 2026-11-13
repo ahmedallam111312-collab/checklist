@@ -78,7 +78,7 @@ test.describe("Phase 2A Admin Security & Authorization Suite", () => {
     await page.goto("/admin/login");
 
     // Attempt login with fake demo credentials
-    await page.fill("#admin_email", "admin@profnurse.ps");
+    await page.fill("#admin_email", "admin@criticalease.ps");
     await page.fill("#admin_password", "TestAdmin123!Safe");
     await page.click("button[type='submit']");
 
@@ -89,7 +89,7 @@ test.describe("Phase 2A Admin Security & Authorization Suite", () => {
 
     // Verify no admin session cookie was set
     const cookies = await context.cookies();
-    const demoCookie = cookies.find((c) => c.name === "profnurse_demo_admin");
+    const demoCookie = cookies.find((c) => c.name === "critical_ease_demo_admin");
     expect(demoCookie).toBeUndefined();
 
     // Verify admin routes remain blocked
@@ -134,7 +134,7 @@ test.describe("Phase 2A Admin Security & Authorization Suite", () => {
     expect(deleteRes.error).toMatch(/Unauthorized/i);
 
     const settingsRes = await updateSiteSettings({
-      site_name: "ProfNurse",
+      site_name: "Critical Ease",
       tagline: "",
       splash_cta: "",
       hero_eyebrow: "",
@@ -469,6 +469,12 @@ test.describe("Phase 2A Admin Security & Authorization Suite", () => {
     // -------------------------------------------------------------------------
     // 2d. PATCH on site_settings id=1 to a different site_name returns [] and unchanged
     // -------------------------------------------------------------------------
+    const { data: settingsBefore } = await secretClient
+      .from("site_settings")
+      .select("site_name")
+      .eq("id", 1)
+      .single();
+
     const patchSettingsRes = await request.patch(
       `${supabaseUrl}/rest/v1/site_settings?id=eq.1`,
       {
@@ -488,8 +494,10 @@ test.describe("Phase 2A Admin Security & Authorization Suite", () => {
       .select("site_name")
       .eq("id", 1)
       .single();
-    console.log(`[2d. Site settings re-read] site_name = ${settingsRecheck.site_name}`);
-    expect(settingsRecheck.site_name).toBe("ProfNurse");
+    expect(settingsRecheck).not.toBeNull();
+    console.log(`[2d. Site settings re-read] site_name = ${settingsRecheck?.site_name}`);
+    expect(settingsRecheck?.site_name).toBe(settingsBefore?.site_name);
+    expect(settingsRecheck?.site_name).not.toBe("Defaced Site Name");
 
     // -------------------------------------------------------------------------
     // 2e. Storage upload of a valid image to site-images is rejected

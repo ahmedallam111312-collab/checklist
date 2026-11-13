@@ -15,23 +15,20 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const storageKey = `profnurse_progress_${procedureSlug}`;
+  const storageKey = `critical_ease_progress_${procedureSlug}`;
 
-  // Load progress from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          // Keep only IDs that exist in current steps
           const validIds = new Set(steps.map((s) => s.id));
           const filtered = parsed.filter((id) => validIds.has(id));
           setCheckedIds(new Set(filtered));
         }
       }
     } catch {
-      // Ignore localStorage errors
     } finally {
       setIsLoaded(true);
     }
@@ -66,25 +63,28 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
 
   if (steps.length === 0) {
     return (
-      <p className="py-6 text-center text-sm text-[var(--color-text-muted)] font-arabic" dir="rtl" lang="ar">
+      <p
+        className="py-6 text-center text-sm text-text-muted font-arabic"
+        dir="rtl"
+        lang="ar"
+      >
         {AR_STRINGS.sectionEmpty}
       </p>
     );
   }
 
-  // Group steps by phase if present
   let currentPhase: string | null = null;
 
   return (
     <div className="space-y-4">
-      {/* Progress Bar & Header */}
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] p-4">
+      {/* Progress Bar & Reset */}
+      <div className="rounded-xl border border-border-subtle bg-light-1 p-4">
         <div className="mb-3 flex items-center justify-between gap-3 text-sm">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-[var(--color-text)]">
+            <span className="font-bold text-navy">
               {formatProgress(done, total)}
             </span>
-            <span className="font-mono text-xs tabular-nums text-[var(--color-text-muted)]">
+            <span className="font-latin text-xs font-semibold tabular-nums text-rose-dark">
               ({percentage}%)
             </span>
           </div>
@@ -92,16 +92,15 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
           <button
             type="button"
             onClick={resetProgress}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-md px-3 text-xs font-semibold text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-danger)] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-pill px-3 text-xs font-semibold text-rose-dark transition-colors hover:bg-page hover:text-critical active:scale-95"
           >
             <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{AR_STRINGS.resetProgress}</span>
           </button>
         </div>
 
-        {/* 8px Progress Track */}
         <div
-          className="h-2 w-full overflow-hidden rounded-full bg-[var(--color-surface)]"
+          className="h-2.5 w-full overflow-hidden rounded-full bg-light-2"
           role="progressbar"
           aria-valuenow={percentage}
           aria-valuemin={0}
@@ -110,17 +109,15 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
         >
           <div
             className={`h-full transition-all duration-300 ease-out ${
-              isComplete
-                ? "bg-[var(--color-success)]"
-                : "bg-[var(--color-primary)]"
+              isComplete ? "bg-success" : "bg-rose"
             }`}
             style={{ width: `${percentage}%` }}
           />
         </div>
       </div>
 
-      {/* Checklist Step Items */}
-      <div className="divide-y divide-[var(--color-border-subtle)] overflow-hidden rounded-lg border border-[var(--color-border-subtle)]">
+      {/* Checklist Steps */}
+      <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-white">
         {steps.map((step, idx) => {
           const showPhase = step.phase && step.phase !== currentPhase;
           if (step.phase) {
@@ -130,13 +127,13 @@ export function Checklist({ steps, procedureSlug }: ChecklistProps) {
           return (
             <React.Fragment key={step.id}>
               {showPhase && (
-                <h3
+                <h4
                   dir="ltr"
                   lang="en"
-                  className="bg-[var(--color-surface-raised)] px-4 py-2.5 text-xs font-mono font-semibold tracking-wider text-[var(--color-primary)] border-b border-[var(--color-border-subtle)] uppercase text-start"
+                  className="eyebrow-latin border-b border-border-subtle bg-light-1 px-4 py-2.5 text-start text-xs font-bold text-rose-dark"
                 >
                   {step.phase}
-                </h3>
+                </h4>
               )}
               <ChecklistStepItem
                 step={step}

@@ -9,6 +9,7 @@ import {
   ChecklistStepInput,
 } from "@/lib/validation/procedure";
 import { ChecklistStep } from "@/types/database";
+import { withIdempotency } from "@/lib/idempotency";
 
 export interface ChecklistActionResponse {
   success?: boolean;
@@ -40,12 +41,19 @@ function revalidateAffectedRoutes(slug?: string) {
  */
 export async function updateChecklistBatch(
   procedureId: string,
-  rawSteps: ChecklistStepInput[]
+  rawSteps: ChecklistStepInput[],
+  idempotencyKey?: string
 ): Promise<ChecklistActionResponse> {
   const auth = await verifyAdmin();
   if (!auth.authorized) {
     return { error: "Unauthorized: admin session required." };
   }
+
+  return withIdempotency(
+    idempotencyKey,
+    auth.user?.id || "admin",
+    `checklist_batch:${procedureId}`,
+    async () => {
 
   const parsed = checklistBatchSchema.safeParse({
     procedureId,
@@ -158,4 +166,6 @@ export async function updateChecklistBatch(
   } catch (err: any) {
     return { error: err.message || "An unexpected error occurred while saving checklist steps." };
   }
+}
+  );
 }

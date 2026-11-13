@@ -1,5 +1,5 @@
 {
-  "name": "profnurse",
+  "name": "critical-ease",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,14 +10,20 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "tsx --test tests/unit/**/*.test.ts",
     "check:secrets": "tsx scripts/check-secrets.ts",
+    "db:migrate:test": "tsx scripts/apply-migrations.ts",
     "seed:demo": "tsx scripts/seed-demo.ts",
+    "preflight": "tsx scripts/preflight.ts",
     "test:e2e": "playwright test",
     "generate:icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
+    "@mux/mux-node": "^15.5.0",
+    "@mux/mux-player-react": "^3.14.1",
+    "@mux/upchunk": "^3.5.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",
+    "gsap": "^3.15.1",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",
     "react": "^19.0.0",

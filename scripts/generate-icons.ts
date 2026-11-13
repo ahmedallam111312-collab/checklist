@@ -3,11 +3,11 @@ import path from "path";
 import sharp from "sharp";
 
 async function main() {
-  const markPath = path.join(process.cwd(), "public", "brand", "mark.svg");
-  const svgBuffer = fs.readFileSync(markPath);
+  const markPath = path.join(process.cwd(), "public", "brand", "critical-ease-mark.png");
+  const imgBuffer = fs.readFileSync(markPath);
 
   const appleTouchIconPath = path.join(process.cwd(), "public", "apple-touch-icon.png");
-  await sharp(svgBuffer)
+  await sharp(imgBuffer)
     .resize(180, 180)
     .png()
     .toFile(appleTouchIconPath);

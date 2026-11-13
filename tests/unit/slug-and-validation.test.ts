@@ -116,11 +116,11 @@ describe("Zod Validation Schemas & Field Limits", () => {
 
   it("enforces siteSettingsSchema limits (footer 300, site_name 300, tagline 300)", () => {
     const valid = siteSettingsSchema.safeParse({
-      site_name: "ProfNurse",
-      tagline: "Learn. Practice. Perform.",
-      splash_cta: "ابدأ",
+      site_name: "Critical Ease",
+      tagline: "Learn • Practice • Excel",
+      splash_cta: "هيا نبدأ",
       hero_eyebrow: "تمريض الطوارئ والرعاية الحرجة",
-      hero_title: "مرحبًا بك في ProfNurse",
+      hero_title: "مرحبًا بك في Critical Ease",
       hero_description: "وصف المنصة التعليمية",
       hero_cta: "استكشف الإجراءات",
       footer_text: "قسم تمريض الحالات الحرجة والطوارئ — جميع الحقوق محفوظة.",
@@ -130,7 +130,7 @@ describe("Zod Validation Schemas & Field Limits", () => {
 
     // Reject footer > 300 chars
     const invalidFooter = siteSettingsSchema.safeParse({
-      site_name: "ProfNurse",
+      site_name: "Critical Ease",
       footer_text: "F".repeat(301),
     });
     assert.equal(invalidFooter.success, false);

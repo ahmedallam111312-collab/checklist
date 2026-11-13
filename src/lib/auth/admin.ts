@@ -32,7 +32,7 @@ export async function verifyAdmin(): Promise<AdminAuthResult> {
 
   // Local demo mode check
   if (isDemoMode()) {
-    const demoAuth = cookieStore.get("profnurse_demo_admin");
+    const demoAuth = cookieStore.get("critical_ease_demo_admin");
     if (demoAuth?.value === "authenticated") {
       return {
         authorized: true,

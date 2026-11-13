@@ -1,18 +1,19 @@
 /**
- * Arabic UI strings for ProfNurse.
- * Reviewed by department professors.
+ * Arabic UI strings for Critical Ease.
  * Precedence: DESIGN.md & SPEC.md section 7.
  */
 
 export const AR_STRINGS = {
   // Navigation & Shell
   home: "الرئيسية",
-  toggleTheme: "تغيير المظهر",
-  start: "ابدأ",
+  navProcedures: "الإجراءات",
+  navAbout: "عن المنصة",
+  navMenu: "القائمة",
+  start: "هيا نبدأ",
   explore: "استكشف",
   backToProcedures: "العودة إلى الإجراءات",
   libraryTitle: "مكتبة الإجراءات",
-  searchPlaceholder: "ابحث عن إجراء...",
+  searchPlaceholder: "ابحث في الإجراءات...",
   noResults: "لا توجد نتائج مطابقة",
 
   // Sections (7 canonical sections in exact order)
@@ -167,6 +168,31 @@ export const AR_STRINGS = {
   backupExportButton: "تصدير نسخة احتياطية",
   backupExporting: "جاري التصدير...",
   backupNote: "تتضمن النسخة الاحتياطية كافة الجداول والنصوص والمسودات، ولا تشمل ملفات الصور المخزنة.",
+
+  // Video Management & Mux
+  videoMuxNotConfigured: "لم يتم إعداد Mux",
+  videoMuxNotConfiguredDesc: "يرجى إضافة مفاتيح Mux إلى متغيرات البيئة لتفعيل إدارة الفيديو.",
+  videoDemoModeDisabled: "إدارة الفيديو معطلة في وضع البيانات التجريبية (Demo Mode).",
+  videoEmptyDropTitle: "اسحب ملف الفيديو وأفلته هنا أو اضغط للاختيار",
+  videoEmptyFormats: "الصيغ المدعومة: MP4, MOV, WebM (الحد الأقصى: 500 ميجابايت)",
+  videoSelectFile: "اختيار ملف فيديو",
+  videoUploading: "جارٍ رفع الفيديو إلى Mux...",
+  videoCancelUpload: "إلغاء الرفع",
+  videoProcessing: "جارٍ معالجة الفيديو في Mux...",
+  videoProcessingDesc: "قد تستغرق المعالجة بضع دقائق حسب حجم الفيديو. يتم التحديث تلقائيًا.",
+  videoReadyTitle: "الفيديو جاهز للعرض",
+  videoDurationLabel: "المدة:",
+  videoReplaceButton: "استبدال الفيديو",
+  videoDeleteButton: "حذف الفيديو",
+  videoDeleteConfirmTitle: "تأكيد حذف الفيديو",
+  videoDeleteConfirmDesc: "هل أنت متأكد من حذف هذا الفيديو؟ سيتم حذف الأصل نهائيًا من Mux ومسح بيانات الفيديو من هذا الإجراء.",
+  videoDeleteConfirmButton: "نعم، احذف الفيديو نهائيًا",
+  videoDeleteCancelButton: "إلغاء",
+  videoQuotaBlocked: "تم الوصول إلى الحد الأقصى للمكتبة المجانية (10 / 10). لا يمكن رفع فيديو جديد إلا بعد حذف فيديو موجود (استبدال الفيديو الحالي متاح).",
+  videoOrphansWarning: "تنبيه: يوجد فيديوهات في Mux غير مرتبطة بأي إجراء ({count}).",
+  videoPublicEmpty: "لم تتم إضافة فيديو بعد",
+  videoPublicRetry: "إعادة المحاولة",
+  videoRefreshStatus: "تحديث الحالة",
 } as const;
 
 export type MessageKey = keyof typeof AR_STRINGS;

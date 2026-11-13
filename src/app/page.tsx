@@ -1,45 +1,50 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { getSiteSettings } from "@/lib/data";
+import { BRAND } from "@/config/brand";
+import { AR_STRINGS } from "@/messages/ar";
+
+export const metadata: Metadata = {
+  title: `${BRAND.name} — ${BRAND.tagline}`,
+  description: BRAND.heroDescription,
+};
 
 export default async function CoverPage() {
   const settings = await getSiteSettings();
+  const ctaLabel = settings.splash_cta || AR_STRINGS.start;
 
   return (
-    <main className="flex min-h-[100svh] flex-col items-center justify-center p-6 text-center">
-      <div className="flex flex-col items-center max-w-md w-full">
-        {/* Large Logo Mark (96px) above large name */}
-        <div className="mb-6 flex flex-col items-center gap-4">
-          <Logo
-            name={settings.site_name}
-            logoPath={settings.logo_path}
-            size={96}
-            nameClassName="text-3xl sm:text-4xl font-semibold tracking-tight"
-            className="flex-col gap-4"
-          />
-        </div>
+    <main className="bg-grad-page flex min-h-[100dvh] flex-col items-center justify-center px-4 py-10 text-center">
+      {/* Real accessible page title & concise description for SEO / screen readers */}
+      <h1 className="sr-only">{settings.site_name || BRAND.name}</h1>
+      <p className="sr-only">{settings.hero_description || BRAND.heroDescription}</p>
 
-        {/* Tagline wrapped in <bdi dir="ltr" lang="en"> to prevent period flipping */}
-        <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-primary)] mb-8">
-          <bdi dir="ltr" lang="en">
-            {settings.tagline}
-          </bdi>
-        </p>
+      {/* Centered White Rounded Cover Card (reference 01-cover.jpg) */}
+      <div className="surface-light squircle-card flex w-[92%] max-w-[520px] flex-col items-center justify-center bg-white px-8 py-12 shadow-card-soft sm:px-12 sm:py-16">
+        <Logo
+          variant="light"
+          name={settings.site_name || BRAND.name}
+          logoPath={settings.logo_path}
+          width={929}
+          height={474}
+          priority
+          sizes="(max-width: 560px) 80vw, 380px"
+          className="h-auto w-full max-w-[360px]"
+        />
+      </div>
 
-        {/* Description / Subtext */}
-        <p className="text-base text-[var(--color-text-secondary)] leading-relaxed mb-10 max-w-sm">
-          {settings.hero_description}
-        </p>
-
-        {/* Start Button */}
+      {/* Primary Rose CTA Pill Button with Navy Text below card */}
+      <div className="mt-8 w-[92%] max-w-[240px]">
         <Link
           href="/home"
-          className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-3 rounded-md bg-[var(--color-primary)] px-8 text-base font-semibold text-[var(--color-on-primary)] shadow-md transition-all hover:bg-[var(--color-primary-hover)] active:scale-95 active:bg-[var(--color-primary-pressed)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+          data-testid="cover-start-cta"
+          className="btn-rose-cta squircle-pill type-button flex min-h-[54px] w-full items-center justify-center gap-3 px-8 text-lg font-bold text-navy"
         >
-          <span>{settings.splash_cta}</span>
-          <ArrowLeft className="h-5 w-5 icon-mirror" aria-hidden="true" />
+          <span>{ctaLabel}</span>
+          <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </Link>
       </div>
     </main>

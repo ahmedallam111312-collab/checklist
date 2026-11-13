@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { formatArabicPlural, AR_STRINGS } from "../../src/messages/ar";
+import { normalizeSearchText } from "../../src/lib/search";
 
 describe("T9 UI Polish & Arabic Pluralization Unit Tests", () => {
   it("T9(a): backup note contains 'تتضمن' instead of 'تضمن'", () => {
@@ -39,5 +40,12 @@ describe("T9 UI Polish & Arabic Pluralization Unit Tests", () => {
     assert.equal(hasArabicText(""), false);
     assert.equal(hasArabicText("   "), false);
     assert.equal(hasArabicText("ترجمة عربية"), true);
+  });
+
+  it("normalizeSearchText normalizes Arabic alef/diacritics/taa marbuta and English casing", () => {
+    assert.equal(normalizeSearchText("إجراء أُكسجين آلي"), normalizeSearchText("اجراء اكسجين الي"));
+    assert.equal(normalizeSearchText("القسطرة الشريانية"), normalizeSearchText("القسطره الشريانيه"));
+    assert.equal(normalizeSearchText("  12-Lead ECG  "), "12-lead ecg");
+    assert.equal(normalizeSearchText(""), "");
   });
 });

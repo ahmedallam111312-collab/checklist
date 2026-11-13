@@ -14,6 +14,7 @@ export interface ResizeResult {
   previewUrl: string;
   width: number;
   height: number;
+  blurDataUrl?: string;
 }
 
 export function validateRawImage(file: File): { valid: boolean; error?: string } {
@@ -70,6 +71,22 @@ export async function resizeImageToWebP(file: File): Promise<ResizeResult> {
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, 0, 0, width, height);
 
+      // Generate a tiny 16x10 blurDataURL placeholder for smooth Next.js blur placeholder
+      let blurDataUrl: string | undefined = undefined;
+      try {
+        const blurCanvas = document.createElement("canvas");
+        blurCanvas.width = 16;
+        blurCanvas.height = 10;
+        const blurCtx = blurCanvas.getContext("2d");
+        if (blurCtx) {
+          blurCtx.imageSmoothingEnabled = true;
+          blurCtx.drawImage(img, 0, 0, 16, 10);
+          blurDataUrl = blurCanvas.toDataURL("image/webp", 0.5);
+        }
+      } catch {
+        // Fallback gracefully if canvas toDataURL fails
+      }
+
       canvas.toBlob(
         (blob) => {
           if (!blob) {
@@ -77,7 +94,7 @@ export async function resizeImageToWebP(file: File): Promise<ResizeResult> {
             return;
           }
           const previewUrl = URL.createObjectURL(blob);
-          resolve({ blob, previewUrl, width, height });
+          resolve({ blob, previewUrl, width, height, blurDataUrl });
         },
         "image/webp",
         WEBP_QUALITY

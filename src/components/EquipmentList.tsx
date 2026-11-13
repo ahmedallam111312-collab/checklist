@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { EquipmentItem } from "@/types/database";
-import { AR_STRINGS, formatEquipmentReady } from "@/messages/ar";
+import { AR_STRINGS } from "@/messages/ar";
 
 interface EquipmentListProps {
   items: EquipmentItem[];
@@ -15,7 +15,7 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const storageKey = `profnurse_equipment_${procedureSlug}`;
+  const storageKey = `critical_ease_equipment_${procedureSlug}`;
 
   useEffect(() => {
     try {
@@ -54,7 +54,11 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
 
   if (items.length === 0) {
     return (
-      <p className="py-6 text-center text-sm text-[var(--color-text-muted)] font-arabic" dir="rtl" lang="ar">
+      <p
+        className="py-6 text-center text-base text-text-muted font-arabic"
+        dir="rtl"
+        lang="ar"
+      >
         {AR_STRINGS.sectionEmpty}
       </p>
     );
@@ -62,31 +66,30 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
 
   return (
     <div className="space-y-3">
-      {/* Ready Counter */}
-      <div className="flex items-center justify-between text-xs font-medium text-[var(--color-text-secondary)]">
+      <div className="flex items-center justify-between text-xs font-semibold text-rose-dark">
         <div className="inline-flex items-center gap-1">
-          <bdi dir="ltr" className="tabular-nums inline-flex items-center gap-1 font-mono">
+          <bdi dir="ltr" className="font-latin inline-flex items-center gap-1 tabular-nums">
             <span data-testid="equip-done">{done}</span>
             <span>{" / "}</span>
             <span data-testid="equip-total">{total}</span>
           </bdi>
-          <span className="font-arabic font-normal ms-1">
+          <span className="ms-1 font-arabic font-medium text-text-secondary">
             {" جاهز"}
           </span>
         </div>
       </div>
 
-      {/* Equipment List */}
-      <div className="divide-y divide-[var(--color-border-subtle)] overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
+      <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-white">
         {items.map((item) => {
           const isChecked = checkedIds.has(item.id);
+          const imageSrc = item.image_path || item.photo_path;
 
           return (
             <div
               key={item.id}
               dir="ltr"
               lang="en"
-              className="flex min-h-[52px] items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--color-surface-raised)]/50"
+              className="flex min-h-[56px] items-center gap-3 px-4 py-3 transition-colors hover:bg-light-1/70"
             >
               <button
                 type="button"
@@ -94,37 +97,36 @@ export function EquipmentList({ items, procedureSlug }: EquipmentListProps) {
                 aria-checked={isChecked}
                 aria-label={item.name}
                 onClick={() => toggleItem(item.id)}
-                className="group relative flex h-11 w-11 shrink-0 -m-2 items-center justify-center rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="group relative -m-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-md"
               >
                 <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-sm transition-all duration-150 ${
+                  className={`flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150 ${
                     isChecked
-                      ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                      : "border-[1.5px] border-[var(--color-border)] bg-[var(--color-surface-sunken)] group-hover:border-[var(--color-primary)]"
+                      ? "bg-navy text-white shadow-sm"
+                      : "border-[1.5px] border-border bg-light-1 group-hover:border-rose-dark"
                   }`}
                 >
-                  {isChecked && (
-                    <Check className="h-4 w-4 stroke-[3] animate-in zoom-in-75 duration-150" />
-                  )}
+                  {isChecked && <Check className="h-4 w-4 stroke-[3]" />}
                 </span>
               </button>
 
-              {item.image_path && (
-                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-[var(--color-border)]">
+              {imageSrc && (
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border-subtle bg-light-1">
                   <Image
-                    src={item.image_path}
+                    src={imageSrc}
                     alt={item.name}
                     fill
+                    placeholder={item.blur_data_url ? "blur" : "empty"}
+                    blurDataURL={item.blur_data_url || undefined}
+                    sizes="48px"
                     className="object-cover"
                   />
                 </div>
               )}
 
               <span
-                className={`text-base leading-snug ${
-                  isChecked
-                    ? "text-[var(--color-text-secondary)]"
-                    : "text-[var(--color-text)]"
+                className={`font-latin text-base leading-snug ${
+                  isChecked ? "text-text-muted" : "text-navy font-medium"
                 }`}
               >
                 {item.name}

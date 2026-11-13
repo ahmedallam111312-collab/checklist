@@ -8,6 +8,7 @@ import { generateSlug, procedureDetailsSchema } from "@/lib/validation/procedure
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { FormattedLabel } from "@/components/admin/FormattedLabel";
 import { AR_STRINGS } from "@/messages/ar";
+import { useUndoToast } from "@/components/admin/UndoToast";
 
 interface DetailsTabProps {
   procedure?: Procedure | null;
@@ -17,6 +18,7 @@ interface DetailsTabProps {
     short_description: string;
     cover_path?: string | null;
     cover_alt: string;
+    blur_data_url?: string | null;
     published: boolean;
   }) => Promise<void>;
   setIsDirty: (dirty: boolean) => void;
@@ -35,8 +37,17 @@ export function DetailsTab({
   const [shortDesc, setShortDesc] = useState(procedure?.short_description || "");
   const [coverPath, setCoverPath] = useState<string | null>(procedure?.cover_path || null);
   const [coverAlt, setCoverAlt] = useState(procedure?.cover_alt || "");
+  const [blurDataUrl, setBlurDataUrl] = useState<string | null>(procedure?.blur_data_url || null);
   const [published, setPublished] = useState(procedure?.published || false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [isMac, setIsMac] = useState(false);
+  const { showUndoToast } = useUndoToast();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.platform) {
+      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform));
+    }
+  }, []);
 
   // Auto-generate slug when title changes unless manually edited
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +80,7 @@ export function DetailsTab({
       short_description: shortDesc,
       cover_path: coverPath,
       cover_alt: coverAlt,
+      blur_data_url: blurDataUrl,
       published,
     };
 
@@ -106,7 +118,7 @@ export function DetailsTab({
           value={title}
           onChange={handleTitleChange}
           placeholder="e.g. Arterial Blood Gas Sampling"
-          className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] font-medium"
+          className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 font-medium"
         />
         <div className="flex justify-between text-[11px] text-[var(--color-text-muted)] mt-1">
           <span>{fieldErrors.title && <span className="text-[var(--color-danger)]">{fieldErrors.title}</span>}</span>
@@ -138,7 +150,7 @@ export function DetailsTab({
             value={slug}
             onChange={handleSlugChange}
             placeholder="abg-sampling"
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] font-mono"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 font-mono"
           />
         </div>
         <div className="flex justify-between text-[11px] text-[var(--color-text-muted)] mt-1">
@@ -167,7 +179,7 @@ export function DetailsTab({
             setIsDirty(true);
           }}
           placeholder="Brief clinical summary displayed in search and library cards..."
-          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] leading-relaxed"
+          className="w-full rounded-lg border border-border bg-search-bg p-3 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 leading-relaxed"
         />
         <div className="flex justify-end text-[11px] text-[var(--color-text-muted)] mt-1">
           <span>{shortDesc.length}/200</span>
@@ -180,20 +192,23 @@ export function DetailsTab({
           currentPath={coverPath}
           currentAlt={coverAlt}
           folder={`covers/${procedure?.id || "drafts"}`}
-          onImageChanged={(newPath, newAlt) => {
+          onImageChanged={(newPath, newAlt, newBlur) => {
             setCoverPath(newPath);
             setCoverAlt(newAlt);
+            if (newBlur !== undefined) {
+              setBlurDataUrl(newBlur);
+            }
             setIsDirty(true);
           }}
         />
       </div>
 
       {/* Publish Toggle & Empty Warning */}
-      <div className="border-t border-[var(--color-border-subtle)] pt-5">
-        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-4 space-y-3">
+      <div className="border-t border-border-subtle pt-5">
+        <div className="squircle-tile rounded-tile border border-border-subtle bg-light-1 p-4 space-y-3">
           {/* Label + Switch Row */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <label htmlFor="publish_toggle" className="text-sm font-bold text-[var(--color-text)] cursor-pointer">
+            <label htmlFor="publish_toggle" className="text-sm font-bold text-navy cursor-pointer">
               <FormattedLabel text={AR_STRINGS.fieldPublish} />
             </label>
 
@@ -205,17 +220,28 @@ export function DetailsTab({
                 aria-checked={published}
                 checked={published}
                 onChange={(e) => {
-                  setPublished(e.target.checked);
+                  const nextVal = e.target.checked;
+                  setPublished(nextVal);
                   setIsDirty(true);
+                  if (!nextVal) {
+                    showUndoToast({
+                      message: "تم إلغاء نشر الإجراء",
+                      durationMs: 8000,
+                      onUndo: () => {
+                        setPublished(true);
+                        setIsDirty(true);
+                      },
+                    });
+                  }
                 }}
                 className="sr-only peer"
               />
-              <div className="w-12 h-6 bg-[var(--color-surface)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border border-[var(--color-border)] peer-checked:bg-[var(--color-primary)]"></div>
+              <div className="w-12 h-6 bg-white peer-focus-visible:ring-2 peer-focus-visible:ring-rose-dark rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all border border-border peer-checked:bg-rose"></div>
               <span
-                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${
                   published
-                    ? "bg-[var(--color-primary)]/20 text-[var(--color-primary)]"
-                    : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border-subtle)]"
+                    ? "border border-success/30 bg-success-surface text-success"
+                    : "bg-white text-text-secondary border border-border-subtle"
                 }`}
               >
                 {published ? AR_STRINGS.adminStatusPublished : AR_STRINGS.adminStatusDraft}
@@ -224,12 +250,12 @@ export function DetailsTab({
           </div>
 
           {/* Full-width Description & Empty Warning */}
-          <p className="text-xs text-[var(--color-text-secondary)] font-arabic leading-relaxed">
+          <p className="text-xs text-text-secondary font-arabic leading-relaxed">
             عند التفعيل، سيظهر الإجراء في مكتبة الطلاب العامة ومحرك البحث فورًا.
           </p>
 
           {published && hasEmptyContent && (
-            <div className="flex items-center gap-2 rounded bg-[var(--color-critical-surface)] p-2 text-xs font-semibold text-[var(--color-critical)]">
+            <div className="flex items-center gap-2 rounded-lg border border-critical/30 bg-critical-surface p-2.5 text-xs font-semibold text-critical">
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span>{AR_STRINGS.publishWarningEmpty}</span>
             </div>
@@ -238,11 +264,11 @@ export function DetailsTab({
       </div>
 
       {/* Save Button */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-border-subtle">
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex w-full sm:w-auto min-h-[44px] items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+          className="squircle-pill btn-rose-cta inline-flex w-full sm:w-auto min-h-[44px] items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-sm font-bold text-navy active:scale-[0.98] disabled:opacity-50"
         >
           {isSaving ? (
             <>
@@ -253,6 +279,9 @@ export function DetailsTab({
             <>
               <Save className="h-4 w-4" />
               <span>{AR_STRINGS.saveChanges}</span>
+              <kbd className="hidden sm:inline-flex items-center rounded border border-navy/25 bg-navy/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-navy">
+                {isMac ? "⌘S" : "Ctrl+S"}
+              </kbd>
             </>
           )}
         </button>

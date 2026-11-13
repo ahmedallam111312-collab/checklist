@@ -341,7 +341,7 @@ Apply sterile transparent dressing | وضع ضماد شفاف معقم`;
     const backupRes = await page.request.get("http://localhost:3000/api/admin/backup");
     expect(backupRes.status()).toBe(200);
     expect(backupRes.headers()["cache-control"]).toBe("no-store");
-    expect(backupRes.headers()["content-disposition"]).toMatch(/profnurse-backup-\d{4}-\d{2}-\d{2}\.json/);
+    expect(backupRes.headers()["content-disposition"]).toMatch(/critical-ease-backup-\d{4}-\d{2}-\d{2}\.json/);
 
     const backupJson = await backupRes.json();
     expect(backupJson.version).toBe(1);
@@ -436,7 +436,6 @@ Apply sterile transparent dressing | وضع ضماد شفاف معقم`;
     expect([404, 200]).toContain(delRes?.status());
 
     // Verify real DB: procedure and all child rows deleted
-    const secretClient = createClient(supabaseUrl, secretKey);
     const { data: dbProc } = await secretClient.from("procedures").select("id").eq("id", createdProcedureId).maybeSingle();
     expect(dbProc).toBeNull();
 

@@ -26,7 +26,7 @@ function saveScreenshot(sourcePath: string, filename: string) {
   fs.copyFileSync(sourcePath, dest2);
 }
 
-test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
+test.describe("Critical Ease Public Verification Suite (Light-Only)", () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const secretKey = process.env.SUPABASE_SECRET_KEY || "";
   const isDemo = process.env.NEXT_PUBLIC_USE_DEMO_DATA === "true";
@@ -167,25 +167,20 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
   test("Capture Required Screenshots, Viewports & 2x Zoom Crops", async ({ browser }) => {
     test.setTimeout(120000); // 2 minutes for comprehensive screenshot matrix
     const targets = [
-      { name: "390px-dark", width: 390, height: 844, theme: "dark" as const },
+      { name: "320px-light", width: 320, height: 568, theme: "light" as const },
       { name: "390px-light", width: 390, height: 844, theme: "light" as const },
-      { name: "1280px-dark", width: 1280, height: 800, theme: "dark" as const },
+      { name: "1280px-light", width: 1280, height: 800, theme: "light" as const },
     ];
 
     for (const target of targets) {
       const context = await browser.newContext({
         viewport: { width: target.width, height: target.height },
-        colorScheme: target.theme,
+        colorScheme: "light",
       });
       const page = await context.newPage();
 
       // Cover Screen (/)
       await page.goto("/");
-      if (target.theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      } else {
-        await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
-      }
       await page.waitForTimeout(150);
       const coverFile = `cover-${target.name}.png`;
       const tempCover = path.join(DOCS_SCREENSHOTS_DIR, `temp-${coverFile}`);
@@ -195,9 +190,6 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
 
       // Home Page (/home) - disable sticky during fullPage capture to prevent mid-page repetition
       await page.goto("/home");
-      if (target.theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
       await page.waitForTimeout(150);
       await page.evaluate(() => {
         const header = document.querySelector("header");
@@ -211,9 +203,6 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
 
       // Library Page (/procedures)
       await page.goto("/procedures");
-      if (target.theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
       await page.waitForTimeout(150);
       await page.evaluate(() => {
         const header = document.querySelector("header");
@@ -227,9 +216,6 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
 
       // Procedure Detail Page (/procedures/e2e-public-test)
       await page.goto("/procedures/e2e-public-test");
-      if (target.theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
       await page.waitForTimeout(200);
 
       // Open Section 4 (Equipment)
@@ -268,20 +254,17 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
       await context.close();
     }
 
-    // Capture procedure-page shot at 1280px at scroll 0, dark and light (natural sticky header)
-    for (const theme of ["dark", "light"] as const) {
+    // Capture procedure-page shot at 1280px at scroll 0 (natural sticky header, light-only)
+    {
       const context = await browser.newContext({
         viewport: { width: 1280, height: 800 },
-        colorScheme: theme,
+        colorScheme: "light",
       });
       const page = await context.newPage();
       await page.goto("/procedures/e2e-public-test");
-      if (theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
       await page.waitForTimeout(200);
 
-      const scroll0Filename = `procedure-1280px-scroll0-${theme}.png`;
+      const scroll0Filename = `procedure-1280px-scroll0-light.png`;
       const tempPath = path.join(DOCS_SCREENSHOTS_DIR, `temp-${scroll0Filename}`);
       await page.screenshot({ path: tempPath, fullPage: false });
       saveScreenshot(tempPath, scroll0Filename);
@@ -289,20 +272,17 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
       await context.close();
     }
 
-    // Capture 320px RTL Dark and 320px RTL Light for header & extreme mobile checks
-    for (const theme of ["dark", "light"] as const) {
+    // Capture 320px RTL Light for header & extreme mobile checks
+    {
       const context = await browser.newContext({
         viewport: { width: 320, height: 600 },
-        colorScheme: theme,
+        colorScheme: "light",
       });
       const page = await context.newPage();
       await page.goto("/procedures/e2e-public-test");
-      if (theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
       await page.waitForTimeout(200);
 
-      const filename = `320px-rtl-${theme}.png`;
+      const filename = `320px-rtl-light.png`;
       const tempPath = path.join(DOCS_SCREENSHOTS_DIR, `temp-${filename}`);
       await page.screenshot({ path: tempPath, fullPage: false });
       saveScreenshot(tempPath, filename);
@@ -320,7 +300,7 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
     await zoomPage.waitForTimeout(200);
 
     // Locate the critical step (step 2) and its parent container
-    const criticalStep = zoomPage.locator("[dir='ltr']").filter({ hasText: "CRITICAL" }).first();
+    const criticalStep = zoomPage.locator("[dir='ltr']").filter({ hasText: "خطوة حرجة" }).first();
     await criticalStep.scrollIntoViewIfNeeded();
 
     // 1. Grayscale screenshot of the critical step
@@ -360,16 +340,15 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
   // --------------------------------------------------------------------------
   // 2. Automated Assertions: Heading Sizes, Bidi, 320px Step, Header, Border
   // --------------------------------------------------------------------------
-  test("Automated Assertions: Heading sizes, Tagline Bidi order, 4px amber border, 320px layout", async ({
+  test("Automated Assertions: Heading sizes, Tagline Bidi order, 4px red critical border, 320px layout", async ({
     page,
   }) => {
-    // 1. Bidi Tagline order assertion on Cover Screen (/)
-    await page.goto("/");
-    const taglineBdi = page.locator("bdi[dir='ltr']").first();
+    // 1. Bidi Tagline order assertion on Home (/home)
+    await page.goto("/home");
+    const taglineBdi = page.locator("bdi[dir='ltr']").filter({ hasText: "Learn • Practice • Excel" }).first();
     expect(await taglineBdi.isVisible()).toBe(true);
     const taglineText = await taglineBdi.textContent();
-    // Verify tagline ends with '.' on the right, not flipped to the start
-    expect(taglineText?.trim()).toBe("Learn. Practice. Perform.");
+    expect(taglineText?.trim()).toBe("Learn • Practice • Excel");
 
     // 2. Heading Sizes Assertions
     // Home title >= 30px on mobile
@@ -391,14 +370,8 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
     const procedureTitleSize = await procedureTitle.evaluate((el) => parseFloat(window.getComputedStyle(el).fontSize));
     expect(procedureTitleSize).toBeGreaterThanOrEqual(24);
 
-    // 3. Critical Step: 4px border width and amber color assertion
-    // Verify in dark theme (#ffb020 = rgb(255, 176, 32))
-    await page.evaluate(() => {
-      localStorage.setItem("profnurse-theme", "dark");
-      document.documentElement.removeAttribute("data-theme");
-    });
-    await page.waitForTimeout(300); // Wait for transition-colors to finish
-    const criticalStep = page.locator("[dir='ltr']").filter({ hasText: "CRITICAL" }).first();
+    // 3. Critical Step: 4px border width and #B42318 red color assertion (light-only)
+    const criticalStep = page.locator("[dir='ltr']").filter({ hasText: "خطوة حرجة" }).first();
     const borderStyles = await criticalStep.evaluate((el) => {
       const computed = window.getComputedStyle(el);
       return {
@@ -407,16 +380,7 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
       };
     });
     expect(borderStyles.borderLeftWidth).toBe("4px");
-    expect(borderStyles.borderLeftColor).toBe("rgb(255, 176, 32)");
-
-    // Also verify in light theme (#8a5300 = rgb(138, 83, 0))
-    await page.evaluate(() => {
-      localStorage.setItem("profnurse-theme", "light");
-      document.documentElement.setAttribute("data-theme", "light");
-    });
-    await page.waitForTimeout(300); // Wait for transition-colors to finish
-    const lightBorderColor = await criticalStep.evaluate((el) => window.getComputedStyle(el).borderLeftColor);
-    expect(lightBorderColor).toBe("rgb(138, 83, 0)");
+    expect(borderStyles.borderLeftColor).toBe("rgb(180, 35, 24)");
 
     // 4. Checklist layout at 320px width: long step uses full width below
     await page.setViewportSize({ width: 320, height: 600 });
@@ -488,66 +452,53 @@ test.describe("ProfNurse Phase 0 & Phase 1 Verification Suite", () => {
     page,
   }) => {
     const pagesToAudit = ["/", "/home", "/procedures", "/procedures/e2e-public-test"];
-    const themes: Array<"dark" | "light"> = ["dark", "light"];
 
     for (const url of pagesToAudit) {
-      for (const theme of themes) {
-        await page.goto(url);
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        } else {
-          await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
-        }
-        await page.waitForTimeout(150);
+      await page.goto(url);
+      await page.waitForTimeout(150);
 
-        // On procedure detail page, expand section 7 (Video) so video placeholder is in DOM on mobile
-        if (url.includes("/procedures/e2e-public-test")) {
-          const videoAccordionBtn = page.locator("button:has-text('الفيديو التوضيحي')").first();
-          if (await videoAccordionBtn.isVisible()) {
-            const isVideoOpen = await videoAccordionBtn.getAttribute("aria-expanded");
-            if (isVideoOpen !== "true") {
-              await videoAccordionBtn.click();
-              await page.waitForTimeout(100);
-            }
+      // On procedure detail page, expand section 7 (Video) so video placeholder is in DOM on mobile
+      if (url.includes("/procedures/e2e-public-test")) {
+        const videoAccordionBtn = page.locator("button:has-text('الفيديو التوضيحي')").first();
+        if (await videoAccordionBtn.isVisible()) {
+          const isVideoOpen = await videoAccordionBtn.getAttribute("aria-expanded");
+          if (isVideoOpen !== "true") {
+            await videoAccordionBtn.click();
+            await page.waitForTimeout(100);
           }
         }
-
-        const accessibilityScanResults = await new AxeBuilder({ page })
-          .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-          .analyze();
-
-        const seriousOrCriticalViolations = accessibilityScanResults.violations.filter(
-          (v) => v.impact === "serious" || v.impact === "critical"
-        );
-
-        expect(
-          seriousOrCriticalViolations,
-          `Accessibility violations found on ${url} in ${theme} mode: ${JSON.stringify(
-            seriousOrCriticalViolations,
-            null,
-            2
-          )}`
-        ).toEqual([]);
       }
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+
+      const seriousOrCriticalViolations = accessibilityScanResults.violations.filter(
+        (v) => v.impact === "serious" || v.impact === "critical"
+      );
+
+      expect(
+        seriousOrCriticalViolations,
+        `Accessibility violations found on ${url}: ${JSON.stringify(
+          seriousOrCriticalViolations,
+          null,
+          2
+        )}`
+      ).toEqual([]);
     }
 
     // Direct audit of video placeholder element on desktop
     await page.setViewportSize({ width: 1280, height: 800 });
-    for (const theme of themes) {
-      await page.goto("/procedures/e2e-public-test");
-      if (theme === "light") {
-        await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-      }
-      await page.waitForTimeout(150);
+    await page.goto("/procedures/e2e-public-test");
+    await page.waitForTimeout(150);
 
-      const videoScanResults = await new AxeBuilder({ page })
-        .include("[data-testid='video-placeholder']")
-        .analyze();
+    const videoScanResults = await new AxeBuilder({ page })
+      .include("[data-testid='video-placeholder']")
+      .analyze();
 
-      const videoViolations = videoScanResults.violations.filter(
-        (v) => v.impact === "serious" || v.impact === "critical"
-      );
-      expect(videoViolations).toEqual([]);
-    }
+    const videoViolations = videoScanResults.violations.filter(
+      (v) => v.impact === "serious" || v.impact === "critical"
+    );
+    expect(videoViolations).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-export type VideoStatus = 'none' | 'uploading' | 'processing' | 'ready' | 'error';
+export type VideoStatus = 'none' | 'uploading' | 'processing' | 'ready' | 'error' | 'errored';
 export type ListKind = 'indication' | 'contraindication' | 'common_mistake';
 
 export interface SiteSettings {
@@ -31,6 +31,7 @@ export interface EquipmentItem {
   name: string;
   image_path?: string | null;
   photo_path?: string | null;
+  blur_data_url?: string | null;
   sort_order: number;
 }
 
@@ -50,15 +51,29 @@ export interface Procedure {
   definition: string;
   cover_path?: string | null;
   cover_alt: string;
+  blur_data_url?: string | null;
   sort_order: number;
   published: boolean;
   mux_upload_id?: string | null;
   mux_asset_id?: string | null;
   mux_playback_id?: string | null;
   video_status: VideoStatus;
+  video_duration_seconds?: number | null;
+  video_error?: string | null;
+  video_updated_at?: string | null;
   created_at: string;
   updated_at: string;
   checklist_steps?: ChecklistStep[];
   equipment_items?: EquipmentItem[];
   list_items?: ListItem[];
+}
+
+export interface IdempotencyRecord {
+  id: string;
+  key: string;
+  user_id: string;
+  action: string;
+  response: Record<string, unknown>;
+  created_at: string;
+  expires_at: string;
 }

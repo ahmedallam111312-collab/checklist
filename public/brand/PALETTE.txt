@@ -1,0 +1,10 @@
+Critical Ease palette (sampled from the client's prototype screenshots and logo)
+navy        #0B2146   header, hero, card base, text on light
+logo-navy   #071D3C   ink color inside the logo file
+plum        #524056   far end of card/hero gradients
+rose        #C87475   buttons, dividers, tiles, tagline on navy (logo ink #C77475)
+rose-dark   #9A4450   rose TEXT on light surfaces (5.2:1 on #F6E6E6)
+light-1     #FBF3F3   search field, top of light gradient
+light-2     #EBD8DA   bottom of light gradient
+page-light  #F6E6E6   mid light surface
+Contrast: rose #C87475 on navy 4.70, on plum 2.79 (fails), on light 2.80 (fails).

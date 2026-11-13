@@ -7,7 +7,7 @@ import { AdminSettingsClient } from "@/components/admin/AdminSettingsClient";
 import { AR_STRINGS } from "@/messages/ar";
 
 export const metadata: Metadata = {
-  title: "إعدادات المنصة — ProfNurse",
+  title: "إعدادات المنصة | Critical Ease",
 };
 
 export default async function AdminSettingsPage() {
@@ -18,18 +18,18 @@ export default async function AdminSettingsPage() {
       <div className="flex items-center gap-2">
         <Link
           href="/admin"
-          className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+          className="inline-flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-dark hover:underline transition-colors"
         >
-          <ArrowRight className="h-4 w-4 icon-mirror" />
+          <ArrowRight className="h-4 w-4" />
           <span>{AR_STRINGS.adminBackToDashboard}</span>
         </Link>
       </div>
 
-      <div className="border-b border-[var(--color-border-subtle)] pb-3">
-        <h1 className="type-h1 text-[var(--color-text)]">
+      <div className="border-b border-border-subtle pb-3">
+        <h1 className="type-h1 text-navy">
           {AR_STRINGS.adminSettings}
         </h1>
-        <p className="mt-1 text-sm text-[var(--color-text-secondary)] font-arabic">
+        <p className="mt-1 text-sm text-text-secondary font-arabic">
           تعديل النصوص الأساسية للمنصة، نصوص الواجهة والصفحة الرئيسية، وشعار الموقع.
         </p>
       </div>

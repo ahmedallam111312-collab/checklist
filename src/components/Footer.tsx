@@ -1,16 +1,79 @@
 import React from "react";
+import Link from "next/link";
+import { Logo } from "@/components/Logo";
+import { BRAND } from "@/config/brand";
+import { AR_STRINGS } from "@/messages/ar";
 
 interface FooterProps {
   footerText?: string;
+  siteName?: string;
 }
 
-export function Footer({ footerText }: FooterProps) {
-  if (!footerText) return null;
-
+export function Footer({ footerText, siteName = BRAND.name }: FooterProps) {
   return (
-    <footer className="mt-auto border-t border-[var(--color-border-subtle)] bg-[var(--color-surface)] py-8 text-center text-sm text-[var(--color-text-muted)]">
-      <div className="mx-auto max-w-[70rem] px-4 sm:px-6">
-        <p className="leading-relaxed">{footerText}</p>
+    <footer className="surface-navy mt-auto border-t-[3px] border-rose bg-navy py-10 text-center text-white">
+      <div className="mx-auto max-w-[70rem] space-y-5 px-4 sm:px-6">
+        <div className="flex justify-center">
+          <Link
+            href="/"
+            aria-label={siteName}
+            className="inline-flex min-h-[44px] items-center justify-center rounded-pill px-2"
+          >
+            <Logo
+              variant="reversed"
+              name={siteName}
+              width={180}
+              height={92}
+              className="h-auto w-[160px]"
+            />
+          </Link>
+        </div>
+
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-text-muted-navy">
+          {BRAND.footerDisclaimer}
+        </p>
+
+        {footerText && footerText !== BRAND.footerDisclaimer && (
+          <p className="text-xs leading-relaxed text-text-muted-navy/90">
+            {footerText}
+          </p>
+        )}
+
+        <nav
+          aria-label="روابط التذييل"
+          className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm"
+        >
+          <Link
+            href="/home"
+            className="inline-flex min-h-[44px] items-center rounded-pill px-3 text-rose-light transition-colors hover:text-white"
+          >
+            {AR_STRINGS.home}
+          </Link>
+          <span aria-hidden="true" className="text-rose/80">
+            •
+          </span>
+          <Link
+            href="/procedures"
+            className="inline-flex min-h-[44px] items-center rounded-pill px-3 text-rose-light transition-colors hover:text-white"
+          >
+            {AR_STRINGS.libraryTitle}
+          </Link>
+          <span aria-hidden="true" className="text-rose/80">
+            •
+          </span>
+          <Link
+            href="/about"
+            className="inline-flex min-h-[44px] items-center rounded-pill px-3 text-rose-light transition-colors hover:text-white"
+          >
+            {AR_STRINGS.navAbout}
+          </Link>
+        </nav>
+
+        <p className="pt-1 text-xs font-medium text-text-muted-navy">
+          <bdi dir="ltr" lang="en" className="font-latin">
+            {BRAND.copyright}
+          </bdi>
+        </p>
       </div>
     </footer>
   );

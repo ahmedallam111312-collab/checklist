@@ -1,43 +1,66 @@
 import type { Metadata, Viewport } from "next";
-import {
-  IBM_Plex_Sans,
-  IBM_Plex_Sans_Arabic,
-  IBM_Plex_Mono,
-} from "next/font/google";
+import { Roboto, IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import { DemoBanner } from "@/components/DemoBanner";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { BRAND } from "@/config/brand";
+import { getSiteUrl } from "@/lib/env";
 
-const ibmPlexSans = IBM_Plex_Sans({
+const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-ibm-plex-sans",
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
   display: "swap",
+  adjustFontFallback: true,
 });
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "700"],
   variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["500"],
-  variable: "--font-ibm-plex-mono",
-  display: "swap",
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
-  title: `${BRAND.name} — ${BRAND.tagline}`,
+  title: {
+    default: `${BRAND.name} — ${BRAND.tagline}`,
+    template: `%s | ${BRAND.name}`,
+  },
   description: BRAND.heroDescription,
+  metadataBase: new URL(getSiteUrl()),
+  openGraph: {
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.heroDescription,
+    siteName: BRAND.name,
+    locale: "ar_SA",
+    type: "website",
+    images: [
+      {
+        url: "/brand/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: `${BRAND.name} — ${BRAND.tagline}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.heroDescription,
+    images: ["/brand/og-image.png"],
+  },
   icons: {
     icon: [
-      { url: "/brand/mark.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon.ico", sizes: "any" },
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      {
+        url: "/brand/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
   },
 };
@@ -46,7 +69,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#07182a",
+  themeColor: "#0B2146",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -58,28 +82,24 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
+      className={`${roboto.variable} ${ibmPlexSansArabic.variable}`}
       suppressHydrationWarning
-      className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} ${ibmPlexMono.variable}`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function() {
-              try {
-                var stored = localStorage.getItem('profnurse-theme');
-                if (stored === 'light') {
-                  document.documentElement.setAttribute('data-theme', 'light');
-                } else if (!stored && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                  document.documentElement.setAttribute('data-theme', 'light');
-                }
-              } catch (e) {}
-            })();`,
-          }}
-        />
-      </head>
-      <body className="font-arabic antialiased selection:bg-[var(--color-primary)] selection:text-[var(--color-on-primary)]">
+      <body
+        className="min-h-[100dvh] flex flex-col font-arabic text-text antialiased selection:bg-rose/25 selection:text-navy"
+        suppressHydrationWarning
+      >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-50 focus:rounded-pill focus:bg-rose focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-navy focus:shadow-lg"
+        >
+          تخطّي إلى المحتوى الرئيسي
+        </a>
         <DemoBanner />
-        {children}
+        <OfflineIndicator />
+        <div id="main-content" className="flex-1 flex flex-col">
+          {children}
+        </div>
       </body>
     </html>
   );

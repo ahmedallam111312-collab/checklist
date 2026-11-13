@@ -1,0 +1,20 @@
+name: Supabase Database Keep-Alive
+
+on:
+  schedule:
+    # Runs at 04:00 UTC every 3 days to keep the free Supabase project active
+    - cron: '0 4 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Protected Health Check
+        run: |
+          if [ -z "${{ secrets.HEALTH_CHECK_SECRET }}" ]; then
+            echo "Skipping secret header: HEALTH_CHECK_SECRET not set in GitHub secrets."
+            curl -f -s -S "${{ secrets.PRODUCTION_URL }}/api/health" || exit 0
+          else
+            curl -f -s -S -H "Authorization: Bearer ${{ secrets.HEALTH_CHECK_SECRET }}" "${{ secrets.PRODUCTION_URL }}/api/health"
+          fi

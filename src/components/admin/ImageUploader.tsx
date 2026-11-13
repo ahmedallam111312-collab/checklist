@@ -11,7 +11,7 @@ interface ImageUploaderProps {
   currentPath?: string | null;
   currentAlt?: string;
   folder: string;
-  onImageChanged: (path: string | null, alt: string) => void;
+  onImageChanged: (path: string | null, alt: string, blurDataUrl?: string | null) => void;
   label?: string;
 }
 
@@ -48,8 +48,8 @@ export function ImageUploader({
     setIsProcessing(true);
 
     try {
-      // 1. Client-side resize to max 1600px WebP
-      const { blob, previewUrl: localPreview } = await resizeImageToWebP(file);
+      // 1. Client-side resize to max 1600px WebP + generate blurDataUrl
+      const { blob, previewUrl: localPreview, blurDataUrl } = await resizeImageToWebP(file);
       setPreviewUrl(localPreview);
 
       // 2. Prepare FormData for server action
@@ -67,7 +67,7 @@ export function ImageUploader({
         setErrorMessage(result.error || "فشل رفع الصورة إلى الخادم.");
         setPreviewUrl(getDisplayUrl(currentPath));
       } else {
-        onImageChanged(result.path, altText);
+        onImageChanged(result.path, altText, blurDataUrl);
       }
     } catch (err: any) {
       setErrorMessage(err.message || "حدث خطأ أثناء معالجة الصورة.");
@@ -100,15 +100,15 @@ export function ImageUploader({
 
   return (
     <div className="space-y-3 text-start">
-      <label className="block text-sm font-semibold text-[var(--color-text)]">
+      <label className="block text-sm font-bold text-navy">
         {label}
       </label>
 
       {/* Upload Drop Zone / Preview Box */}
-      <div className="rounded-lg border-2 border-dashed border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-4 text-center transition-colors hover:border-[var(--color-primary)]">
+      <div className="squircle-tile rounded-tile border-2 border-dashed border-border bg-light-1 p-4 text-center transition-colors hover:border-rose-dark">
         {activeDisplayUrl ? (
           <div className="space-y-3">
-            <div className="relative mx-auto h-48 w-full max-w-md overflow-hidden rounded-md border border-[var(--color-border)] bg-black/40">
+            <div className="relative mx-auto h-48 w-full max-w-md overflow-hidden rounded-lg border border-border-subtle bg-white">
               <Image
                 src={activeDisplayUrl}
                 alt={altText || "معاينة الصورة المرفوعة"}
@@ -117,7 +117,7 @@ export function ImageUploader({
                 className="object-contain"
               />
               {isProcessing && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white">
+                <div className="absolute inset-0 flex items-center justify-center bg-navy/65 text-white">
                   <Loader2 className="h-6 w-6 animate-spin" />
                 </div>
               )}
@@ -128,7 +128,7 @@ export function ImageUploader({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isProcessing}
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-xs font-semibold text-[var(--color-text)] transition-colors hover:border-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-border bg-white px-4 py-2 text-xs font-bold text-navy transition-colors hover:border-rose-dark hover:text-rose-dark"
               >
                 <Upload className="h-4 w-4" aria-hidden="true" />
                 <span>تغيير الصورة</span>
@@ -138,7 +138,7 @@ export function ImageUploader({
                 type="button"
                 onClick={handleRemove}
                 disabled={isProcessing}
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-[var(--color-danger)]/30 bg-[var(--color-danger-surface)] px-4 py-2 text-xs font-semibold text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-danger/30 bg-danger-surface px-4 py-2 text-xs font-bold text-danger transition-colors hover:bg-danger hover:text-white"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
                 <span>إزالة الصورة</span>
@@ -147,11 +147,11 @@ export function ImageUploader({
           </div>
         ) : (
           <div className="py-6">
-            <ImageIcon className="mx-auto h-10 w-10 text-[var(--color-text-muted)]" />
-            <p className="mt-2 text-sm text-[var(--color-text)]">
+            <ImageIcon className="mx-auto h-10 w-10 text-text-secondary" />
+            <p className="mt-2 text-sm font-semibold text-navy">
               اسحب الصورة وأفلتها هنا، أو اضغط للاختيار
             </p>
-            <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+            <p className="mt-1 text-xs text-text-secondary">
               يدعم JPEG أو PNG أو WebP بحد أقصى 5 ميجابايت (يتم ضغطها إلى WebP بحجم أقل من 2 ميجابايت تلقائيًا)
             </p>
 
@@ -159,7 +159,7 @@ export function ImageUploader({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isProcessing}
-              className="mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+              className="squircle-pill btn-rose-cta mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-pill px-5 py-2 text-xs font-bold text-navy active:scale-95"
             >
               {isProcessing ? (
                 <>
@@ -187,7 +187,7 @@ export function ImageUploader({
       </div>
 
       {errorMessage && (
-        <p className="text-xs text-[var(--color-danger)]" role="alert">
+        <p className="text-xs text-danger font-medium" role="alert">
           {errorMessage}
         </p>
       )}
@@ -196,7 +196,7 @@ export function ImageUploader({
       <div>
         <label
           htmlFor="cover_alt_input"
-          className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1"
+          className="block text-xs font-semibold text-text-secondary mb-1.5"
         >
           النص البديل (200 حرف كحد أقصى)
         </label>
@@ -207,7 +207,7 @@ export function ImageUploader({
           onChange={handleAltChange}
           placeholder="وصف الصورة لقارئ الشاشة..."
           maxLength={200}
-          className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+          className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
         />
       </div>
     </div>

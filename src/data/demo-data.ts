@@ -7,11 +7,11 @@ const globalForDemo = globalThis as unknown as {
 
 const INITIAL_SETTINGS: SiteSettings = {
   id: 1,
-  site_name: "ProfNurse",
-  tagline: "Learn. Practice. Perform.",
-  splash_cta: "ابدأ",
+  site_name: "Critical Ease",
+  tagline: "Learn • Practice • Excel",
+  splash_cta: "هيا نبدأ",
   hero_eyebrow: "تمريض الطوارئ والرعاية الحرجة",
-  hero_title: "مرحبًا بك في ProfNurse",
+  hero_title: "مرحبًا بك في Critical Ease",
   hero_description:
     "منصة تعليمية عملية لإجراءات تمريض الطوارئ والرعاية الحرجة: خطوات واضحة، وقوائم تحقق تفاعلية، وفيديوهات توضيحية.",
   hero_cta: "استكشف الإجراءات",

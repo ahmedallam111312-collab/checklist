@@ -1,143 +1,80 @@
-"use client";
-
-import React, { useId } from "react";
+import React from "react";
 import Image from "next/image";
 import { BRAND } from "@/config/brand";
 
+export type LogoVariant =
+  | "chip"
+  | "reversed"
+  | "light"
+  | "mark"
+  | "mark-reversed";
+
+const VARIANT_ASSETS: Record<
+  LogoVariant,
+  { src: string; width: number; height: number }
+> = {
+  chip: {
+    src: "/brand/critical-ease-logo-chip.png",
+    width: 1003,
+    height: 548,
+  },
+  reversed: {
+    src: "/brand/critical-ease-logo-reversed.png",
+    width: 929,
+    height: 474,
+  },
+  light: {
+    src: "/brand/critical-ease-logo.png",
+    width: 929,
+    height: 474,
+  },
+  mark: {
+    src: "/brand/critical-ease-mark.png",
+    width: 434,
+    height: 374,
+  },
+  "mark-reversed": {
+    src: "/brand/critical-ease-mark-reversed.png",
+    width: 434,
+    height: 374,
+  },
+};
+
 interface LogoProps {
+  variant?: LogoVariant;
   name?: string;
   logoPath?: string | null;
-  size?: number; // size of the SVG mark
-  showName?: boolean;
-  nameClassName?: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
   className?: string;
-  hideNameBelow360?: boolean;
+  sizes?: string;
 }
 
 export function Logo({
+  variant = "light",
   name = BRAND.name,
   logoPath,
-  size = 36,
-  showName = true,
-  nameClassName = "text-xl font-semibold tracking-tight",
+  width,
+  height,
+  priority = false,
   className = "",
-  hideNameBelow360 = false,
+  sizes,
 }: LogoProps) {
-  const rawId = useId();
-  const gradId = `pn-bg-${rawId.replace(/:/g, "")}`;
-
-  if (logoPath) {
-    return (
-      <div className={`flex items-center gap-3 ${className}`}>
-        <Image
-          src={logoPath}
-          alt={name}
-          width={size}
-          height={size}
-          className="object-contain"
-        />
-        {showName && (
-          <span
-            lang="en"
-            dir="ltr"
-            className={`font-sans ${nameClassName} ${
-              hideNameBelow360 ? "hidden min-[360px]:inline" : ""
-            }`}
-          >
-            {name}
-          </span>
-        )}
-      </div>
-    );
-  }
-
-  // Parse two-tone if CamelCase (e.g. Prof + Nurse)
-  const camelMatch = name.match(/^([A-Z][a-z]+)([A-Z][a-z0-9]+)$/);
-  const part1 = camelMatch ? camelMatch[1] : name;
-  const part2 = camelMatch ? camelMatch[2] : null;
+  const asset = VARIANT_ASSETS[variant];
+  const src = logoPath || asset.src;
+  const resolvedWidth = width ?? asset.width;
+  const resolvedHeight = height ?? asset.height;
 
   return (
-    <div className={`flex items-center gap-2.5 ${className}`}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        viewBox="0 0 64 64"
-        role="img"
-        aria-hidden={showName ? "true" : undefined}
-        aria-label={showName ? undefined : name}
-        className="shrink-0 drop-shadow-sm select-none"
-      >
-        <title>{name}</title>
-        <defs>
-          <linearGradient
-            id={gradId}
-            x1="8"
-            y1="4"
-            x2="58"
-            y2="60"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor="#17446a" />
-            <stop offset="1" stopColor="#07182a" />
-          </linearGradient>
-        </defs>
-        <rect width="64" height="64" rx="16" fill={`url(#${gradId})`} />
-        <rect
-          x="0.75"
-          y="0.75"
-          width="62.5"
-          height="62.5"
-          rx="15.25"
-          fill="none"
-          stroke="#1f4466"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M49 11v8M45 15h8"
-          stroke="#b4c7d6"
-          strokeOpacity="0.7"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M8 34H19L24 20L31 46L37 26L41 34H56"
-          fill="none"
-          stroke="#00d2ff"
-          strokeOpacity="0.22"
-          strokeWidth="9"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M8 34H19L24 20L31 46L37 26L41 34H56"
-          fill="none"
-          stroke="#00d2ff"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="56" cy="34" r="3.2" fill="#7be7ff" />
-      </svg>
-
-      {showName && (
-        <span
-          lang="en"
-          dir="ltr"
-          className={`font-sans ${nameClassName} ${
-            hideNameBelow360 ? "hidden min-[360px]:inline" : ""
-          }`}
-        >
-          {part2 ? (
-            <>
-              <span className="text-[var(--color-text)]">{part1}</span>
-              <span className="text-[var(--color-primary)]">{part2}</span>
-            </>
-          ) : (
-            <span className="text-[var(--color-text)]">{name}</span>
-          )}
-        </span>
-      )}
-    </div>
+    <Image
+      src={src}
+      alt={name}
+      width={resolvedWidth}
+      height={resolvedHeight}
+      priority={priority}
+      sizes={sizes}
+      className={`object-contain select-none ${className}`}
+    />
   );
 }

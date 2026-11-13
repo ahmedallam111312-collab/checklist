@@ -1,18 +1,19 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Plus, Video, AlertCircle, Download } from "lucide-react";
+import { Plus, Video, AlertCircle, AlertTriangle, Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/data";
 import { DEMO_PROCEDURES } from "@/data/demo-data";
 import { Procedure } from "@/types/database";
 import { AR_STRINGS } from "@/messages/ar";
 import { AdminDashboardClient } from "@/components/admin/AdminDashboardClient";
+import { getVideoUsageSummary } from "@/app/admin/actions/video";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "إدارة الإجراءات — ProfNurse",
+  title: "إدارة الإجراءات | Critical Ease",
 };
 
 export default async function AdminDashboardPage() {
@@ -34,20 +35,36 @@ export default async function AdminDashboardPage() {
     } catch {}
   }
 
-  // Placeholder video count (1 ready per published procedure with video, placeholder for Phase 3)
-  const videosUsed = procedures.filter((p) => p.video_status === "ready").length;
+  // Live video usage & orphan asset summary
+  let videosUsed = 0;
   const videoLimit = 10;
-  const isVideoNearLimit = videosUsed >= 8;
+  let orphanAssets: string[] = [];
+
+  try {
+    const summary = await getVideoUsageSummary();
+    videosUsed = summary.usedCount;
+    orphanAssets = summary.orphanAssets;
+  } catch {
+    videosUsed = procedures.filter((p) => p.mux_asset_id).length;
+  }
+
+  const isAmber = videosUsed >= 8 && videosUsed < 10;
+  const isRed = videosUsed >= 10;
+  const barColor = isRed
+    ? "bg-critical"
+    : isAmber
+    ? "bg-warning"
+    : "bg-rose-dark";
 
   return (
     <div className="space-y-6 text-start">
       {/* Top Header Row: Title & Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[var(--color-border-subtle)] pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border-subtle pb-5">
         <div>
-          <h1 className="type-h1 text-[var(--color-text)]">
+          <h1 className="type-h1 text-navy">
             {AR_STRINGS.adminProceduresList}
           </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)] font-arabic">
+          <p className="mt-1 text-sm text-text-secondary font-arabic">
             إدارة وتعديل الإجراءات السريرية، ترتيب عرضها للطلاب، ونشرها.
           </p>
         </div>
@@ -57,17 +74,17 @@ export default async function AdminDashboardPage() {
           <a
             href="/api/admin/backup"
             download
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2 text-xs font-semibold text-[var(--color-text)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-border bg-white px-4 py-2 text-xs font-bold text-navy transition-colors hover:border-rose-dark hover:text-rose-dark"
             title={AR_STRINGS.backupNote}
           >
-            <Download className="h-4 w-4 text-[var(--color-primary)]" aria-hidden="true" />
+            <Download className="h-4 w-4 text-rose-dark" aria-hidden="true" />
             <span>{AR_STRINGS.backupExportButton}</span>
           </a>
 
           {/* Add Procedure Button */}
           <Link
             href="/admin/procedures/new"
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill btn-rose-cta inline-flex min-h-[44px] items-center gap-2 rounded-pill px-4 py-2 text-sm font-bold text-navy active:scale-[0.98]"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             <span>{AR_STRINGS.adminAddProcedure}</span>
@@ -76,38 +93,62 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Backup note in UI */}
-      <p className="text-xs text-[var(--color-text-muted)] font-arabic">
-        ℹ {AR_STRINGS.backupNote}
+      <p className="text-xs text-text-secondary font-arabic">
+        {AR_STRINGS.backupNote}
       </p>
 
-      {/* Placeholder "videos used: n / 10" widget */}
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 sm:p-5">
+      {/* Videos used widget */}
+      <div
+        data-testid="video-usage-card"
+        className="squircle-card rounded-card border border-border-subtle bg-white p-4 sm:p-5 shadow-card-soft"
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Video className="h-5 w-5 text-[var(--color-primary)]" aria-hidden="true" />
-            <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            <Video className="h-5 w-5 text-rose-dark" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-navy">
               {AR_STRINGS.adminVideosUsedWidget}
             </h2>
           </div>
-          <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-secondary)]" dir="ltr">
+          <span className="font-mono text-xs font-bold tabular-nums text-text-secondary" dir="ltr">
             {videosUsed} / {videoLimit}
           </span>
         </div>
 
-        <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-[var(--color-surface-sunken)]">
+        <div className="mt-2.5 h-2.5 w-full overflow-hidden rounded-full bg-light-1 border border-border-subtle">
           <div
-            className={`h-full transition-all duration-300 ${
-              isVideoNearLimit ? "bg-[var(--color-critical)]" : "bg-[var(--color-primary)]"
-            }`}
+            className={`h-full transition-all duration-300 ${barColor}`}
             style={{ width: `${Math.min(100, (videosUsed / videoLimit) * 100)}%` }}
           />
         </div>
 
-        {isVideoNearLimit && (
-          <p className="mt-2 flex items-center gap-1.5 text-xs text-[var(--color-critical)]">
+        {isRed && (
+          <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-danger" role="alert">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+            <span>{AR_STRINGS.videoQuotaBlocked}</span>
+          </p>
+        )}
+
+        {isAmber && !isRed && (
+          <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-warning">
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
             <span>{AR_STRINGS.adminVideosWarning}</span>
           </p>
+        )}
+
+        {orphanAssets.length > 0 && (
+          <div className="mt-3 rounded-lg border border-warning/40 bg-warning-surface p-2.5 text-xs text-warning space-y-1">
+            <div className="flex items-center gap-1.5 font-bold">
+              <AlertTriangle className="h-4 w-4 shrink-0" />
+              <span>تنبيه: يوجد فيديوهات في Mux غير مرتبطة بأي إجراء ({orphanAssets.length}).</span>
+            </div>
+            <div className="font-mono text-[11px] text-text-secondary flex flex-wrap gap-1" dir="ltr">
+              {orphanAssets.map((id) => (
+                <span key={id} className="inline-block rounded bg-white px-1.5 py-0.5 border border-border-subtle">
+                  {id}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 

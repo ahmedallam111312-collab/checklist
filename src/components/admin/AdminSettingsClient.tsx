@@ -67,10 +67,10 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
       <div aria-live="polite">
         {feedback && (
           <div
-            className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-semibold text-start mb-2 animate-in fade-in ${
+            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-start mb-2 animate-in fade-in ${
               feedback.type === "success"
-                ? "bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
-                : "bg-[var(--color-danger-surface)] text-[var(--color-danger)]"
+                ? "border border-success/30 bg-success-surface text-success"
+                : "border border-danger/30 bg-danger-surface text-danger"
             }`}
           >
             {feedback.type === "success" ? (
@@ -83,8 +83,8 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 sm:p-7 space-y-5 shadow-sm">
-        <h2 className="text-base font-bold text-[var(--color-text)] border-b border-[var(--color-border-subtle)] pb-3">
+      <div className="squircle-card rounded-card border border-border-subtle bg-white p-5 sm:p-7 space-y-5 shadow-card-soft">
+        <h2 className="text-base font-bold text-navy border-b border-border-subtle pb-3">
           {AR_STRINGS.settingsTitle}
         </h2>
 
@@ -92,9 +92,9 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_site_name"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
-            <FormattedLabel text={AR_STRINGS.settingsSiteName} /> <span className="text-[var(--color-danger)]">*</span>
+            <FormattedLabel text={AR_STRINGS.settingsSiteName} /> <span className="text-danger">*</span>
           </label>
           <input
             id="setting_site_name"
@@ -105,10 +105,10 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.site_name}
             onChange={(e) => handleChange("site_name", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] font-semibold focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy font-semibold focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
           {fieldErrors.site_name && (
-            <p className="mt-1 text-xs text-[var(--color-danger)]">{fieldErrors.site_name}</p>
+            <p className="mt-1 text-xs text-danger">{fieldErrors.site_name}</p>
           )}
         </div>
 
@@ -116,7 +116,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_tagline"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsTagline} />
           </label>
@@ -128,7 +128,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.tagline}
             onChange={(e) => handleChange("tagline", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
         </div>
 
@@ -136,7 +136,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_splash_cta"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsSplashCta} />
           </label>
@@ -146,7 +146,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.splash_cta}
             onChange={(e) => handleChange("splash_cta", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
         </div>
 
@@ -154,7 +154,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_hero_eyebrow"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsHeroEyebrow} />
           </label>
@@ -164,7 +164,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.hero_eyebrow}
             onChange={(e) => handleChange("hero_eyebrow", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
         </div>
 
@@ -172,7 +172,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_hero_title"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsHeroTitle} />
           </label>
@@ -182,10 +182,10 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.hero_title}
             onChange={(e) => handleChange("hero_title", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
-          <p className="mt-1 type-caption text-[var(--color-text-muted)] font-arabic leading-relaxed">
-            العنوان الرئيسي المعروض في واجهة الصفحة الرئيسية (الافتراضي: &quot;مرحبًا بك في ProfNurse&quot;). عند احتواء العنوان على اسم المنصة، يتم عزله وتنسيقه بلوني الهوية البصرية تلقائيًا.
+          <p className="mt-1 type-caption text-text-secondary font-arabic leading-relaxed">
+            العنوان الرئيسي المعروض في واجهة الصفحة الرئيسية (الافتراضي: &quot;مرحبًا بك في Critical Ease&quot;). عند احتواء العنوان على اسم المنصة، يتم عزله وتنسيقه بلوني الهوية البصرية تلقائيًا.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_hero_desc"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsHeroDesc} />
           </label>
@@ -203,7 +203,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={1000}
             value={settings.hero_description}
             onChange={(e) => handleChange("hero_description", e.target.value.slice(0, 1000))}
-            className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] leading-relaxed"
+            className="w-full rounded-lg border border-border bg-search-bg p-3 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 leading-relaxed"
           />
         </div>
 
@@ -211,7 +211,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_hero_cta"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsHeroCta} />
           </label>
@@ -221,7 +221,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
             maxLength={300}
             value={settings.hero_cta}
             onChange={(e) => handleChange("hero_cta", e.target.value.slice(0, 300))}
-            className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+            className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
           />
         </div>
 
@@ -229,7 +229,7 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
         <div>
           <label
             htmlFor="setting_footer_text"
-            className="block text-sm font-semibold text-[var(--color-text)] mb-1"
+            className="block text-sm font-semibold text-navy mb-1"
           >
             <FormattedLabel text={AR_STRINGS.settingsFooterText} />
           </label>
@@ -244,38 +244,38 @@ export function AdminSettingsClient({ initialSettings }: AdminSettingsClientProp
               e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             placeholder="قسم تمريض الحالات الحرجة والطوارئ — جميع الحقوق محفوظة."
-            className="w-full min-h-[60px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-3 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] resize-none"
+            className="w-full min-h-[60px] rounded-lg border border-border bg-search-bg p-3 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 resize-none"
           />
           {/* Live character counter aligned to end under field */}
           <div className="flex justify-end mt-1">
-            <span className="text-xs text-[var(--color-text-muted)] font-mono">
+            <span className="text-xs text-text-secondary font-mono">
               {settings.footer_text.length}/300
             </span>
           </div>
-          <p className="mt-1 type-caption text-[var(--color-text-muted)] font-arabic leading-relaxed">
+          <p className="mt-1 type-caption text-text-secondary font-arabic leading-relaxed">
             إذا تم مسح هذا الحقل بالكامل، فلن يتم عرض أي تذييل على الموقع العام.
           </p>
         </div>
 
         {/* Site Logo Upload / Replacement */}
-        <div className="border-t border-[var(--color-border-subtle)] pt-6">
+        <div className="border-t border-border-subtle pt-6">
           <ImageUploader
             label={AR_STRINGS.settingsLogo}
             currentPath={settings.logo_path}
             folder="logos"
             onImageChanged={handleLogoChanged}
           />
-          <p className="mt-2 type-caption text-[var(--color-text-muted)] font-arabic leading-relaxed">
-            عند رفع شعار، سيحل محل الشعار الافتراضي واسم المنصة. يمكن حذفه للعودة إلى الشعار الرمزي البرمجي.
+          <p className="mt-2 type-caption text-text-secondary font-arabic leading-relaxed">
+            عند رفع شعار، سيحل محل الشعار الافتراضي واسم المنصة. يمكن حذفه للعودة إلى الشعار الافتراضي.
           </p>
         </div>
 
         {/* Save Settings Button */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end pt-4 border-t border-[var(--color-border-subtle)]">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end pt-4 border-t border-border-subtle">
           <button
             type="submit"
             disabled={isSaving}
-            className="w-full sm:w-auto inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill btn-rose-cta w-full sm:w-auto inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-sm font-bold text-navy active:scale-[0.98] disabled:opacity-50"
           >
             {isSaving ? (
               <>

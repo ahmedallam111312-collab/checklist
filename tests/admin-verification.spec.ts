@@ -286,9 +286,9 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
   });
 
   // --------------------------------------------------------------------------
-  // 1d. Fix 2c: Mobile Editor Tabs Reachability at 320px and 390px
+  // 1d. K7-3: Mobile Editor Active Tab Scrolled Fully Into View (320px & 390px)
   // --------------------------------------------------------------------------
-  test("Fix 2c: Mobile Editor Tabs Reachability at 320px and 390px", async ({
+  test("K7-3: Mobile Editor Active Tab Scrolled Fully Into View (320px and 390px)", async ({
     page,
   }) => {
     for (const width of [320, 390]) {
@@ -296,19 +296,33 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
       await loginAsAdmin(page);
       await page.goto(`/admin/procedures/${targetProcId}`);
 
+      const navContainer = page.locator("nav[role='tablist']");
+      await expect(navContainer).toBeVisible();
+
       const tabIds = ["details", "overview", "equipment", "checklist", "video"];
       for (const tabId of tabIds) {
         const tabBtn = page.locator(`#tab-${tabId}`);
         await expect(tabBtn).toBeAttached();
 
-        // Scroll tab into view and assert visible
-        await tabBtn.scrollIntoViewIfNeeded();
-        await expect(tabBtn).toBeVisible();
+        // Click tab to activate it
+        await tabBtn.click({ force: true });
+        await page.waitForTimeout(150);
+
+        // Verify tab is marked active
+        await expect(tabBtn).toHaveAttribute("aria-selected", "true");
+
+        // Verify bounding box lies inside the tab container
+        const tabBox = await tabBtn.boundingBox();
+        const navBox = await navContainer.boundingBox();
+        expect(tabBox).not.toBeNull();
+        expect(navBox).not.toBeNull();
+
+        // Assert active tab's bounding box lies completely inside the tab container
+        expect(tabBox!.x).toBeGreaterThanOrEqual(navBox!.x - 1.5);
+        expect(tabBox!.x + tabBox!.width).toBeLessThanOrEqual(navBox!.x + navBox!.width + 1.5);
 
         // Verify touch / click target is at least 44px
-        const box = await tabBtn.boundingBox();
-        expect(box).not.toBeNull();
-        expect(box!.height).toBeGreaterThanOrEqual(44);
+        expect(tabBox!.height).toBeGreaterThanOrEqual(44);
       }
     }
   });
@@ -489,7 +503,7 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
   // --------------------------------------------------------------------------
   // 4. Full Admin Screenshot Matrix (Login, Dashboard, Details, Overview, Settings)
   // --------------------------------------------------------------------------
-  test("Capture Required Admin Screenshots at 390px and 1280px in Dark and Light Themes", async ({
+  test("Capture Required Admin Screenshots at 320px, 390px and 1280px (Light-Only)", async ({
     browser,
   }) => {
     test.setTimeout(180000);
@@ -499,21 +513,18 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
       { width: 390, height: 844, name: "390px" },
       { width: 1280, height: 800, name: "1280px" },
     ];
-    const themes = ["dark", "light"] as const;
+    const themes = ["light"] as const;
 
     for (const vp of viewports) {
       for (const theme of themes) {
         const context = await browser.newContext({
           viewport: { width: vp.width, height: vp.height },
-          colorScheme: theme,
+          colorScheme: "light",
         });
         const page = await context.newPage();
 
         // A. Login Page
         await page.goto("/admin/login");
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.waitForTimeout(150);
         const loginShot = path.join(DOCS_SCREENSHOTS_DIR, `temp-login-${vp.name}-${theme}.png`);
         await page.screenshot({ path: loginShot, fullPage: true });
@@ -522,10 +533,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
 
         // Login for subsequent dashboard shots
         await loginAsAdmin(page);
-
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.waitForTimeout(150);
 
         // B. Dashboard Page
@@ -536,9 +543,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
 
         // C. Details Tab (/admin/procedures/demo-proc-1)
         await page.goto(`/admin/procedures/${targetProcId}`);
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.waitForTimeout(150);
         const detailsShot = path.join(DOCS_SCREENSHOTS_DIR, `temp-details-${vp.name}-${theme}.png`);
         await page.screenshot({ path: detailsShot, fullPage: true });
@@ -556,9 +560,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
         // D2. Tab strip on mobile at 320px and 390px scrolled to each end
         if (vp.name === "320px" || vp.name === "390px") {
           await page.goto(`/admin/procedures/${targetProcId}`);
-          if (theme === "light") {
-            await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-          }
           await page.waitForTimeout(150);
 
           // Scrolled to start (Details tab selected)
@@ -580,9 +581,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
 
         // E. Settings Page (/admin/settings)
         await page.goto("/admin/settings");
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.waitForTimeout(150);
         const settingsShot = path.join(DOCS_SCREENSHOTS_DIR, `temp-settings-${vp.name}-${theme}.png`);
         await page.screenshot({ path: settingsShot, fullPage: true });
@@ -591,9 +589,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
 
         // F. Equipment Tab (/admin/procedures/[id])
         await page.goto(`/admin/procedures/${targetProcId}`);
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.click("#tab-equipment");
         await page.waitForTimeout(200);
         const equipShot = path.join(DOCS_SCREENSHOTS_DIR, `temp-equip-${vp.name}-${theme}.png`);
@@ -624,9 +619,6 @@ test.describe("Phase 2A Admin Quality Gate & Verification Suite", () => {
 
         // I. Public Page Showing Result (/procedures/e2e-admin-verify)
         await page.goto("/procedures/e2e-admin-verify");
-        if (theme === "light") {
-          await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
-        }
         await page.waitForTimeout(200);
         // Expand equipment accordion
         const pubEquip = page.locator("button:has-text('الأدوات')");

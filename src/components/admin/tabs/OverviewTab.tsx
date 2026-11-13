@@ -63,7 +63,7 @@ function AutoGrowingTextarea({
         adjustHeight();
       }}
       placeholder={placeholder}
-      className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-2.5 text-sm text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] leading-relaxed resize-none font-sans"
+      className="w-full rounded-lg border border-border bg-search-bg p-2.5 text-sm text-navy focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25 leading-relaxed resize-none font-sans"
     />
   );
 }
@@ -176,7 +176,7 @@ export function OverviewTab({
             setIsDirty(true);
           }}
           placeholder="Clinical definition, procedure principles, and physiological rationale..."
-          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)] leading-relaxed focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+          className="w-full rounded-lg border border-border bg-search-bg p-3 text-sm text-navy leading-relaxed focus:border-rose-dark focus:outline-none focus:ring-2 focus:ring-rose-dark/25"
         />
       </div>
 
@@ -194,7 +194,7 @@ export function OverviewTab({
           <button
             type="button"
             onClick={() => addItem(setIndications, "ind")}
-            className="inline-flex min-h-[44px] shrink-0 whitespace-nowrap self-start sm:self-auto items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text)] hover:border-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill inline-flex min-h-[44px] shrink-0 whitespace-nowrap self-start sm:self-auto items-center gap-1.5 rounded-pill border border-border bg-white px-3.5 py-2 text-xs font-bold text-navy hover:border-rose-dark hover:text-rose-dark"
           >
             <Plus className="h-4 w-4" />
             <span>{AR_STRINGS.addItem}</span>
@@ -249,7 +249,7 @@ export function OverviewTab({
           <button
             type="button"
             onClick={() => addItem(setContraindications, "con")}
-            className="inline-flex min-h-[44px] shrink-0 whitespace-nowrap self-start sm:self-auto items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text)] hover:border-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+            className="squircle-pill inline-flex min-h-[44px] shrink-0 whitespace-nowrap self-start sm:self-auto items-center gap-1.5 rounded-pill border border-border bg-white px-3.5 py-2 text-xs font-bold text-navy hover:border-rose-dark hover:text-rose-dark"
           >
             <Plus className="h-4 w-4" />
             <span>{AR_STRINGS.addItem}</span>
@@ -352,11 +352,11 @@ export function OverviewTab({
       )}
 
       {/* Save Button */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-border-subtle">
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex w-full sm:w-auto min-h-[44px] items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-[var(--color-on-primary)] transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+          className="squircle-pill btn-rose-cta inline-flex w-full sm:w-auto min-h-[44px] items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-sm font-bold text-navy active:scale-[0.98] disabled:opacity-50"
         >
           {isSaving ? (
             <>

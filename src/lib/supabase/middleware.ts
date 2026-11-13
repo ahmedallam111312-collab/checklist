@@ -2,26 +2,32 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isApiRoute = pathname.startsWith("/api");
+
+  // Public routes (cover, /home, /about, /procedures/*) do not require admin auth checks.
+  // Passing through directly avoids Next.js App Router status code override on notFound().
+  if (!isAdminRoute && !isApiRoute) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
 
-  const pathname = request.nextUrl.pathname;
-  const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/admin/login";
 
-  // Security header: noindex, nofollow on all admin routes
-  if (isAdminRoute) {
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-  }
+  // Security header: noindex, nofollow, noarchive on all admin and api routes
+  response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
 
   // Handle local demo mode
   const isDemo = process.env.NEXT_PUBLIC_USE_DEMO_DATA === "true";
   if (isDemo) {
     if (isAdminRoute && !isLoginPage) {
-      const demoAuth = request.cookies.get("profnurse_demo_admin");
+      const demoAuth = request.cookies.get("critical_ease_demo_admin");
       if (demoAuth?.value !== "authenticated") {
         const url = request.nextUrl.clone();
         url.pathname = "/admin/login";

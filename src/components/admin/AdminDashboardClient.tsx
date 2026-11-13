@@ -69,10 +69,10 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
           <div aria-live="polite">
             {feedback && (
               <div
-                className={`inline-flex items-center gap-2 rounded-md px-3 py-1 text-xs font-semibold ${
+                className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold ${
                   feedback.type === "success"
-                    ? "bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
-                    : "bg-[var(--color-danger-surface)] text-[var(--color-danger)]"
+                    ? "border border-success/30 bg-success-surface text-success"
+                    : "border border-danger/30 bg-danger-surface text-danger"
                 }`}
               >
                 {feedback.type === "success" && <Check className="h-3.5 w-3.5" />}
@@ -87,7 +87,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
               type="button"
               onClick={handleSaveBatchOrder}
               disabled={isSaving}
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-[var(--color-on-primary)] shadow-sm transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+              className="squircle-pill btn-rose-cta inline-flex min-h-[44px] items-center gap-2 rounded-pill px-4 py-2 text-xs font-bold text-navy active:scale-[0.98] disabled:opacity-50"
             >
               {isSaving ? (
                 <>
@@ -106,13 +106,13 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
       )}
 
       {procedures.length === 0 ? (
-        <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 text-center">
-          <p className="text-sm text-[var(--color-text-secondary)]">
+        <div className="squircle-card rounded-card border border-border-subtle bg-white p-8 text-center shadow-card-soft">
+          <p className="text-sm text-text-secondary">
             {AR_STRINGS.adminNoProcedures}
           </p>
           <Link
             href="/admin/procedures/new"
-            className="mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-[var(--color-on-primary)]"
+            className="squircle-pill btn-rose-cta mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-pill px-5 py-2 text-xs font-bold text-navy"
           >
             {AR_STRINGS.adminAddProcedure}
           </Link>
@@ -137,16 +137,16 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                       #{index + 1}
                     </span>
                     <span
-                      className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
                         proc.published
-                          ? "bg-[var(--color-primary)]/20 text-[var(--color-primary)]"
-                          : "bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] border border-[var(--color-border-subtle)]"
+                          ? "border border-success/30 bg-success-surface text-success"
+                          : "bg-light-1 text-text-secondary border border-border-subtle"
                       }`}
                     >
                       {proc.published ? AR_STRINGS.adminStatusPublished : AR_STRINGS.adminStatusDraft}
                     </span>
                     <h3
-                      className="font-semibold text-sm sm:text-base text-[var(--color-text)] break-words !leading-[1.3]"
+                      className="font-bold text-sm sm:text-base text-navy break-words !leading-[1.3]"
                       style={{ lineHeight: 1.3 }}
                     >
                       <bdi dir="ltr" lang="en">
@@ -155,7 +155,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                     </h3>
                   </div>
 
-                  <div className="flex flex-col gap-0.5 text-xs text-[var(--color-text-muted)]">
+                  <div className="flex flex-col gap-0.5 text-xs text-text-secondary">
                     <bdi dir="ltr" lang="en" className="font-mono inline-block text-start">
                       {`/${proc.slug}`}
                     </bdi>
@@ -172,7 +172,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                     rel="noopener noreferrer"
                     title={AR_STRINGS.adminDraftPreview}
                     aria-label={`${AR_STRINGS.adminDraftPreview}: ${proc.title}`}
-                    className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+                    className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border-subtle bg-light-1 text-text-secondary transition-colors hover:border-rose-dark hover:text-rose-dark"
                   >
                     <Eye className="h-4 w-4" aria-hidden="true" />
                   </Link>
@@ -182,7 +182,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                     href={`/admin/procedures/${proc.id}`}
                     title="تعديل الإجراء"
                     aria-label={`تعديل: ${proc.title}`}
-                    className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+                    className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border-subtle bg-light-1 text-text-secondary transition-colors hover:border-rose-dark hover:text-rose-dark"
                   >
                     <Edit3 className="h-4 w-4" aria-hidden="true" />
                   </Link>
@@ -193,7 +193,7 @@ export function AdminDashboardClient({ initialProcedures }: AdminDashboardClient
                     onClick={() => setDeletingProc(proc)}
                     title={AR_STRINGS.deleteProcedure}
                     aria-label={`${AR_STRINGS.deleteProcedure}: ${proc.title}`}
-                    className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-surface)] text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+                    className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-danger/25 bg-danger-surface text-danger transition-colors hover:bg-danger hover:text-white"
                   >
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
                   </button>

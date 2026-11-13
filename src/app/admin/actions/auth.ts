@@ -1,11 +1,16 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/data";
 import { loginSchema } from "@/lib/validation/procedure";
 import { AR_STRINGS } from "@/messages/ar";
+import {
+  checkLoginRateLimit,
+  recordLoginFailure,
+  recordLoginSuccess,
+} from "@/lib/auth/rate-limiter";
 
 export async function loginAdmin(
   prevState: any,
@@ -14,8 +19,24 @@ export async function loginAdmin(
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
+  const headerStore = await headers();
+  const ip =
+    headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    headerStore.get("x-real-ip") ||
+    "client-ip";
+  const rateLimitKey = `${ip}:${email || "anonymous"}`;
+
+  // 1. Enforce server-side rate limiting on login attempts
+  const rateLimitStatus = await checkLoginRateLimit(rateLimitKey);
+  if (!rateLimitStatus.allowed) {
+    return {
+      error: "تم تجاوز عدد محاولات الدخول المسموح بها. الرجاء المحاولة بعد 15 دقيقة.",
+    };
+  }
+
   const parsed = loginSchema.safeParse({ email, password });
   if (!parsed.success) {
+    await recordLoginFailure(rateLimitKey);
     return { error: AR_STRINGS.loginGenericError };
   }
 
@@ -25,12 +46,14 @@ export async function loginAdmin(
     const validPassword = process.env.E2E_ADMIN_PASSWORD;
 
     if (!validEmail || !validPassword) {
+      await recordLoginFailure(rateLimitKey);
       return { error: "E2E_ADMIN_EMAIL or E2E_ADMIN_PASSWORD missing in environment." };
     }
 
     if (parsed.data.email === validEmail && parsed.data.password === validPassword) {
+      await recordLoginSuccess(rateLimitKey);
       const cookieStore = await cookies();
-      cookieStore.set("profnurse_demo_admin", "authenticated", {
+      cookieStore.set("critical_ease_demo_admin", "authenticated", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -39,6 +62,7 @@ export async function loginAdmin(
       });
       return { success: true };
     }
+    await recordLoginFailure(rateLimitKey);
     return { error: AR_STRINGS.loginGenericError };
   }
 
@@ -52,6 +76,7 @@ export async function loginAdmin(
       });
 
     if (signInError || !signInData.user) {
+      await recordLoginFailure(rateLimitKey);
       return { error: AR_STRINGS.loginGenericError };
     }
 
@@ -59,11 +84,14 @@ export async function loginAdmin(
     const { data: isAdmin, error: rpcError } = await supabase.rpc("is_admin");
     if (rpcError || !isAdmin) {
       await supabase.auth.signOut();
+      await recordLoginFailure(rateLimitKey);
       return { error: AR_STRINGS.loginGenericError };
     }
 
+    await recordLoginSuccess(rateLimitKey);
     return { success: true };
   } catch {
+    await recordLoginFailure(rateLimitKey);
     return { error: AR_STRINGS.loginGenericError };
   }
 }
@@ -72,7 +100,7 @@ export async function logoutAdmin(): Promise<void> {
   const cookieStore = await cookies();
 
   if (isDemoMode()) {
-    cookieStore.delete("profnurse_demo_admin");
+    cookieStore.delete("critical_ease_demo_admin");
     redirect("/admin/login");
   }
 

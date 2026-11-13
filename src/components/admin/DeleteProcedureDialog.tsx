@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { AR_STRINGS } from "@/messages/ar";
 
@@ -20,6 +20,36 @@ export function DeleteProcedureDialog({
   const [typedTitle, setTypedTitle] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Keyboard accessibility: Escape key closes delete confirmation dialog
+  // Mobile popstate / back button handling
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (typeof window !== "undefined") {
+      try {
+        window.history.pushState({ deleteDialogOpen: true }, "");
+      } catch {}
+
+      const handlePopState = () => {
+        onCancel();
+      };
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [isOpen, onCancel]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onCancel]);
 
   if (!isOpen) return null;
 
@@ -44,23 +74,30 @@ export function DeleteProcedureDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="delete-dialog-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150"
+      className="surface-light fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-navy/65 backdrop-blur-sm animate-in fade-in duration-150"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
     >
-      <div className="w-full max-w-md rounded-xl border border-[var(--color-danger)]/40 bg-[var(--color-surface)] p-6 shadow-2xl text-start">
-        <div className="flex items-center gap-3 text-[var(--color-danger)]">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-danger-surface)]">
+      <div className="squircle-card w-full sm:max-w-md rounded-t-card sm:rounded-card border border-danger/40 bg-white p-6 shadow-card-soft text-start safe-pb animate-in slide-in-from-bottom sm:slide-in-from-bottom-4 duration-200">
+        {/* Mobile Drag Indicator */}
+        <div className="sm:hidden -mt-2 mb-3 flex justify-center items-center select-none">
+          <div className="h-1.5 w-12 rounded-full bg-border opacity-80" />
+        </div>
+        <div className="flex items-center gap-3 text-danger">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger-surface">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <h2 id="delete-dialog-title" className="text-lg font-bold text-[var(--color-text)]">
+          <h2 id="delete-dialog-title" className="text-lg font-bold text-navy">
             {AR_STRINGS.deleteConfirmTitle}
           </h2>
         </div>
 
-        <p className="mt-4 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+        <p className="mt-4 text-sm text-text-secondary leading-relaxed">
           {AR_STRINGS.deleteConfirmWarning}
         </p>
 
-        <div className="mt-3 rounded-md bg-[var(--color-surface-sunken)] p-3 border border-[var(--color-border)] select-all font-mono text-sm font-semibold text-[var(--color-text)] text-left" dir="ltr">
+        <div className="mt-3 rounded-lg bg-light-1 p-3 border border-border-subtle select-all font-mono text-sm font-semibold text-navy text-left" dir="ltr">
           {procedureTitle}
         </div>
 
@@ -68,7 +105,7 @@ export function DeleteProcedureDialog({
           <div>
             <label
               htmlFor="confirm-title-input"
-              className="block text-xs font-semibold text-[var(--color-text-muted)] mb-1"
+              className="block text-xs font-semibold text-text-secondary mb-1.5"
             >
               {AR_STRINGS.deleteConfirmPlaceholder}
             </label>
@@ -81,12 +118,12 @@ export function DeleteProcedureDialog({
               value={typedTitle}
               onChange={(e) => setTypedTitle(e.target.value)}
               placeholder={procedureTitle}
-              className="w-full min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-3 text-sm font-mono text-[var(--color-text)] focus:border-[var(--color-danger)] focus:outline-none focus:ring-1 focus:ring-[var(--color-danger)]"
+              className="squircle-pill w-full min-h-[44px] rounded-pill border border-border bg-search-bg px-3.5 text-sm font-mono text-navy focus:border-danger focus:outline-none focus:ring-2 focus:ring-danger/25"
             />
           </div>
 
           {error && (
-            <p className="text-xs text-[var(--color-danger)] font-medium" role="alert">
+            <p className="text-xs text-danger font-medium" role="alert">
               {error}
             </p>
           )}
@@ -96,7 +133,7 @@ export function DeleteProcedureDialog({
               type="button"
               onClick={onCancel}
               disabled={isDeleting}
-              className="inline-flex min-h-[44px] min-w-[80px] items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+              className="squircle-pill inline-flex min-h-[44px] min-w-[80px] items-center justify-center rounded-pill border border-border bg-white px-4 py-2 text-sm font-bold text-navy transition-colors hover:border-rose-dark hover:text-rose-dark"
             >
               {AR_STRINGS.cancel}
             </button>
@@ -104,7 +141,7 @@ export function DeleteProcedureDialog({
             <button
               type="submit"
               disabled={!isMatch || isDeleting}
-              className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-[var(--color-danger)] px-5 py-2 text-sm font-semibold text-white transition-opacity disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)]"
+              className="squircle-pill inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-danger px-5 py-2 text-sm font-bold text-white transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isDeleting ? (
                 <>

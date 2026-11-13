@@ -68,7 +68,7 @@ export function ReorderableList<T extends ReorderableItem>({
   };
 
   return (
-    <ul className="divide-y divide-[var(--color-border-subtle)] overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
+    <ul className="squircle-card divide-y divide-border-subtle overflow-hidden rounded-card border border-border-subtle bg-white shadow-card-soft">
       {items.map((item, index) => {
         const isFirst = index === 0;
         const isLast = index === items.length - 1;
@@ -82,15 +82,15 @@ export function ReorderableList<T extends ReorderableItem>({
             onDragEnd={handleDragEnd}
             className={`flex ${
               stackedOnMobile ? "flex-col sm:flex-row sm:items-start" : "flex-row items-center"
-            } gap-2.5 sm:gap-3 p-3 transition-colors ${
+            } gap-2.5 sm:gap-3 p-3.5 transition-colors ${
               draggedIndex === index
-                ? "bg-[var(--color-surface-raised)] opacity-75 ring-1 ring-[var(--color-primary)]"
-                : "hover:bg-[var(--color-surface-raised)]/40"
+                ? "bg-light-1 opacity-80 ring-2 ring-rose-dark"
+                : "hover:bg-light-1/50"
             }`}
           >
             {/* Desktop Drag Handle (Hidden on touch-only devices) */}
             <div
-              className={`hidden cursor-grab active:cursor-grabbing sm:flex h-11 w-8 shrink-0 items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text)] ${
+              className={`hidden cursor-grab active:cursor-grabbing sm:flex h-11 w-8 shrink-0 items-center justify-center text-text-secondary hover:text-navy ${
                 stackedOnMobile ? "mt-0.5" : ""
               }`}
               title="سحب للترتيب"
@@ -117,7 +117,7 @@ export function ReorderableList<T extends ReorderableItem>({
                 onClick={() => moveUp(index)}
                 disabled={isFirst}
                 aria-label={`${AR_STRINGS.adminMoveUp} (${index + 1})`}
-                className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)] disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border-subtle bg-light-1 text-text-secondary transition-colors hover:border-rose-dark hover:text-rose-dark disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -126,7 +126,7 @@ export function ReorderableList<T extends ReorderableItem>({
                 onClick={() => moveDown(index)}
                 disabled={isLast}
                 aria-label={`${AR_STRINGS.adminMoveDown} (${index + 1})`}
-                className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)] disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="squircle-pill inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-border-subtle bg-light-1 text-text-secondary transition-colors hover:border-rose-dark hover:text-rose-dark disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </button>

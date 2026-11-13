@@ -43,7 +43,7 @@ export async function runRestore(filePath: string, apply: boolean = false) {
   }
 
   console.log("==================================================");
-  console.log(`ProfNurse Backup Restore Engine (${apply ? "APPLY MODE" : "DRY RUN"})`);
+  console.log(`Critical Ease Backup Restore Engine (${apply ? "APPLY MODE" : "DRY RUN"})`);
   console.log("==================================================");
   console.log(`File: ${filePath}`);
   console.log(`Exported At: ${data.exported_at}`);
