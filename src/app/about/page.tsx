@@ -23,35 +23,31 @@ export default async function AboutPage() {
       <section className="bg-grad-hero surface-navy border-b-[3px] border-rose px-4 py-10 text-white sm:px-6 sm:py-14">
         <div className="mx-auto max-w-3xl space-y-3 text-start">
           <p className="text-xs font-bold text-rose-light">
-            [محتوى تعريفي مؤقت — قابل للتعديل لاحقاً من لوحة التحكم]
+            دليل الإجراءات التمريضية السريرية
           </p>
           <h1 className="type-display font-bold text-white">
             {AR_STRINGS.navAbout}
           </h1>
           <p className="type-body max-w-2xl leading-relaxed text-text-muted-navy">
-            [مساحة مخصصة لنبذة تعريفية عن منصة{" "}
-            <bdi dir="ltr" lang="en" className="font-latin text-rose-light">
-              {settings.site_name}
-            </bdi>{" "}
-            وأهدافها التعليمية — سيتم استبدال هذا النص لاحقاً من الإدارة].
+            منصة مرجعية رقمية متخصصة في توثيق وتبسيط الإجراءات السريرية والتدريبية لتمريض الطوارئ والحالات الحرجة، تهدف لدعم الممارسة العملية الآمنة ورفع جاهزية الطلبة والكوادر التمريضية.
           </p>
         </div>
       </section>
 
       <main className="bg-grad-page flex-1 px-4 py-10 sm:px-6 lg:py-14">
         <div className="mx-auto max-w-3xl space-y-6">
-          {/* Card 1: Educational Purpose Placeholder */}
+          {/* Card 1: Educational Purpose */}
           <div className="surface-light squircle-card border border-border-subtle bg-white p-6 shadow-card-soft sm:p-8">
             <div className="mb-3 flex items-center gap-3 text-rose-dark">
               <Info className="h-5 w-5 shrink-0" aria-hidden="true" />
               <h2 className="type-h2 font-bold text-navy">الهدف التعليمي</h2>
             </div>
             <p className="type-body leading-relaxed text-text-secondary">
-              [نص مؤقت قابل للتعديل من لوحة التحكم — مخصص لوصف الغرض التعليمي والتدريبي للمنصة وفق توجيهات الجهة المالكة].
+              تهدف منصة <bdi dir="ltr" lang="en" className="font-latin font-semibold text-navy">Critical Ease</bdi> إلى توفير مرجع سريري سريع وموثوق لطلبة وخريجي التمريض، يركز على الخطوات التنفيذية الدقيقة، وإبراز الخطوات الحرجة لسلامة المريض، مع تفصيل الأدوات والمعدات وموانع الاستخدام، للمساهمة في اتخاذ القرارات السريرية السليمة داخل أقسام الطوارئ والعناية المركزة.
             </p>
           </div>
 
-          {/* Card 2: Credits / Team Placeholder (zero fabricated names or claims) */}
+          {/* Card 2: Team & Institutional Information */}
           <div className="surface-light squircle-card border border-border-subtle bg-white p-6 shadow-card-soft sm:p-8">
             <div className="mb-3 flex items-center gap-3 text-rose-dark">
               <Users className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -60,7 +56,7 @@ export default async function AboutPage() {
               </h2>
             </div>
             <p className="type-body leading-relaxed text-text-secondary">
-              [نص مؤقت قابل للتعديل لاحقاً من لوحة التحكم — يتم إضافة تفاصيل المنصة وفريق الإعداد هنا عند التزويد بها].
+              تم إعداد وتطوير هذا المحتوى بإشراف أكاديمي وسريري متخصص في تمريض الحالات الحرجة والطوارئ، بالتعاون مع الكوادر التدريبية والسريرية، بهدف توحيد المعايير الإجرائية وتيسير مراجعتها وفق أفضل الممارسات التمريضية المعتمدة.
             </p>
           </div>
 
